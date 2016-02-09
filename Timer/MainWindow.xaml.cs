@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,12 +24,8 @@ namespace Timer
         public MainWindow()
         {
             InitializeComponent();
-            
-            listBox.Items.Clear();
-            foreach (Racer racer in DataManager.Racers)
-            {
-                listBox.Items.Add(racer.Car.Name + ", " + racer.Maker.Name + ", " + racer.Barcode);
-            }
+
+            updateRacerList();
 
             tbCommand.Focusable = true;
 
@@ -45,6 +40,7 @@ namespace Timer
             {
                 label1.Content = "Waiting for race check in...";
                 listBox1.Items.Clear();
+                updateTimeList();
             }
             else
             {
@@ -111,11 +107,11 @@ namespace Timer
 
             if (result == RaceManager.MakeNextReturn.Added)
             {
-                listBox1.Items.Add(DataManager.Racers[index].Car.Name);
+                listBox1.Items.Add(DataManager.Competition.Racers[index].Car.Name);
             } //error handling
             else if (result == RaceManager.MakeNextReturn.CallBackUsed)
             {
-                DataManager.MessageProvider.showMessage("Duplicate Racer", DataManager.Racers[index].Car.Name + " has allready been entered into this race");
+                DataManager.MessageProvider.showMessage("Duplicate Racer", DataManager.Competition.Racers[index].Car.Name + " has allready been entered into this race");
             }
             else if (result == RaceManager.MakeNextReturn.RaceFull)
             {
@@ -153,9 +149,9 @@ namespace Timer
                 //try a car barcode
                 bool found = false;
                 
-                for (int i = 0; i < DataManager.Racers.Count && !found; i++)
+                for (int i = 0; i < DataManager.Competition.Racers.Count && !found; i++)
                 {
-                    if(DataManager.Racers[i].Barcode == barcode)
+                    if(DataManager.Competition.Racers[i].Barcode == barcode)
                     {
                         found = true;
                         addRacer(i);
@@ -166,6 +162,15 @@ namespace Timer
                 {
                     DataManager.MessageProvider.showError("Invalid Command", "[" + barcode + "] is not a valid command");
                 }
+            }
+        }
+
+        private void updateRacerList()
+        {
+            listBox.Items.Clear();
+            foreach (Racer racer in DataManager.Competition.Racers)
+            {
+                listBox.Items.Add(racer.Car.Name + ", " + racer.Maker.Name + ", " + racer.Barcode);
             }
         }
 
@@ -206,12 +211,77 @@ namespace Timer
             }
         }
 
+        private void updateTimeList()
+        {
+            if (listBox.SelectedIndex >= 0 && listBox.SelectedIndex < DataManager.Competition.Racers.Count)
+            {
+                listBox2.Items.Clear();
+                foreach (Time time in DataManager.Competition.Racers[listBox.SelectedIndex].Times)
+                {
+                    listBox2.Items.Add(time.Speed + "s, Lane: " + time.Lane + ", Place: " + time.Place);
+                }
+            }
+        }
+
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            listBox2.Items.Clear();
-            foreach (Time time in DataManager.Racers[listBox.SelectedIndex].Times)
+            updateTimeList();
+        }
+
+        private void btnAddCar_Click(object sender, RoutedEventArgs e)
+        {
+            //======================================================
+            //check for another car containg any of this information
+            //======================================================
+            if (tbCarName.Text != string.Empty)
             {
-                listBox2.Items.Add(time.Speed + "s, Lane: " + time.Lane + ", Place: " + time.Place);
+                if (tbMakerName.Text != string.Empty)
+                {
+                    if (tbBarcode.Text != string.Empty)
+                    {
+                        DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, tbMakerName.Text, tbBarcode.Text));
+                        tbCarName.Clear();
+                        tbMakerName.Clear();
+                        tbBarcode.Clear();
+                        updateRacerList();
+                    }
+                    else
+                    {
+                        DataManager.MessageProvider.showMessage("Missing Car's Barcode", "The car's barcode must be entered");
+                    }
+                }
+                else
+                {
+                    DataManager.MessageProvider.showMessage("Missing Maker's Name", "The maker's name must be entered");
+                }
+            }
+            else
+            {
+                DataManager.MessageProvider.showMessage("Missing Car's Name", "The car's name must be entered");
+            }
+        }
+
+        private void tbBarcode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                btnAddCar_Click(sender, new RoutedEventArgs());
+            }
+        }
+
+        private void tbMakerName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Keyboard.Focus(tbBarcode);
+            }
+        }
+
+        private void tbCarName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Keyboard.Focus(tbMakerName);
             }
         }
     }

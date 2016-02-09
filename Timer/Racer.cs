@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Timer
@@ -34,6 +33,7 @@ namespace Timer
         public List<Time> Times
         {
             get { return _times; }
+            set { _times = value; }
         }
         public void addTime(Time time)
         {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Timer
 {
@@ -32,6 +31,11 @@ namespace Timer
             _lane = lane;
             _speed = speed;
             _place = place;
+        }
+
+        public Time()
+        {
+            //for json deserialize
         }
     }
 }

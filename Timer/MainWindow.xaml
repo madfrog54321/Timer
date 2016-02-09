@@ -27,12 +27,19 @@
     <Grid>
         <ComboBox x:Name="cboPorts" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="120" Height="20"/>
         <Button x:Name="btnConnect" Content="Connect" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="btnConnect_Click"/>
-        <ListBox x:Name="listBox" HorizontalAlignment="Left" Margin="10,35,0,10" Width="264" SelectionChanged="listBox_SelectionChanged"/>
+        <ListBox x:Name="listBox" HorizontalAlignment="Left" Margin="10,35,0,205" Width="264" SelectionChanged="listBox_SelectionChanged"/>
         <TextBox x:Name="tbCommand" Height="23" Margin="279,13,70,0" IsEnabled="False" TextWrapping="Wrap" Text="" VerticalAlignment="Top" KeyDown="tbCommand_KeyDown" PreviewLostKeyboardFocus="tbCommand_PreviewLostKeyboardFocus"/>
         <Button x:Name="btnLockKeyboard" Content="Lock" Margin="0,13,10,0" VerticalAlignment="Top" Height="23" Click="btnLockKeyboard_Click" HorizontalAlignment="Right" Width="55"/>
         <ListBox x:Name="listBox1" Height="156" Margin="279,72,10,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="Label" HorizontalAlignment="Left" Margin="279,41,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.079,0.692"/>
         <ListBox x:Name="listBox2" Margin="279,233,10,10"/>
+        <Button x:Name="btnAddCar" Content="Add Car" HorizontalAlignment="Left" Margin="199,0,0,10" Width="75" Height="20" VerticalAlignment="Bottom" Click="btnAddCar_Click"/>
+        <TextBox x:Name="tbCarName" HorizontalAlignment="Left" Margin="10,0,0,151" TextWrapping="Wrap" Width="264" Height="23" VerticalAlignment="Bottom" KeyDown="tbCarName_KeyDown"/>
+        <TextBox x:Name="tbMakerName" HorizontalAlignment="Left" Margin="10,0,0,92" TextWrapping="Wrap" Width="264" Height="23" VerticalAlignment="Bottom" KeyDown="tbMakerName_KeyDown"/>
+        <TextBox x:Name="tbBarcode" HorizontalAlignment="Left" Margin="10,0,0,38" TextWrapping="Wrap" Width="264" Height="23" VerticalAlignment="Bottom" KeyDown="tbBarcode_KeyDown"/>
+        <Label Content="Car's Name" HorizontalAlignment="Left" Margin="10,0,0,174" Height="26" VerticalAlignment="Bottom"/>
+        <Label Content="Car's Barcode" HorizontalAlignment="Left" Margin="10,0,0,61" Height="26" VerticalAlignment="Bottom"/>
+        <Label Content="Maker's Name" HorizontalAlignment="Left" Margin="10,0,0,120" Height="26" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>
