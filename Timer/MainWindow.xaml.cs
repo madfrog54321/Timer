@@ -22,109 +22,67 @@ namespace Timer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private TrackTimer _timer;
-        private List<Racer> _racers;
-        private List<int> _currentRace;
-
         public MainWindow()
         {
             InitializeComponent();
-
-            _currentRace = new List<int>();
-
-            _racers = new List<Racer>();
-            _racers.Add(new Racer("test car 1", "maker 1", "1"));
-            _racers.Add(new Racer("test car 2", "maker 2", "2"));
-            _racers.Add(new Racer("test car 3", "maker 3", "3"));
-            _racers.Add(new Racer("test car 4", "maker 4", "4"));
-            _racers.Add(new Racer("test car 5", "maker 5", "5"));
-            _racers.Add(new Racer("test car 6", "maker 6", "6"));
-            _racers.Add(new Racer("test car 7", "maker 7", "7"));
-            _racers.Add(new Racer("test car 8", "maker 8", "8"));
-            _racers.Add(new Racer("test car 9", "maker 9", "9"));
-            _racers.Add(new Racer("test car 10", "maker 10", "10"));
+            
             listBox.Items.Clear();
-            foreach (Racer racer in _racers)
+            foreach (Racer racer in DataManager.Racers)
             {
                 listBox.Items.Add(racer.Car.Name + ", " + racer.Maker.Name + ", " + racer.Barcode);
             }
 
             tbCommand.Focusable = true;
 
-            clearRacers();
+            label1.Content = "Waiting for race check in...";
 
             updatePorts();
         }
 
-        private void btnConnect_Click(object sender, RoutedEventArgs e)
-        {
-            _timer = new TrackTimer(cboPorts.Text);
-            if (_timer.Connected)
-            {
-                btnConnect.IsEnabled = false;
-                tbCommand.IsEnabled = true;
-                _timer.OnGotRace += _timer_OnGotRace;
-                _timer.getNextRace();
-            }
-        }
-
-        private void _timer_OnGotRace(bool success, Race race)
+        private void RaceManager_onReadyForNextRace()
         {
             if (Dispatcher.CheckAccess())
             {
-                if (success)
-                {
-                    if (_currentRace.Count > 0)
-                    {
-                        Time[] times = race.Times;
-                        for (int i = 0; i < times.Length; i++)
-                        {
-                            if (_currentRace[i] != -2)
-                            {
-                                _racers[_currentRace[i]].addTime(times[i]);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("A race has been recieved out of timing", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                clearRacers();
+                label1.Content = "Waiting for race check in...";
+                listBox1.Items.Clear();
             }
             else
             {
-                Dispatcher.Invoke(new Action<bool, Race>(_timer_OnGotRace), new object[] { success, race });
+                Dispatcher.Invoke(new Action(RaceManager_onReadyForNextRace));
+            }
+        }
+
+        private void btnConnect_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataManager.tryConnectTimer(cboPorts.Text))
+            {
+                btnConnect.IsEnabled = false;
+                tbCommand.IsEnabled = true;
+                DataManager.RaceManager.onReadyForNextRace += RaceManager_onReadyForNextRace;
+                DataManager.RaceManager.onRaceIsFull += RaceManager_onRaceIsFull;
+            }
+        }
+
+        private void RaceManager_onRaceIsFull()
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                label1.Content = "Waiting for race completion...";
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(RaceManager_onRaceIsFull));
             }
         }
 
         private void updatePorts()
         {
-            string[] ArrayComPortsNames = null;
-            int index = -1;
-            string ComPortName = null;
-
-            ArrayComPortsNames = SerialPort.GetPortNames();
-            do
+            string[] ports = DataManager.getPorts();
+            foreach (string port in ports)
             {
-                index += 1;
-                cboPorts.Items.Add(ArrayComPortsNames[index]);
+                cboPorts.Items.Add(port);
             }
-            while (!((ArrayComPortsNames[index] == ComPortName) || (index == ArrayComPortsNames.GetUpperBound(0))));
-
-            Array.Sort(ArrayComPortsNames);
-
-            //want to get first out
-            if (index == ArrayComPortsNames.GetUpperBound(0))
-            {
-                ComPortName = ArrayComPortsNames[0];
-            }
-            cboPorts.Text = ArrayComPortsNames[0];
-        }
-
-        private void btnGetNext_Click(object sender, RoutedEventArgs e)
-        {
-            _timer.getNextRace();
+            cboPorts.SelectedIndex = 0;
         }
 
         private void tbCommand_KeyDown(object sender, KeyEventArgs e)
@@ -147,36 +105,35 @@ namespace Timer
             }
         }
 
-        private void clearRacers()
-        {
-            if (_timer != null && _timer.Connected) { _timer.resetMask(); }
-            listBox1.Items.Clear();
-            _currentRace.Clear();
-            label1.Content = "Waiting for race check in...";
-        }
-
         private void addRacer(int index)
         {
-            if (!_currentRace.Contains(index))
+            RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_CarLane(index);
+
+            if (result == RaceManager.MakeNextReturn.Added)
             {
-                if (listBox1.Items.Count < 6)
-                {
-                    listBox1.Items.Add(_racers[index].Car.Name);
-                    _currentRace.Add(index);
-                    if (listBox1.Items.Count == 6)
-                    {
-                        label1.Content = "Waiting for race completion...";
-                        _timer.getNextRace();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Cannot enter more than 6 racers into this race", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                listBox1.Items.Add(DataManager.Racers[index].Car.Name);
+            } //error handling
+            else if (result == RaceManager.MakeNextReturn.CallBackUsed)
+            {
+                MessageBox.Show("Racer " + DataManager.Racers[index].Car.Name + " has allready been entered into this race", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else
+            else if (result == RaceManager.MakeNextReturn.RaceFull)
             {
-                MessageBox.Show("Racer " + _racers[index].Car.Name + " has allready been entered into this race", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Cannot enter more than 6 racers into this race", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void addEmpty()
+        {
+            RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_EmptyLane();
+
+            if (result == RaceManager.MakeNextReturn.Added)
+            {
+                listBox1.Items.Add("Empty");
+            } //error handling
+            else if (result == RaceManager.MakeNextReturn.RaceFull)
+            {
+                MessageBox.Show("Cannot enter more than 6 racers into this race", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -184,37 +141,20 @@ namespace Timer
         {
             if (barcode == "reset")
             {
-                clearRacers();
+                DataManager.RaceManager.forgetRace();
             }
             else if (barcode == "mask")
             {
-                if(_currentRace.Count < 6)
-                {
-                    _timer.maskOffLane(_currentRace.Count + 1);
-                    listBox1.Items.Add("Empty");
-                    _currentRace.Add(-2);
-                    if (listBox1.Items.Count == 6)
-                    {
-                        label1.Content = "Waiting for race completion...";
-                        _timer.getNextRace();
-                    }
-                }
+                addEmpty();
             }
             else
             {
+                //try a car barcode
                 bool found = false;
-
-                //for (int i = 1; i < 7 && !found; i++) {
-                //    if(barcode == "mask" + i)
-                //    {
-                //        found = true;
-                //        _timer.maskOffLane(i);
-                //    }
-                //}
-
-                for (int i = 0; i < _racers.Count && !found; i++)
+                
+                for (int i = 0; i < DataManager.Racers.Count && !found; i++)
                 {
-                    if(_racers[i].Barcode == barcode)
+                    if(DataManager.Racers[i].Barcode == barcode)
                     {
                         found = true;
                         addRacer(i);
@@ -268,7 +208,7 @@ namespace Timer
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             listBox2.Items.Clear();
-            foreach (Time time in _racers[listBox.SelectedIndex].Times)
+            foreach (Time time in DataManager.Racers[listBox.SelectedIndex].Times)
             {
                 listBox2.Items.Add(time.Speed + "s, Lane: " + time.Lane + ", Place: " + time.Place);
             }
