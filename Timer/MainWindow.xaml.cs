@@ -115,11 +115,11 @@ namespace Timer
             } //error handling
             else if (result == RaceManager.MakeNextReturn.CallBackUsed)
             {
-                MessageBox.Show("Racer " + DataManager.Racers[index].Car.Name + " has allready been entered into this race", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                DataManager.MessageProvider.showMessage("Duplicate Racer", DataManager.Racers[index].Car.Name + " has allready been entered into this race");
             }
             else if (result == RaceManager.MakeNextReturn.RaceFull)
             {
-                MessageBox.Show("Cannot enter more than 6 racers into this race", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
             }
         }
 
@@ -133,7 +133,7 @@ namespace Timer
             } //error handling
             else if (result == RaceManager.MakeNextReturn.RaceFull)
             {
-                MessageBox.Show("Cannot enter more than 6 racers into this race", "Main Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
             }
         }
 
@@ -142,6 +142,7 @@ namespace Timer
             if (barcode == "reset")
             {
                 DataManager.RaceManager.forgetRace();
+                RaceManager_onReadyForNextRace();
             }
             else if (barcode == "mask")
             {
@@ -163,7 +164,7 @@ namespace Timer
 
                 if (!found)
                 {
-                    MessageBox.Show("The command code [" + barcode + "] does not belong to a command", "Main Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    DataManager.MessageProvider.showError("Invalid Command", "[" + barcode + "] is not a valid command");
                 }
             }
         }

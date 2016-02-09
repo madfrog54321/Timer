@@ -19,8 +19,6 @@ namespace Timer
         private const string GET_NEXT_RACE = "rg";
         private const string MESSAGE_END = "\r";
         private const string RETURN_END = "\r\n";
-        private const int NUM_TRACKS = 6;
-        private const string ERROR_HEADER = "Track Error";
         private const string MASK_LANE = "om";
         private const int DECIMAL_PLACES = 3;
 
@@ -62,7 +60,7 @@ namespace Timer
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ERROR_HEADER);
+                DataManager.MessageProvider.showError("Could not connect to track timer", ex.Message);
             }
         }
 
@@ -74,18 +72,29 @@ namespace Timer
             if (endIndex != -1)
             {
                 processData(_currentResponse.Substring(0, endIndex));
-                _currentResponse = _currentResponse.Substring(endIndex + RETURN_END.Length + 1);
+                _currentResponse = _currentResponse.Substring(endIndex + RETURN_END.Length);
             }
 
-            if(_currentResponse.Length > 50)
+            if(_currentResponse.Length > 100)
             {
-                MessageBox.Show("The responce buffer [size: 50 chars] has been filled without finding a valid response");
+                DataManager.MessageProvider.showError("Invalid responce from track timer", "The responce buffer [size: 100 chars] has been filled without finding a valid response " + _currentResponse.Length);
+                _currentResponse = "";//disgard responces
+                _waitingForRace = false;//ready for new responce
             }
+        }
+
+        public void stopWaitingForRace()
+        {
+            _waitingForRace = false;
         }
 
         private void processData(string value)
         {
-            if (_waitingForRace)
+            if (value == "?")
+            {
+                DataManager.MessageProvider.showError("Track responded with \"?\"", "The track timer did not understand the command, or the command was invalid");
+            }
+            else if (_waitingForRace)
             {
                 value = value.Replace("  ", "0 ");
                 if (value[value.Length - 1] == ' ')
@@ -93,65 +102,57 @@ namespace Timer
                     value = value.Substring(0, value.Length - 1) + '0';
                 }
                 string[] splitValue = value.Split(' ');
-                if (splitValue.Length == NUM_TRACKS)
+                //form of: 1=9.9992
+                List<Time> times = new List<Time>();
+                bool success = true;
+                for(int i = 0; i < splitValue.Length && success; i++)
                 {
-                    //form of: 1=9.9992
-                    List<Time> times = new List<Time>();
-                    bool success = true;
-                    for(int i = 0; i < splitValue.Length && success; i++)
+                    if (splitValue[i].Length == 5 + DECIMAL_PLACES)
                     {
-                        if (splitValue[i].Length == 5 + DECIMAL_PLACES)
+                        //get the lane number
+                        char laneC = splitValue[i][0];
+                        int lane = 0;
+                        if (int.TryParse(laneC.ToString(), out lane))
                         {
-                            //get the lane number
-                            char laneC = splitValue[i][0];
-                            int lane = 0;
-                            if (int.TryParse(laneC.ToString(), out lane))
+                            //get the time on that lane
+                            string timeS = splitValue[i].Substring(2, splitValue[i].Length - 3);
+                            float time = 0;
+                            if(float.TryParse(timeS, out time))
                             {
-                                //get the time on that lane
-                                string timeS = splitValue[i].Substring(2, splitValue[i].Length - 3);
-                                float time = 0;
-                                if(float.TryParse(timeS, out time))
+                                //get what place it came in at
+                                char placeC = splitValue[i][splitValue[i].Length - 1];
+                                int place = 0;
+                                if (int.TryParse(placeC.ToString(), out place))
                                 {
-                                    //get what place it came in at
-                                    char placeC = splitValue[i][splitValue[i].Length - 1];
-                                    int place = 0;
-                                    if (int.TryParse(placeC.ToString(), out place))
-                                    {
-                                        //add this lanes time
-                                        times.Add(new Time(lane, time, place));
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("Failed to convert: " + placeC + " to a int", ERROR_HEADER, MessageBoxButton.OK, MessageBoxImage.Error);
-                                        success = false;
-                                    }
+                                    //add this lanes time
+                                    times.Add(new Time(lane, time, place));
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Failed to convert " + timeS + " to a float", ERROR_HEADER, MessageBoxButton.OK, MessageBoxImage.Error);
+                                    DataManager.MessageProvider.showError("Failed to read timer", "Failed to convert [" + placeC + "] to a int");
                                     success = false;
                                 }
                             }
                             else
                             {
-                                MessageBox.Show("Failed to convert: " + laneC + " to a int", ERROR_HEADER, MessageBoxButton.OK, MessageBoxImage.Error);
+                                DataManager.MessageProvider.showError("Failed to read timer", "Failed to convert [" + timeS + "] to a float");
                                 success = false;
                             }
                         }
                         else
                         {
-
-                            MessageBox.Show("The time code was not " + (5 + DECIMAL_PLACES).ToString() + " chars long, it was " + splitValue[i].Length, ERROR_HEADER, MessageBoxButton.OK, MessageBoxImage.Error);
+                            DataManager.MessageProvider.showError("Failed to read timer", "Failed to convert [" + laneC + "] to a int");
                             success = false;
                         }
                     }
-                    _waitingForRace = false;
-                    triggerGotRace(success, new Race(times.ToArray()));
+                    else
+                    {
+                        DataManager.MessageProvider.showError("Failed to read timer", "The time code was not " + (5 + DECIMAL_PLACES).ToString() + " chars long. It was " + splitValue[i].Length + " chars");
+                        success = false;
+                    }
                 }
-                else
-                {
-                    MessageBox.Show(splitValue.Length + " lanes were return instead of the expected " + NUM_TRACKS, ERROR_HEADER);
-                }
+                _waitingForRace = false;
+                triggerGotRace(success, new Race(times.ToArray()));
             }
         }
 
@@ -176,7 +177,7 @@ namespace Timer
 
         public void reset()
         {
-            //this is not writen
+
         }
     }
 }

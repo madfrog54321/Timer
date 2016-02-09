@@ -58,7 +58,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BasicMessageProvider.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="MessageProvider.cs" />
     <Compile Include="Race.cs" />
     <Compile Include="RaceManager.cs" />
     <Compile Include="Time.cs" />

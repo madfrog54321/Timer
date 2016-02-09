@@ -76,17 +76,24 @@ namespace Timer
                 }
                 else
                 {
-                    //use error handeler
+                    DataManager.MessageProvider.showError("Error mapping times", "The Track Timer returned more lanes than the Race Manager was told about");
                 }
             }
             else
             {
-                //use error handeler
+                DataManager.MessageProvider.showError("Error getting times", "The Track Timer failed to get the times");
             }
+        }
+
+        public int NumberOfLanes
+        {
+            get { return _numLanes; }
         }
 
         public void forgetRace()
         {
+            DataManager.TrackTimer.stopWaitingForRace();
+            DataManager.TrackTimer.reset();
             DataManager.TrackTimer.resetMask();//clear mask on phisical timer
             _raceCallBack.Clear();
         }
@@ -114,13 +121,11 @@ namespace Timer
                 }
                 else
                 {
-                    //use error handeler
                     return MakeNextReturn.RaceFull;
                 }
             }
             else
             {
-                //use error handeler
                 return MakeNextReturn.CallBackUsed;
             }
         }
@@ -140,7 +145,6 @@ namespace Timer
             }
             else
             {
-                //use error handeler
                 return MakeNextReturn.RaceFull;
             }
         }
