@@ -168,9 +168,43 @@ namespace Timer
         private void updateRacerList()
         {
             listBox.Items.Clear();
+            stack.Children.Clear();
             foreach (Racer racer in DataManager.Competition.Racers)
             {
                 listBox.Items.Add(racer.Car.Name + ", " + racer.Maker.Name + ", " + racer.Barcode);
+                
+                Image image = new Image();
+                Uri uri = new Uri(new Uri(System.Reflection.Assembly.GetExecutingAssembly().Location), racer.Car.ImageUri);
+                try
+                {
+                    image.Source = new BitmapImage(uri);
+                }
+                catch (Exception ex)
+                {
+                    DataManager.MessageProvider.showError("Image Not Found", ex.Message);
+                }
+                image.Width = 50;
+                image.Height = 50;
+                
+                Image image2 = new Image();
+                Uri uri2 = new Uri(new Uri(System.Reflection.Assembly.GetExecutingAssembly().Location), racer.Maker.ImageUri);
+                try
+                {
+                    image2.Source = new BitmapImage(uri2);
+                }
+                catch(Exception ex)
+                {
+                    DataManager.MessageProvider.showError("Image Not Found", ex.Message);
+                }
+                image2.Width = 50;
+                image2.Height = 50;
+
+                StackPanel panel = new StackPanel();
+                panel.Orientation = Orientation.Horizontal;
+                panel.Children.Add(image);
+                panel.Children.Add(image2);
+
+                stack.Children.Add(panel);
             }
         }
 
@@ -239,7 +273,7 @@ namespace Timer
                 {
                     if (tbBarcode.Text != string.Empty)
                     {
-                        DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, tbMakerName.Text, tbBarcode.Text));
+                        DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, DataManager.Settings.DefaltCarImageUri, tbMakerName.Text, DataManager.Settings.DefaltMakerImageUri, tbBarcode.Text));
                         tbCarName.Clear();
                         tbMakerName.Clear();
                         tbBarcode.Clear();
@@ -283,6 +317,12 @@ namespace Timer
             {
                 Keyboard.Focus(tbMakerName);
             }
+        }
+
+        private void btnRemoveCar_Click(object sender, RoutedEventArgs e)
+        {
+            DataManager.Competition.Racers.RemoveAt(listBox.SelectedIndex);
+            updateRacerList();
         }
     }
 }

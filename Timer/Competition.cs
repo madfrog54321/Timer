@@ -6,7 +6,7 @@ namespace Timer
 {
     class Competition
     {
-        private List<Racer> _racers = new List<Racer>();
+        private List<Racer> _racers;
         public List<Racer> Racers
         {
             get { return _racers; }
@@ -15,8 +15,7 @@ namespace Timer
 
         public Competition()
         {
-            //_racers = new List<Racer>();
-            //_racers.Add(new Racer("car", "maker", "barcode"));
+            _racers = new List<Racer>();
         }
 
         private const string DEFAULT_FILENAME = "competition.jsn";
@@ -28,15 +27,14 @@ namespace Timer
 
         public static Competition Load(string fileName = DEFAULT_FILENAME)
         {
-            Competition t = new Competition();
-            JavaScriptSerializer java = new JavaScriptSerializer();
+            Competition t;
             if (File.Exists(fileName))
             {
-                t = java.Deserialize<Competition>(File.ReadAllText(fileName));
+                t = (new JavaScriptSerializer()).Deserialize<Competition>(File.ReadAllText(fileName));
             }
             else
             {
-                
+                t = new Competition();
             }
             return t;
         }

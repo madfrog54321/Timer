@@ -12,9 +12,25 @@ namespace Timer
             set { _numLanes = value; }
         }
 
+        private string _defaltCarImageUri;
+        public string DefaltCarImageUri
+        {
+            get { return _defaltCarImageUri; }
+            set { _defaltCarImageUri = value; }
+        }
+
+        private string _defaltMakerImageUri;
+        public string DefaltMakerImageUri
+        {
+            get { return _defaltMakerImageUri; }
+            set { _defaltMakerImageUri = value; }
+        }
+
         public Settings()
         {
             _numLanes = 6;
+            _defaltCarImageUri = "";
+            _defaltMakerImageUri = "";
         }
 
         private const string DEFAULT_FILENAME = "settings.jsn";

@@ -65,10 +65,10 @@ namespace Timer
             _barcode = barcode;
             _times = new List<Time>();
         }
-        public Racer(string carName, BitmapImage carImage, string makerName, BitmapImage makerImage, string barcode)
+        public Racer(string carName, string carImageUri, string makerName, string makerImageUri, string barcode)
         {
-            _car = new Car(carName, carImage);
-            _maker = new Maker(makerName, makerImage);
+            _car = new Car(carName, carImageUri);
+            _maker = new Maker(makerName, makerImageUri);
             _barcode = barcode;
             _times = new List<Time>();
         }

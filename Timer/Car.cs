@@ -15,27 +15,27 @@ namespace Timer
             set { _name = value; }
         }
 
-        private BitmapImage _image;
-        public BitmapImage Image
+        private string _imageUri;
+        public string ImageUri
         {
-            get { return _image; }
-            set { _image = value; }
+            get { return _imageUri; }
+            set { _imageUri = value; }
         }
 
         public Car()
         {
             _name = string.Empty;
-            _image = null;
+            _imageUri = string.Empty;
         }
         public Car(string name)
         {
             _name = name;
-            _image = null;
+            _imageUri = string.Empty;
         }
-        public Car(string name, BitmapImage image)
+        public Car(string name, string imageUri)
         {
             _name = name;
-            _image = image;
+            _imageUri = imageUri;
         }
     }
 }

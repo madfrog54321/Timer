@@ -32,7 +32,7 @@
         <Button x:Name="btnLockKeyboard" Content="Lock" Margin="0,13,10,0" VerticalAlignment="Top" Height="23" Click="btnLockKeyboard_Click" HorizontalAlignment="Right" Width="55"/>
         <ListBox x:Name="listBox1" Height="156" Margin="279,72,10,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="Label" HorizontalAlignment="Left" Margin="279,41,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.079,0.692"/>
-        <ListBox x:Name="listBox2" Margin="279,233,10,10"/>
+        <ListBox x:Name="listBox2" Margin="487,233,10,38"/>
         <Button x:Name="btnAddCar" Content="Add Car" HorizontalAlignment="Left" Margin="199,0,0,10" Width="75" Height="20" VerticalAlignment="Bottom" Click="btnAddCar_Click"/>
         <TextBox x:Name="tbCarName" HorizontalAlignment="Left" Margin="10,0,0,151" TextWrapping="Wrap" Width="264" Height="23" VerticalAlignment="Bottom" KeyDown="tbCarName_KeyDown"/>
         <TextBox x:Name="tbMakerName" HorizontalAlignment="Left" Margin="10,0,0,92" TextWrapping="Wrap" Width="264" Height="23" VerticalAlignment="Bottom" KeyDown="tbMakerName_KeyDown"/>
@@ -40,6 +40,8 @@
         <Label Content="Car's Name" HorizontalAlignment="Left" Margin="10,0,0,174" Height="26" VerticalAlignment="Bottom"/>
         <Label Content="Car's Barcode" HorizontalAlignment="Left" Margin="10,0,0,61" Height="26" VerticalAlignment="Bottom"/>
         <Label Content="Maker's Name" HorizontalAlignment="Left" Margin="10,0,0,120" Height="26" VerticalAlignment="Bottom"/>
+        <Button x:Name="btnRemoveCar" Content="Remove Car" Margin="0,0,10,10" Click="btnRemoveCar_Click" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
+        <StackPanel x:Name="stack" Margin="279,233,0,38" HorizontalAlignment="Left" Width="203" Orientation="Vertical"/>
 
     </Grid>
 </Window>
