@@ -39,14 +39,17 @@
     <StartupObject>Timer.DataManager</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AForge.Video">
+      <HintPath>AForgeLib\AForge.Video.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AForge.Video.DirectShow">
+      <HintPath>AForgeLib\AForge.Video.DirectShow.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -59,6 +62,7 @@
     <Compile Include="BasicMessageProvider.cs" />
     <Compile Include="Competition.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="DllLoader.cs" />
     <Compile Include="MessageProvider.cs" />
     <Compile Include="Race.cs" />
     <Compile Include="RaceManager.cs" />
@@ -107,6 +111,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AForgeLib\AForge.Video.xml" />
+    <EmbeddedResource Include="AForgeLib\AForge.Video.DirectShow.dll" />
+    <EmbeddedResource Include="AForgeLib\AForge.Video.dll" />
+    <None Include="AForgeLib\AForge.Video.DirectShow.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 
 namespace Timer
 {
@@ -72,6 +71,9 @@ namespace Timer
             //open settings
             _settings = Settings.Load();
             _competition = Competition.Load();
+
+            //get embbedded dlls
+            DllLoader.handleEmbeddedDlls();
 
             //start wpf application thread
             var application = new App();
