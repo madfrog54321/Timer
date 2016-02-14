@@ -1,0 +1,49 @@
+﻿<Window x:Class="Timer.CameraWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Timer"
+        Closing="Window_Closing"
+        mc:Ignorable="d"
+        Icon="Assets/CameraWindowIcon.png"
+        Title="Camera" Height="600" Width="600"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <!-- throw in some extra colour for our floating action button -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Green.Named.Primary.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <DockPanel>
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="cmbCameras" Grid.Column="0" Margin="8, 8, 8, 0" materialDesign:TextFieldAssist.Hint="Camera" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="cmbCameras_SelectionChanged"/>
+                <ComboBox x:Name="cmbResolutions" Grid.Column="1" Margin="8, 8, 8, 0" materialDesign:TextFieldAssist.Hint="Resolution" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="cmbResolutions_SelectionChanged"/>
+            </Grid>
+            <Image x:Name="frameImage" Margin="8,8,8,8"/>
+        </DockPanel>
+        <Button x:Name="btnTakePicture" Style="{StaticResource MaterialDesignFloatingActionDarkButton}" Margin="0,0,0,16" ToolTip="Take Picture" Width="56" Height="56" VerticalAlignment="Bottom" Click="btnTakePicture_Click">
+            <materialDesign:PackIcon Kind="CameraIris" Height="32" Width="32" />
+        </Button>
+    </Grid>
+</Window>

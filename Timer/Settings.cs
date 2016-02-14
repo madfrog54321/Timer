@@ -26,11 +26,19 @@ namespace Timer
             set { _defaltMakerImageUri = value; }
         }
 
+        private string _imageDirectory;
+        public string ImageDirectory
+        {
+            get { return _imageDirectory; }
+            set { _imageDirectory = value; }
+        }
+
         public Settings()
         {
             _numLanes = 6;
             _defaltCarImageUri = "";
             _defaltMakerImageUri = "";
+            _imageDirectory = "images";
         }
 
         private const string DEFAULT_FILENAME = "settings.jsn";

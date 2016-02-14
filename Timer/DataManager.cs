@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Reflection;
 
@@ -63,6 +64,21 @@ namespace Timer
             saveSettings();
         }
 
+        private static Uri getAssemblyUri()
+        {
+            return new Uri(Assembly.GetExecutingAssembly().Location);
+        }
+
+        public static string getAbsolutePath(string relativePath)
+        {
+            return getAbsoluteUri(relativePath).LocalPath;
+        }
+
+        public static Uri getAbsoluteUri(string relativePath)
+        {
+            return new Uri(getAssemblyUri(), relativePath);
+        }
+
         [STAThread]
         public static void Main()
         {
@@ -71,9 +87,6 @@ namespace Timer
             //open settings
             _settings = Settings.Load();
             _competition = Competition.Load();
-
-            //get embbedded dlls
-            DllLoader.handleEmbeddedDlls();
 
             //start wpf application thread
             var application = new App();

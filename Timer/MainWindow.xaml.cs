@@ -168,7 +168,7 @@ namespace Timer
                 listBox.Items.Add(racer.Car.Name + ", " + racer.Maker.Name + ", " + racer.Barcode);
                 
                 Image image = new Image();
-                Uri uri = new Uri(new Uri(System.Reflection.Assembly.GetExecutingAssembly().Location), racer.Car.ImageUri);
+                Uri uri = DataManager.getAbsoluteUri(racer.Car.ImageUri);
                 try
                 {
                     image.Source = new BitmapImage(uri);
@@ -181,7 +181,7 @@ namespace Timer
                 image.Height = 50;
                 
                 Image image2 = new Image();
-                Uri uri2 = new Uri(new Uri(System.Reflection.Assembly.GetExecutingAssembly().Location), racer.Maker.ImageUri);
+                Uri uri2 = DataManager.getAbsoluteUri(racer.Maker.ImageUri);
                 try
                 {
                     image2.Source = new BitmapImage(uri2);
