@@ -146,27 +146,7 @@ namespace Timer
 
         private void btnTakePicture_Click(object sender, RoutedEventArgs e)
         {
-            BitmapSource image = (BitmapSource)frameImage.Source;
-
-            string imageDirectory = DataManager.getAbsolutePath(DataManager.Settings.ImageDirectory);
-            if (!Directory.Exists(imageDirectory))
-            {
-                Directory.CreateDirectory(imageDirectory);
-            }
-
-            string uniqueFileName;
-            do
-            {
-                uniqueFileName = imageDirectory + "\\" + string.Format(@"{0}.png", Guid.NewGuid());
-            }
-            while (File.Exists(uniqueFileName));
-
-            using (var fileStream = new FileStream(uniqueFileName, FileMode.Create))
-            {
-                BitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(image));
-                encoder.Save(fileStream);
-            }
+            CropWindow.cropPicture(frameImage.Source);
         }
     }
 }

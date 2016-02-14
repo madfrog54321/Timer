@@ -81,6 +81,9 @@
       <DependentUpon>CameraWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Competition.cs" />
+    <Compile Include="CropWindow.xaml.cs">
+      <DependentUpon>CropWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataManager.cs" />
     <Compile Include="MessageProvider.cs" />
     <Compile Include="Race.cs" />
@@ -95,6 +98,10 @@
     <Compile Include="Time.cs" />
     <Compile Include="TrackTimer.cs" />
     <Page Include="CameraWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CropWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
