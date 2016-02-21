@@ -20,7 +20,7 @@ namespace Timer
     /// </summary>
     public partial class CropWindow : Window
     {
-        private CropWindow()
+        public CropWindow()
         {
             InitializeComponent();
 
@@ -48,8 +48,8 @@ namespace Timer
                 height = relativePoint.Y;
             }
 
-            width -= 12;
-            height -= 12;
+            width -= 15.5;
+            height -= 15.5;
 
             if (width < 0)
             {
@@ -80,8 +80,8 @@ namespace Timer
             }
 
 
-            width -= 12;
-            height -= 12;
+            width -= 15.5;
+            height -= 15.5;
 
 
             if (width < 0)
@@ -94,8 +94,8 @@ namespace Timer
                 height = 0;
             }
 
-            Crop.ColumnDefinitions[6].Width = new GridLength(width);
-            Crop.RowDefinitions[6].Height = new GridLength(height);
+            Crop.ColumnDefinitions[13].Width = new GridLength(width);
+            Crop.RowDefinitions[13].Height = new GridLength(height);
         }
 
         private enum MouseState
@@ -105,56 +105,63 @@ namespace Timer
 
         private MouseState _mouseState;
 
-        private void Crop_MouseMove(object sender, MouseEventArgs e)
-        {
-            if(e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (_mouseState == MouseState.TopLeft)
-                {
-                    setTopLeft(e.GetPosition(Crop).X, e.GetPosition(Crop).Y);
-                }
-                else if (_mouseState == MouseState.BottomRight)
-                {
-                    setBottomRight(Crop.ActualWidth - e.GetPosition(Crop).X, Crop.ActualHeight - e.GetPosition(Crop).Y);
-                }
-            }
-            else
-            {
-                _mouseState = MouseState.None;
-            }
-        }
-
         private void BottomRightGrip_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            _mouseState = MouseState.BottomRight;
+            startMouseDragState(MouseState.BottomRight);
         }
 
         private void TopLeftGrip_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            _mouseState = MouseState.TopLeft;
+            startMouseDragState(MouseState.TopLeft);
         }
 
-        private void Crop_MouseUp(object sender, MouseButtonEventArgs e)
+        private void startMouseDragState(MouseState newState)
         {
+            CaptureMouse();
+            TopLeftGrip.IsHitTestVisible = false;
+            BottomRightGrip.IsHitTestVisible = false;
+            Crop.IsHitTestVisible = false;
+            MainGrid.IsHitTestVisible = false;
+            btnTakePicture.IsHitTestVisible = false;
+
+            _mouseState = newState;
+        }
+
+        private void stopMouseDragState()
+        {
+            ReleaseMouseCapture();
+            TopLeftGrip.IsHitTestVisible = true;
+            BottomRightGrip.IsHitTestVisible = true;
+            Crop.IsHitTestVisible = true;
+            MainGrid.IsHitTestVisible = true;
+            btnTakePicture.IsHitTestVisible = true;
+
             _mouseState = MouseState.None;
         }
 
         private void frameImage_Loaded(object sender, RoutedEventArgs e)
         {
             setTopLeft(0, 0);
-            setBottomRight(Crop.ActualWidth, Crop.ActualHeight);
+            setBottomRight(0, 0);
         }
 
         private void btnTakePicture_Click(object sender, RoutedEventArgs e)
         {
-            BitmapSource rawImage = (BitmapSource)frameImage.Source;
+            Point topLeft_crop = getLocationOfCellOnCrop(3, 3);
+            Point bottomRight_crop = getLocationOfCellOnCrop(11, 11);
 
-            Point topLeftPoint = Crop.TransformToVisual(frameImage).Transform(new Point(Crop.ColumnDefinitions[0].Width.Value, Crop.RowDefinitions[0].Height.Value));
-            Point bottomRightPoint = Crop.TransformToVisual(frameImage).Transform(new Point(Crop.ColumnDefinitions[6].Width.Value, Crop.RowDefinitions[6].Height.Value));
-            bottomRightPoint.X = frameImage.ActualWidth - bottomRightPoint.X;
-            bottomRightPoint.Y = frameImage.ActualHeight - bottomRightPoint.Y;
+            Point topLeft_image = Crop.TransformToVisual(frameImage).Transform(topLeft_crop);
+            Point bottomRight_image = Crop.TransformToVisual(frameImage).Transform(bottomRight_crop);
 
-            CroppedBitmap image = new CroppedBitmap(rawImage, new Int32Rect((int)topLeftPoint.X, (int)topLeftPoint.Y, Math.Min((int)bottomRightPoint.X - (int)topLeftPoint.X, rawImage.PixelWidth), Math.Min((int)bottomRightPoint.Y - (int)topLeftPoint.Y, rawImage.PixelHeight)));
+            double maxWidth = frameImage.ActualWidth - Math.Max(topLeft_image.X, 0);
+            double maxHeight = frameImage.ActualHeight - Math.Max(topLeft_image.Y, 0);
+
+            int x = (int)Math.Max(topLeft_image.X, 0);
+            int y = (int)Math.Max(topLeft_image.Y, 0);
+            int width = (int)Math.Min(bottomRight_image.X - topLeft_image.X, maxWidth);
+            int height = (int)Math.Min(bottomRight_image.Y - topLeft_image.Y, maxHeight);
+
+            BitmapImage image = cropFromImageHolder(frameImage, new Int32Rect(x, y, width, height));
 
             string imageDirectory = DataManager.getAbsolutePath(DataManager.Settings.ImageDirectory);
             if (!Directory.Exists(imageDirectory))
@@ -177,6 +184,75 @@ namespace Timer
             }
 
             Close();
+        }
+
+        private BitmapImage cropFromImageHolder(Image imageHolder, Int32Rect crop)
+        {
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)imageHolder.ActualWidth, (int)imageHolder.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(imageHolder);
+
+            return sourceToImage(new CroppedBitmap(bitmap, crop));
+        }
+        
+        private BitmapImage sourceToImage(BitmapSource source)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                BitmapImage bImg = new BitmapImage();
+
+                encoder.Frames.Add(BitmapFrame.Create(source));
+                encoder.Save(memoryStream);
+
+                bImg.BeginInit();
+                bImg.StreamSource = new MemoryStream(memoryStream.ToArray());
+                bImg.EndInit();
+
+                bImg.Freeze();
+
+                return bImg;
+            }
+        }
+
+        private Point getLocationOfCellOnCrop(int column, int row)
+        {
+            Point point = new Point(0, 0);
+
+            for (int i = 0; i < column; i++)
+            {
+                point.X += Crop.ColumnDefinitions[i].ActualWidth;
+            }
+
+            for (int i = 0; i < row; i++)
+            {
+                point.Y += Crop.RowDefinitions[i].ActualHeight;
+            }
+
+            return point;
+        }
+
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (_mouseState == MouseState.TopLeft)
+                {
+                    setTopLeft(e.GetPosition(Crop).X, e.GetPosition(Crop).Y);
+                }
+                else if (_mouseState == MouseState.BottomRight)
+                {
+                    setBottomRight(Crop.ActualWidth - e.GetPosition(Crop).X, Crop.ActualHeight - e.GetPosition(Crop).Y);
+                }
+            }
+            else
+            {
+                stopMouseDragState();
+            }
+        }
+
+        private void Window_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            stopMouseDragState();
         }
     }
 }

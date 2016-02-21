@@ -113,20 +113,23 @@ namespace Timer
             }
         }
 
-        BitmapImage BitmapToImageSource(Bitmap bitmap)
+        ImageSource BitmapToImageSource(Bitmap bitmap)
         {
-            using (MemoryStream memory = new MemoryStream())
-            {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
-                memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
-                bitmapimage.BeginInit();
-                bitmapimage.StreamSource = memory;
-                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapimage.EndInit();
+            //using (MemoryStream memory = new MemoryStream())
+            //{
+            //    bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+            //    memory.Position = 0;
+            //    BitmapImage bitmapimage = new BitmapImage();
+            //    bitmapimage.BeginInit();
+            //    bitmapimage.StreamSource = memory;
+            //    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+            //    bitmapimage.EndInit();
 
-                return bitmapimage;
-            }
+            //    return bitmapimage;
+            //}
+
+            ImageSourceConverter c = new ImageSourceConverter();
+            return (ImageSource)c.ConvertFrom(bitmap);
         }
 
         private void cmbCameras_SelectionChanged(object sender, SelectionChangedEventArgs e)
