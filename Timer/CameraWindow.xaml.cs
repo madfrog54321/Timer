@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -96,40 +98,25 @@ namespace Timer
 
         private void _camera_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
         {
-            Bitmap frame = (Bitmap)eventArgs.Frame.Clone();
-
-            setFrame(frame);
-        }
-
-        private void setFrame(Bitmap frame)
-        {
-            if (Dispatcher.CheckAccess())
+            using (System.Drawing.Image img = (Bitmap)eventArgs.Frame.Clone())//clone bitmap (stop threading error)
+            using (MemoryStream ms = new MemoryStream())
             {
-                frameImage.Source = BitmapToImageSource(frame);
+                //convert bitmap to bitmapimage
+                img.Save(ms, ImageFormat.Bmp);
+                ms.Seek(0, SeekOrigin.Begin);
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
+                bi.StreamSource = ms;
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.EndInit();
+
+                bi.Freeze();//allow GC to collect the image
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                {
+                    frameImage.Source = bi;
+                }));
             }
-            else
-            {
-                Dispatcher.BeginInvoke(new Action<Bitmap>(setFrame), new object[] { frame });
-            }
-        }
-
-        ImageSource BitmapToImageSource(Bitmap bitmap)
-        {
-            //using (MemoryStream memory = new MemoryStream())
-            //{
-            //    bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
-            //    memory.Position = 0;
-            //    BitmapImage bitmapimage = new BitmapImage();
-            //    bitmapimage.BeginInit();
-            //    bitmapimage.StreamSource = memory;
-            //    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-            //    bitmapimage.EndInit();
-
-            //    return bitmapimage;
-            //}
-
-            ImageSourceConverter c = new ImageSourceConverter();
-            return (ImageSource)c.ConvertFrom(bitmap);
+            GC.Collect();//clear any images in memory
         }
 
         private void cmbCameras_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -150,6 +137,11 @@ namespace Timer
         private void btnTakePicture_Click(object sender, RoutedEventArgs e)
         {
             CropWindow.cropPicture(frameImage.Source);
+        }
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            showCameras();
         }
     }
 }

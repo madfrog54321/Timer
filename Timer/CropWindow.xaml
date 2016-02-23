@@ -31,7 +31,7 @@
 
     <Grid x:Name="MainGrid" IsHitTestVisible="True">
         <Viewbox IsHitTestVisible="False" Stretch="Uniform" Margin="20,20,20,20" >
-            <Image x:Name="frameImage" IsHitTestVisible="False" Source="C:\Users\MadFrog\Pictures\2015-09-27.jpg" Stretch="None" Loaded="frameImage_Loaded"/>
+            <Image x:Name="frameImage" IsHitTestVisible="False" Stretch="None" Loaded="frameImage_Loaded"/>
         </Viewbox>
         <Grid IsHitTestVisible="True" x:Name="Crop">
             <Grid.ColumnDefinitions>

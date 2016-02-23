@@ -20,7 +20,7 @@ namespace Timer
     /// </summary>
     public partial class CropWindow : Window
     {
-        public CropWindow()
+        private CropWindow()
         {
             InitializeComponent();
 
@@ -37,32 +37,68 @@ namespace Timer
 
         private void setTopLeft(double width, double height)
         {
+            //stop the top left grip from extending past the image's top and left edge
             Point relativePoint = frameImage.TransformToVisual(Crop).Transform(new Point(0, 0));
             if (width < relativePoint.X)
             {
                 width = relativePoint.X;
             }
-
             if (height < relativePoint.Y)
             {
                 height = relativePoint.Y;
             }
 
+            //make space for border of crop tool
             width -= 15.5;
             height -= 15.5;
 
+            //check if new location will push the bottom right grip out of position
+            Size cropMinSize = getMinSizeOfAllOtherCells(0);
+            if (cropMinSize.Width + width > Crop.ActualWidth)
+            {
+                width = Crop.ActualWidth - cropMinSize.Width;
+            }
+            if (cropMinSize.Height + height > Crop.ActualHeight)
+            {
+                height = Crop.ActualHeight - cropMinSize.Height;
+            }
+
+            //check if the size has gone below 0, and if so set it to 0
             if (width < 0)
             {
                 width = 0;
             }
-
             if (height < 0)
             {
                 height = 0;
             }
 
+            //set the top left most cell's size to the new calculated size
             Crop.ColumnDefinitions[0].Width = new GridLength(width);
             Crop.RowDefinitions[0].Height = new GridLength(height);
+        }
+
+        private Size getMinSizeOfAllOtherCells(int exludedDiagnalCell) 
+        {
+            Size size = new Size(0, 0);
+
+            for(int i = 0; i < Crop.ColumnDefinitions.Count; i++)
+            {
+                if(i != exludedDiagnalCell)//dont add the exluded cell into the calculation
+                {
+                    if (Crop.ColumnDefinitions[i].Width.IsAbsolute)
+                    {
+                        size.Width += Crop.ColumnDefinitions[i].Width.Value;
+                    }
+
+                    if (Crop.RowDefinitions[i].Height.IsAbsolute)
+                    {
+                        size.Height += Crop.RowDefinitions[i].Height.Value;
+                    }
+                }
+            }
+
+            return size;
         }
 
         private void setBottomRight(double width, double height)
