@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Timer"
         Closing="Window_Closing"
         mc:Ignorable="d"
-        Icon="Assets/CameraWindowIcon.png"
+        Icon="../../../Assets/Images/CameraWindowIcon.png"
         Title="Camera" Height="600" Width="600"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"

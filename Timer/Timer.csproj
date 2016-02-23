@@ -41,25 +41,21 @@
     <StartupObject>Timer.DataManager</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AForge.Video">
-      <HintPath>AForgeLib\AForge.Video.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libraries\AForge\AForge.Video.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video.DirectShow">
-      <HintPath>AForgeLib\AForge.Video.DirectShow.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libraries\AForge\AForge.Video.DirectShow.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>MaterialDesign\MaterialDesignColors.dll</HintPath>
-      <Private>True</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>Libraries\MaterialDesign\MaterialDesignColors.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=1.4.1.485, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>MaterialDesign\MaterialDesignThemes.Wpf.dll</HintPath>
-      <Private>True</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>Libraries\MaterialDesign\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -72,65 +68,61 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="Code\Internal\Heart\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BasicMessageProvider.cs" />
-    <Compile Include="CameraWindow.xaml.cs">
+    <Compile Include="Code\GUI\Windows\BasicMessageProvider.cs" />
+    <Compile Include="Code\GUI\Windows\CameraWindow.xaml.cs">
       <DependentUpon>CameraWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Competition.cs" />
-    <Compile Include="CropWindow.xaml.cs">
+    <Compile Include="Code\Internal\InformationHolders\Competition.cs" />
+    <Compile Include="Code\GUI\Windows\CropWindow.xaml.cs">
       <DependentUpon>CropWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataManager.cs" />
-    <Compile Include="MessageProvider.cs" />
-    <Compile Include="Race.cs" />
-    <Compile Include="RaceManager.cs" />
-    <Compile Include="RacerDetails.xaml.cs">
+    <Compile Include="Code\Internal\Heart\DataManager.cs" />
+    <Compile Include="Code\GUI\Controls\MessageProvider.cs" />
+    <Compile Include="Code\Internal\InformationHolders\Race.cs" />
+    <Compile Include="Code\Internal\InformationHolders\RaceManager.cs" />
+    <Compile Include="Code\GUI\Controls\RacerDetails.xaml.cs">
       <DependentUpon>RacerDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
-    <Compile Include="test.xaml.cs">
+    <Compile Include="Code\Internal\InformationHolders\Settings.cs" />
+    <Compile Include="Code\GUI\Windows\test.xaml.cs">
       <DependentUpon>test.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Time.cs" />
-    <Compile Include="TrackTimer.cs" />
-    <Page Include="CameraWindow.xaml">
+    <Compile Include="Code\Internal\InformationHolders\Time.cs" />
+    <Compile Include="Code\Internal\Communications\TrackTimer.cs" />
+    <Page Include="Code\GUI\Windows\CameraWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CropWindow.xaml">
+    <Page Include="Code\GUI\Windows\CropWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Code\GUI\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="Code\Internal\Heart\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Car.cs" />
-    <Compile Include="Maker.cs" />
-    <Compile Include="Racer.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Code\Internal\InformationHolders\Car.cs" />
+    <Compile Include="Code\Internal\InformationHolders\Maker.cs" />
+    <Compile Include="Code\Internal\InformationHolders\Racer.cs" />
+    <Compile Include="Code\GUI\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RacerDetails.xaml">
+    <Page Include="Code\GUI\Controls\RacerDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="test.xaml">
+    <Page Include="Code\GUI\Windows\test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -149,24 +141,25 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Code\Internal\Heart\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AForgeLib\AForge.Video.xml" />
-    <None Include="AForgeLib\AForge.Video.DirectShow.dll" />
-    <None Include="AForgeLib\AForge.Video.dll" />
-    <None Include="AForgeLib\AForge.Video.DirectShow.xml" />
+    <None Include="Libraries\AForge\AForge.Video.xml" />
+    <None Include="Libraries\AForge\AForge.Video.DirectShow.dll" />
+    <None Include="Libraries\AForge\AForge.Video.dll" />
+    <None Include="Libraries\AForge\AForge.Video.DirectShow.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="IMG_7143.JPG" />
+    <Resource Include="Assets\Images\IMG_7143.JPG" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MaterialDesign\MaterialDesignColors.dll" />
-    <None Include="MaterialDesign\MaterialDesignThemes.Wpf.dll" />
+    <None Include="Libraries\MaterialDesign\MaterialDesignColors.dll" />
+    <None Include="Libraries\MaterialDesign\MaterialDesignThemes.Wpf.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\CameraWindowIcon.png" />
+    <Resource Include="Assets\Images\CameraWindowIcon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
