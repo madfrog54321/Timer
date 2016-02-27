@@ -1,0 +1,330 @@
+﻿<Window x:Class="Timer.test"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Timer"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d" 
+        Title="Timer" Height="600" Width="600"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+
+    <Window.Resources>
+        <Style TargetType="CheckBox" x:Key="CircleCheckbox">
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Content" Value=""></Setter>
+            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Grid>
+                            <Ellipse Fill="#00000000"/>
+                            <Ellipse x:Name="highLight" Fill="#80222222" Width="0" Height="0"/>
+                            <ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsChecked" Value="True" >
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard TargetName="highLight">
+                                            <DoubleAnimation From="0" To="32" Duration="0:0:0.1" Storyboard.TargetProperty="Width">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation From="0" To="32" Duration="0:0:0.1" Storyboard.TargetProperty="Height">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard TargetName="highLight">
+                                            <DoubleAnimation From="32" To="0" Duration="0:0:0.1" Storyboard.TargetProperty="Width">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseIn"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation From="32" To="0" Duration="0:0:0.1" Storyboard.TargetProperty="Height">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseIn"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox" x:Key="CircleCheckbox2">
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Content" Value=""></Setter>
+            <Setter Property="Opacity" Value="1"></Setter>
+            <Setter Property="Foreground" Value="#888888"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Grid>
+                            <Ellipse Fill="#00000000"/>
+                            <Ellipse x:Name="highLight" Fill="#80222222" Width="0" Height="0"/>
+                            <ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsChecked" Value="True" >
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames FillBehavior="HoldEnd" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0:0:0" Value="#888888" />
+                                                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#eeeeee" />
+                                            </ColorAnimationUsingKeyFrames>
+                                            <DoubleAnimation  Storyboard.TargetName="highLight" From="0" To="32" Duration="0:0:0.1" Storyboard.TargetProperty="Width">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation  Storyboard.TargetName="highLight" From="0" To="32" Duration="0:0:0.1" Storyboard.TargetProperty="Height">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames FillBehavior="HoldEnd" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0:0:0" Value="#eeeeee" />
+                                                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#888888" />
+                                            </ColorAnimationUsingKeyFrames>
+                                            <DoubleAnimation  Storyboard.TargetName="highLight" From="32" To="0" Duration="0:0:0.1" Storyboard.TargetProperty="Width">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseIn"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation  Storyboard.TargetName="highLight" From="32" To="0" Duration="0:0:0.1" Storyboard.TargetProperty="Height">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseIn"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="RadioButton" x:Key="CircleRadioButton">
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Content" Value=""></Setter>
+            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Grid>
+                            <Ellipse Fill="#00000000"/>
+                            <Ellipse x:Name="highLight" Fill="#80222222" Width="0" Height="0"/>
+                            <ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsChecked" Value="True" >
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard TargetName="highLight">
+                                            <DoubleAnimation From="0" To="32" Duration="0:0:0.1" Storyboard.TargetProperty="Width">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation From="0" To="32" Duration="0:0:0.1" Storyboard.TargetProperty="Height">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard TargetName="highLight">
+                                            <DoubleAnimation From="32" To="0" Duration="0:0:0.1" Storyboard.TargetProperty="Width">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseIn"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation From="32" To="0" Duration="0:0:0.1" Storyboard.TargetProperty="Height">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseIn"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid x:Name="MainGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="8">
+                <ScrollViewer>
+                    <StackPanel>
+
+                        <StackPanel>
+
+                            <materialDesign:ColorZone Visibility="Collapsed" Mode="Light">
+                                <Grid Grid.Column="2" Grid.Row="2" Margin="8, 8, 0, 0" VerticalAlignment="Stretch">
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionButton}" materialDesign:ShadowAssist.ShadowDepth="Depth0" Margin="0,0,0,0" BorderBrush="Transparent" Background="Transparent" ToolTip="Add New Racer" Width="56" Height="56" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                        <Image Source="../../../Assets/Images/IMG_7143.JPG" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-1"/>
+                                    </Button>
+                                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="68, 16, 16, 16">
+                                        <TextBlock TextAlignment="Left" Margin="0, 0, 0, 0" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold">
+                                            Woodie
+                                        </TextBlock>
+                                        <TextBlock TextAlignment="Left" Margin="0, 4, 0, 0" VerticalAlignment="Center" FontSize="16">
+                                            Konnor Andrews
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </materialDesign:ColorZone>
+
+                        </StackPanel>
+
+                        <WrapPanel x:Name="listHolder" HorizontalAlignment="Center" Margin="0, 0, 8, 8">
+
+                            
+
+                        </WrapPanel>
+
+
+                    </StackPanel>
+                </ScrollViewer>
+
+
+                <Button x:Name="btnCreateRacer" Click="btnCreateRacer_Click" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Margin="0,0,32,16" ToolTip="Add New Racer" Width="48" Height="48" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                    <materialDesign:PackIcon Kind="Plus" Height="32" Width="32" Foreground="#eeeeee"/>
+                </Button>
+            </Grid>
+
+
+
+
+            <materialDesign:ColorZone Grid.Row="4" Grid.ColumnSpan="8" Mode="PrimaryDark" Padding="8" materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                <Grid materialDesign:RippleAssist.IsCentered="True">
+                    <materialDesign:ColorZone VerticalAlignment="Center" Mode="Light" Padding="4 4 4 4" HorizontalAlignment="Left" CornerRadius="2" Panel.ZIndex="1"
+                                   Margin="0,0,50,0" MaxWidth="500" MinWidth="300"
+                                   materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Margin="8 0 0 0" materialDesign:TextFieldAssist.Hint="Enter Barcode" 
+                                     materialDesign:TextFieldAssist.DecorationVisibility="Collapsed" BorderThickness="0"
+                                     MinWidth="200" VerticalAlignment="Center" />
+                            <CheckBox Style="{DynamicResource CircleCheckbox2}" Width="32" Height="32" Grid.Column="1">
+                                <materialDesign:PackIcon Kind="LockOpen" Margin="0 0 0 0" Width="24" Height="24" />
+                            </CheckBox>
+                        </Grid>
+                    </materialDesign:ColorZone>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="auto">
+                        <CheckBox Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8">
+                            <materialDesign:PackIcon Kind="ArrowDown" Width="24" Height="24"  HorizontalAlignment="Center" />
+                        </CheckBox>
+                        <Border BorderThickness="0, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignBody}" Margin="0 8 0 8" Width="1" HorizontalAlignment="Right"/>
+                        <RadioButton HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="8, 8, 8, 8" Panel.ZIndex="2" Width="32">
+                            <materialDesign:PackIcon Kind="ViewHeadline" Width="24" Height="24" />
+                        </RadioButton>
+                        <RadioButton IsChecked="True" HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="0, 8, 8, 8" Panel.ZIndex="2" Width="32">
+                            <materialDesign:PackIcon Kind="ViewModule" Width="24" Height="24" />
+                        </RadioButton>
+                        <Border BorderThickness="0, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignBody}" Margin="0 8 0 8" Width="1" HorizontalAlignment="Right"/>
+                        <Button HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" Click="button_Click">
+                            <materialDesign:PackIcon Kind="Settings" Width="24" Height="24" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:ColorZone>
+
+
+            <Label Background="{DynamicResource MaterialDesignPaper}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="8" Grid.RowSpan="4"/>
+
+
+            <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" BorderThickness="1, 0, 0.5, 0" BorderBrush="{DynamicResource MaterialDesignDivider}" Margin="0, 16, 0, 8"/>
+            <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" BorderThickness="0.5, 0, 0.5, 0" BorderBrush="{DynamicResource MaterialDesignDivider}" Margin="0, 16, 0, 8"/>
+            <Border Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" BorderThickness="0.5, 0, 0.5, 0" BorderBrush="{DynamicResource MaterialDesignDivider}" Margin="0, 16, 0, 8"/>
+            <Border Grid.Column="4" Grid.Row="1" Grid.RowSpan="2" BorderThickness="0.5, 0, 0.5, 0" BorderBrush="{DynamicResource MaterialDesignDivider}" Margin="0, 16, 0, 8"/>
+            <Border Grid.Column="5" Grid.Row="1" Grid.RowSpan="2" BorderThickness="0.5, 0, 0.5, 0" BorderBrush="{DynamicResource MaterialDesignDivider}" Margin="0, 16, 0, 8"/>
+            <Border Grid.Column="6" Grid.Row="1" Grid.RowSpan="2" BorderThickness="0.5, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignDivider}" Margin="0, 16, 0, 8"/>
+
+            <Label Grid.Column="1" Grid.Row="1" Content="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+            <Label Grid.Column="2" Grid.Row="1" Content="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+            <Label Grid.Column="3" Grid.Row="1" Content="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+            <Label Grid.Column="4" Grid.Row="1" Content="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+            <Label Grid.Column="5" Grid.Row="1" Content="5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+            <Label Grid.Column="6" Grid.Row="1" Content="6" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+
+            <Grid x:Name="RaceList" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="Overlay" Background="Black" Opacity="0.7" Visibility="Collapsed" MouseUp="Overlay_MouseUp">
+
+        </Grid>
+        <Grid x:Name="Drawer" Background="#FFFAFAFA" Margin="0 ,0, -415,0" HorizontalAlignment="Right" Width="400"/>
+
+        <Grid x:Name="HostGrid">
+            
+        </Grid>
+    </Grid>
+</Window>

@@ -1,6 +1,6 @@
 ﻿namespace Timer
 {
-    class Maker
+    public class Maker
     {
         private string _name;
         public string Name

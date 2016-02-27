@@ -2,7 +2,7 @@
 
 namespace Timer
 {
-    class Racer
+    public class Racer
     {
         private Car _car;
         public Car Car

@@ -1,6 +1,6 @@
 ﻿namespace Timer
 {
-    class Time
+    public class Time
     {
         private float _speed;
         public float Speed

@@ -79,6 +79,26 @@ namespace Timer
             return new Uri(getAssemblyUri(), relativePath);
         }
 
+        public static Uri getRelativeUri(string absolutePath)
+        {
+            return getAssemblyUri().MakeRelativeUri(new Uri(absolutePath));
+        }
+
+        public static Uri getRelativeUri(Uri absoluteUri)
+        {
+            return getAssemblyUri().MakeRelativeUri(absoluteUri);
+        }
+
+        public static string getRelativePath(string absolutePath)
+        {
+            return getRelativeUri(absolutePath).ToString();
+        }
+
+        public static string getRelativePath(Uri absoluteUri)
+        {
+            return getRelativeUri(absoluteUri).ToString();
+        }
+
         [STAThread]
         public static void Main()
         {

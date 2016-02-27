@@ -28,10 +28,22 @@ namespace Timer
 
         }
 
-        static public void cropPicture(ImageSource picture)
+        public delegate void savedImageHandler(Uri file);
+        public event savedImageHandler onSavedImage;
+        private void triggerSavedImage(Uri file)
+        {
+            savedImageHandler handler = onSavedImage;
+            if (handler != null)
+            {
+                handler(file);
+            }
+        }
+
+        static public void cropPicture(ImageSource picture, savedImageHandler handler)
         {
             CropWindow cropTool = new CropWindow();
             cropTool.frameImage.Source = picture;
+            cropTool.onSavedImage += handler;
             cropTool.ShowDialog();
         }
 
@@ -218,6 +230,8 @@ namespace Timer
                 encoder.Frames.Add(BitmapFrame.Create(image));
                 encoder.Save(fileStream);
             }
+
+            triggerSavedImage(DataManager.getAbsoluteUri(uniqueFileName));//tell caller image was created
 
             Close();
         }

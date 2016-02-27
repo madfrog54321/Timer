@@ -72,9 +72,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Code\GUI\Controls\DialogBox.xaml.cs">
+      <DependentUpon>DialogBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Code\GUI\Windows\BasicMessageProvider.cs" />
     <Compile Include="Code\GUI\Windows\CameraWindow.xaml.cs">
       <DependentUpon>CameraWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Code\GUI\Controls\CarTile.xaml.cs">
+      <DependentUpon>CarTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Code\Internal\InformationHolders\Competition.cs" />
     <Compile Include="Code\GUI\Windows\CropWindow.xaml.cs">
@@ -83,7 +89,7 @@
     <Compile Include="Code\Internal\Heart\DataManager.cs" />
     <Compile Include="Code\GUI\Controls\MessageProvider.cs" />
     <Compile Include="Code\Internal\InformationHolders\Race.cs" />
-    <Compile Include="Code\Internal\InformationHolders\RaceManager.cs" />
+    <Compile Include="Code\Internal\Heart\RaceManager.cs" />
     <Compile Include="Code\GUI\Controls\RacerDetails.xaml.cs">
       <DependentUpon>RacerDetails.xaml</DependentUpon>
     </Compile>
@@ -93,7 +99,15 @@
     </Compile>
     <Compile Include="Code\Internal\InformationHolders\Time.cs" />
     <Compile Include="Code\Internal\Communications\TrackTimer.cs" />
+    <Page Include="Code\GUI\Controls\DialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Code\GUI\Windows\CameraWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Code\GUI\Controls\CarTile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -159,7 +173,15 @@
   <ItemGroup>
     <Resource Include="Assets\Images\CameraWindowIcon.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\Images\Jet-New-Design-2-300-web.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Images\DefaltCarPicture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Images\DefaltCreatorImage.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

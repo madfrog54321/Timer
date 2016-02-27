@@ -38,8 +38,8 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btnRefresh" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingActionDarkButton}" materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="8,8,0,0" ToolTip="Save Picture" Width="32" Height="32" Click="btnRefresh_Click">
-                    <materialDesign:PackIcon Kind="Refresh" Height="24" Width="24" />
+                <Button Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="0" Margin="8,8,0,0" ToolTip="Save Picture" Width="32" Height="32" Click="btnRefresh_Click">
+                    <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
                 </Button>
                 <ComboBox x:Name="cmbCameras" Grid.Column="1" Margin="8, 8, 8, 0" materialDesign:TextFieldAssist.Hint="Camera" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="cmbCameras_SelectionChanged"/>
                 <ComboBox x:Name="cmbResolutions" Grid.Column="2" Margin="8, 8, 8, 0" materialDesign:TextFieldAssist.Hint="Resolution" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="cmbResolutions_SelectionChanged"/>

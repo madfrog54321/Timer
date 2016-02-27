@@ -34,6 +34,17 @@ namespace Timer
             showCameras();
         }
 
+        public delegate void savedImageHandler(Uri file);
+        public event savedImageHandler onSavedImage;
+        private void triggerSavedImage(Uri file)
+        {
+            savedImageHandler handler = onSavedImage;
+            if (handler != null)
+            {
+                handler(file);
+            }
+        }
+
         private void showCameras()
         {
             _videoCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -136,7 +147,10 @@ namespace Timer
 
         private void btnTakePicture_Click(object sender, RoutedEventArgs e)
         {
-            CropWindow.cropPicture(frameImage.Source);
+            CropWindow.cropPicture(frameImage.Source, delegate (Uri file)
+            {
+                triggerSavedImage(file);
+            });
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)

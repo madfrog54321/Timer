@@ -36,8 +36,8 @@ namespace Timer
         public Settings()
         {
             _numLanes = 6;
-            _defaltCarImageUri = "";
-            _defaltMakerImageUri = "";
+            _defaltCarImageUri = "pack://application:,,,/Timer;component/Assets/Images/DefaltCarPicture.png";
+            _defaltMakerImageUri = "pack://application:,,,/Timer;component/Assets/Images/DefaltCreatorImage.png";
             _imageDirectory = "images";
         }
 

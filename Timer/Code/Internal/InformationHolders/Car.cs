@@ -1,6 +1,6 @@
 ﻿namespace Timer
 {
-    class Car
+    public class Car
     {
         private string _name;
         public string Name
