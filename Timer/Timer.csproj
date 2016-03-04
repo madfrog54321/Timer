@@ -72,9 +72,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Code\GUI\Controls\Dialog\Dialog.xaml.cs">
+      <DependentUpon>Dialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Code\GUI\Controls\DialogBox.xaml.cs">
       <DependentUpon>DialogBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Code\GUI\Controls\Dialog\DialogButton.cs" />
     <Compile Include="Code\GUI\Windows\BasicMessageProvider.cs" />
     <Compile Include="Code\GUI\Windows\CameraWindow.xaml.cs">
       <DependentUpon>CameraWindow.xaml</DependentUpon>
@@ -87,7 +91,7 @@
       <DependentUpon>CropWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Code\Internal\Heart\DataManager.cs" />
-    <Compile Include="Code\GUI\Controls\MessageProvider.cs" />
+    <Compile Include="Code\Internal\Heart\MessageProvider.cs" />
     <Compile Include="Code\Internal\InformationHolders\Race.cs" />
     <Compile Include="Code\Internal\Heart\RaceManager.cs" />
     <Compile Include="Code\GUI\Controls\RacerDetails.xaml.cs">
@@ -99,6 +103,10 @@
     </Compile>
     <Compile Include="Code\Internal\InformationHolders\Time.cs" />
     <Compile Include="Code\Internal\Communications\TrackTimer.cs" />
+    <Page Include="Code\GUI\Controls\Dialog\Dialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Code\GUI\Controls\DialogBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

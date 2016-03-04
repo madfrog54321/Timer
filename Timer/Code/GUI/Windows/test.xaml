@@ -321,8 +321,31 @@
         <Grid x:Name="Overlay" Background="Black" Opacity="0.7" Visibility="Collapsed" MouseUp="Overlay_MouseUp">
 
         </Grid>
-        <Grid x:Name="Drawer" Background="#FFFAFAFA" Margin="0 ,0, -415,0" HorizontalAlignment="Right" Width="400"/>
+        <Grid x:Name="Drawer" Background="#FFFAFAFA" Margin="0 ,0, -415,0" HorizontalAlignment="Right" Width="400">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="8"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
+            </Grid.RowDefinitions>
+            <materialDesign:ColorZone Grid.RowSpan="5" Grid.ColumnSpan="7" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth3"/>
 
+            <Button Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
+                <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
+            </Button>
+            <ComboBox Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+            <Button Grid.Column="5" Grid.Row="1" Content="Connect"/>
+        </Grid>
         <Grid x:Name="HostGrid">
             
         </Grid>

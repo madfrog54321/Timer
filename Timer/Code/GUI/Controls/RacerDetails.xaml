@@ -22,85 +22,68 @@
     </UserControl.Resources>
 
 
-    <Grid>
-        <Grid x:Name="Overlay" Background="#88000000" MouseUp="Overlay_MouseUp"/>
-        <materialDesign:Card x:Name="Card" MinWidth="400" MaxWidth="700" VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth2" HorizontalAlignment="Center" Margin="16, 16, 16, 16">
-            <Grid x:Name="Info" Opacity="1" VerticalAlignment="Stretch">
+    <Grid x:Name="Info" Opacity="1" VerticalAlignment="Stretch" MinWidth="400" MaxWidth="700" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Background="{DynamicResource PrimaryHueDarkBrush}" Height="200">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Background="{DynamicResource PrimaryHueDarkBrush}" Height="200">
+                <Image x:Name="imgCarPicture" Grid.Row="0" Grid.RowSpan="4" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Grid Background="#66000000" Margin="8" Grid.Column="0" Grid.Row="1" Height="56" Width="56">
+                    <Grid.OpacityMask>
+                        <VisualBrush Visual="{Binding ElementName=creatorImage}"/>
+                    </Grid.OpacityMask>
+                    <Button x:Name="btnCarPicture" Click="btnCarPicture_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" materialDesign:RippleAssist.ClipToBounds="True" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Camera" Width="32" Height="32" />
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="3" VerticalAlignment="Bottom" Background="#44000000">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="8"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Image x:Name="imgCarPicture" Grid.Row="0" Grid.RowSpan="4" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <Grid Background="#66000000" Margin="8" Grid.Column="0" Grid.Row="1" Height="56" Width="56">
+                    <Border x:Name="creatorImage" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Background="White" Height="48" Width="48" CornerRadius="30"/>
+                    <Grid Background="{DynamicResource SecondaryAccentBrush}" Margin="8" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Height="56" Width="56">
                         <Grid.OpacityMask>
                             <VisualBrush Visual="{Binding ElementName=creatorImage}"/>
                         </Grid.OpacityMask>
-                        <Button x:Name="btnCarPicture" Click="btnCarPicture_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" materialDesign:RippleAssist.ClipToBounds="True" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image x:Name="imgCreatorPicture" Grid.Row="0" Grid.RowSpan="2" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Grid Background="#55000000"/>
+                        <Button x:Name="btnCreatorPicture" Click="btnCreatorPicture_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" materialDesign:RippleAssist.ClipToBounds="True" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Camera" Width="32" Height="32" />
                         </Button>
                     </Grid>
-                    <Grid Grid.Row="3" VerticalAlignment="Bottom" Background="#44000000">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="8"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Border x:Name="creatorImage" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Background="White" Height="48" Width="48" CornerRadius="30"/>
-                        <Grid Background="{DynamicResource SecondaryAccentBrush}" Margin="8" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Height="56" Width="56">
-                            <Grid.OpacityMask>
-                                <VisualBrush Visual="{Binding ElementName=creatorImage}"/>
-                            </Grid.OpacityMask>
-                            <Image x:Name="imgCreatorPicture" Grid.Row="0" Grid.RowSpan="2" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Grid Background="#55000000"/>
-                            <Button x:Name="btnCreatorPicture" Click="btnCreatorPicture_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" materialDesign:RippleAssist.ClipToBounds="True" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <materialDesign:PackIcon Kind="Camera" Width="32" Height="32" />
-                            </Button>
-                        </Grid>
-                        <TextBox x:Name="tbCarName" Grid.Column="1" Grid.Row="0" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Car's Name"/>
-                        <TextBox x:Name="tbCreatorName" Grid.Column="1" Grid.Row="1" FontSize="16" VerticalAlignment="Top" materialDesign:TextFieldAssist.Hint="Creator's Name"/>
-                    </Grid>
-                </Grid>
-                <Grid Grid.Row="1" Margin="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*"/>
-                        <ColumnDefinition Width="16"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="cmbClass" FontSize="14" Grid.Column="0" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Class" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
-                    <TextBox x:Name="tbBarcode" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Barcode"/>
-                </Grid>
-                <Label Grid.Row="2" Content="No Racing Data" IsEnabled="False" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ScrollViewer Grid.Row="2">
-                    <StackPanel Margin="8">
-                        
-                        
-                    </StackPanel>
-                </ScrollViewer>
-                <Grid Grid.Row="3" HorizontalAlignment="Stretch" Margin="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" x:Name="btnDelete" Click="btnDelete_Click" Content="Delete" Style="{StaticResource MaterialDesignFlatButton}" Margin="0, 0, 8, 0"/>
-                    <Button Grid.Column="2" IsCancel="True" x:Name="btnRevert" Click="btnRevert_Click" Content="Revert" Style="{StaticResource MaterialDesignFlatButton}" Margin="0, 0, 8, 0"/>
-                    <Button Grid.Column="3" IsDefault="True" x:Name="btnSave" Content="Save" Click="btnSave_Click"/>
+                    <TextBox x:Name="tbCarName" Grid.Column="1" Grid.Row="0" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Car's Name"/>
+                    <TextBox x:Name="tbCreatorName" Grid.Column="1" Grid.Row="1" FontSize="16" VerticalAlignment="Top" materialDesign:TextFieldAssist.Hint="Creator's Name"/>
                 </Grid>
             </Grid>
-        </materialDesign:Card>
+            <Grid Grid.Row="1" Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="cmbClass" FontSize="14" Grid.Column="0" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Class" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+                <TextBox x:Name="tbBarcode" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Barcode"/>
+            </Grid>
+            <Label Grid.Row="2" Content="No Racing Data" IsEnabled="False" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ScrollViewer Grid.Row="2">
+            <StackPanel Margin="8">
+
+
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

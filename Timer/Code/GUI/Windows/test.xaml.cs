@@ -30,9 +30,98 @@ namespace Timer
 
             //addEmpty();
         }
-        
-        
 
+
+        //private void addRacer(int index)
+        //{
+        //    //RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_CarLane(index);
+        //    RaceManager.MakeNextReturn result = RaceManager.MakeNextReturn.Added;
+
+        //    if (result == RaceManager.MakeNextReturn.Added)
+        //    {
+        //        //listBox1.Items.Add(DataManager.Competition.Racers[index].Car.Name);
+
+        //        CarTile tile = CarTile.createTile(DataManager.Competition.Racers[index], false);
+        //        tile.SetValue(Grid.RowProperty, 2);//change index
+        //        tile.Margin = new Thickness(8, 8, 8, 0);
+        //        tile.SetValue(Grid.ColumnProperty, 2);
+        //        MainGrid.Children.Add(tile);
+
+        //    } //error handling
+        //    else if (result == RaceManager.MakeNextReturn.CallBackUsed)
+        //    {
+        //        DataManager.MessageProvider.showMessage("Duplicate Racer", DataManager.Competition.Racers[index].Car.Name + " has allready been entered into this race");
+        //    }
+        //    else if (result == RaceManager.MakeNextReturn.RaceFull)
+        //    {
+        //        DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
+        //    }
+        //}
+
+        //private void addEmpty()
+        //{
+        //    //RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_EmptyLane();
+        //    RaceManager.MakeNextReturn result = RaceManager.MakeNextReturn.Added;
+
+        //    if (result == RaceManager.MakeNextReturn.Added)
+        //    {
+        //        //listBox1.Items.Add("Empty");
+
+
+        //        //< TextBlock Grid.Column = "2" Opacity = "0.7" Grid.Row = "2" TextAlignment = "Left" Margin = "0, 4, 0, 0" HorizontalAlignment = "Center" VerticalAlignment = "Center" FontSize = "18" >
+        //        //                   Empty
+        //        //           </ TextBlock >
+
+        //        TextBlock textBlock = new TextBlock();
+
+        //        textBlock.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane);
+
+        //        textBlock.Margin = new Thickness(0, 0, 0, 0);
+        //        textBlock.TextAlignment = TextAlignment.Center;
+        //        textBlock.FontSize = 18;
+        //        textBlock.Text = "Empty";
+        //        textBlock.Opacity = 0.7;
+        //        textBlock.VerticalAlignment = VerticalAlignment.Center;
+        //        RaceList.Children.Add(textBlock);
+
+        //    } //error handling
+        //    else if (result == RaceManager.MakeNextReturn.RaceFull)
+        //    {
+        //        DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
+        //    }
+        //}
+
+        //private void runBarcodeCommand(string barcode)
+        //{
+        //    if (barcode == "reset")
+        //    {
+        //        DataManager.RaceManager.forgetRace();
+        //        //===reset race===
+        //    }
+        //    else if (barcode == "mask")
+        //    {
+        //        addEmpty();
+        //    }
+        //    else
+        //    {
+        //        //try a car barcode
+        //        bool found = false;
+
+        //        for (int i = 0; i < DataManager.Competition.Racers.Count && !found; i++)
+        //        {
+        //            if (DataManager.Competition.Racers[i].Barcode == barcode)
+        //            {
+        //                found = true;
+        //                addRacer(i);
+        //            }
+        //        }
+
+        //        if (!found)
+        //        {
+        //            DataManager.MessageProvider.showError("Invalid Command", "[" + barcode + "] is not a valid command");
+        //        }
+        //    }
+        //}
 
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -177,7 +266,7 @@ namespace Timer
 
         private void btnCreateRacer_Click(object sender, RoutedEventArgs e)
         {
-            RacerDetails.createNewRacer(HostGrid, delegate()
+            RacerDetails.createNewRacer(HostGrid, delegate ()
             {
                 updateRacerList();
             });

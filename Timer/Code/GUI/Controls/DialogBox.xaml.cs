@@ -41,8 +41,6 @@ namespace Timer
             }
         }
 
-        private Panel _parent;
-
         public static void showOptionBox(Panel parent, string message, string title, string secondaryOption, string mainOption, dialogResultHandler handler)
         {
             DialogBox dialog = new DialogBox();
@@ -50,23 +48,19 @@ namespace Timer
 
             dialog.tbMessage.Text = message;
             dialog.tbTitle.Text = title;
-            dialog.btnOption2.Content = secondaryOption;
-            dialog.btnOption1.Content = mainOption;
 
-            dialog._parent = parent;
-            dialog._parent.Children.Add(dialog);
-        }
+            new Dialog(parent, dialog, false, false, false, null,
+                new DialogButton(secondaryOption, DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate () {
 
-        private void btnOption2_Click(object sender, RoutedEventArgs e)
-        {
-            _parent.Children.Remove(this);
-            triggerGotDialogResult(DialogResult.SecondaryOption);
-        }
+                    dialog.triggerGotDialogResult(DialogResult.SecondaryOption);
 
-        private void btnOption1_Click(object sender, RoutedEventArgs e)
-        {
-            _parent.Children.Remove(this);
-            triggerGotDialogResult(DialogResult.MainOption);
+                    return DialogButton.ReturnEvent.Close;
+                }), new DialogButton(mainOption, DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate () {
+
+                    dialog.triggerGotDialogResult(DialogResult.MainOption);
+
+                    return DialogButton.ReturnEvent.Close;
+                }));
         }
     }
 }
