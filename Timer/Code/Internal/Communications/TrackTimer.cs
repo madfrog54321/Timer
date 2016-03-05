@@ -36,21 +36,28 @@ namespace Timer
             }
         }
 
+        public void disconnect()
+        {
+            _serialPort.Close();
+            _serialPort.Dispose();
+        }
+
         public TrackTimer(string portName)
         {
-            _currentResponse = "";
-            _waitingForRace = false;
-
-            _serialPort = new SerialPort();
-            _serialPort.DataReceived += _serialPort_DataReceived;
-            _serialPort.PortName = portName;
-            _serialPort.BaudRate = BAUD_RATE;
-            _serialPort.DataBits = DATA_BITS;
-            _serialPort.StopBits = STOP_BITS;
-            _serialPort.Handshake = HAND_SHAKE;
-            _serialPort.Parity = PARITY;
             try
             {
+                _currentResponse = "";
+                _waitingForRace = false;
+
+                _serialPort = new SerialPort();
+                _serialPort.DataReceived += _serialPort_DataReceived;
+                _serialPort.PortName = portName;
+                _serialPort.BaudRate = BAUD_RATE;
+                _serialPort.DataBits = DATA_BITS;
+                _serialPort.StopBits = STOP_BITS;
+                _serialPort.Handshake = HAND_SHAKE;
+                _serialPort.Parity = PARITY;
+
                 _serialPort.Open();
             }
             catch (Exception ex)

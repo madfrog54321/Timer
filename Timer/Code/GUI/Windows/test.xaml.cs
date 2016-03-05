@@ -26,102 +26,116 @@ namespace Timer
         {
             InitializeComponent();
 
+            DataManager.MessageProvider = new DialogMessageProvider(HostGrid, delegate
+            {
+                DataManager.MessageProvider = new BasicMessageProvider();
+            });
+
             updateRacerList();
+            
+            updatePorts();
 
             //addEmpty();
         }
+        
+        private void updatePorts()
+        {
+            string[] ports = DataManager.getPorts();
+            foreach (string port in ports)
+            {
+                cboPorts.Items.Add(port);
+            }
+            cboPorts.SelectedIndex = 0;
+        }
+
+        private void addRacer(int index)
+        {
+            RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_CarLane(index);
+
+            if (result == RaceManager.MakeNextReturn.Added)
+            {
+                //listBox1.Items.Add(DataManager.Competition.Racers[index].Car.Name);
+
+                CarTile tile = CarTile.createTile(DataManager.Competition.Racers[index], false);
+                tile.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane - 2);
+                tile.Margin = new Thickness(8, 8, 8, 0);
+                RaceList.Children.Add(tile);
+
+            } //error handling
+            else if (result == RaceManager.MakeNextReturn.CallBackUsed)
+            {
+                DataManager.MessageProvider.showMessage("Duplicate Racer", DataManager.Competition.Racers[index].Car.Name + " has allready been entered into this race");
+            }
+            else if (result == RaceManager.MakeNextReturn.RaceFull)
+            {
+                DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
+            }
+        }
+
+        private void addEmpty()
+        {
+            RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_EmptyLane();
+
+            if (result == RaceManager.MakeNextReturn.Added)
+            {
+                //listBox1.Items.Add("Empty");
 
 
-        //private void addRacer(int index)
-        //{
-        //    //RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_CarLane(index);
-        //    RaceManager.MakeNextReturn result = RaceManager.MakeNextReturn.Added;
+                //< TextBlock Grid.Column = "2" Opacity = "0.7" Grid.Row = "2" TextAlignment = "Left" Margin = "0, 4, 0, 0" HorizontalAlignment = "Center" VerticalAlignment = "Center" FontSize = "18" >
+                //                   Empty
+                //           </ TextBlock >
 
-        //    if (result == RaceManager.MakeNextReturn.Added)
-        //    {
-        //        //listBox1.Items.Add(DataManager.Competition.Racers[index].Car.Name);
+                TextBlock textBlock = new TextBlock();
 
-        //        CarTile tile = CarTile.createTile(DataManager.Competition.Racers[index], false);
-        //        tile.SetValue(Grid.RowProperty, 2);//change index
-        //        tile.Margin = new Thickness(8, 8, 8, 0);
-        //        tile.SetValue(Grid.ColumnProperty, 2);
-        //        MainGrid.Children.Add(tile);
+                textBlock.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane - 2);
 
-        //    } //error handling
-        //    else if (result == RaceManager.MakeNextReturn.CallBackUsed)
-        //    {
-        //        DataManager.MessageProvider.showMessage("Duplicate Racer", DataManager.Competition.Racers[index].Car.Name + " has allready been entered into this race");
-        //    }
-        //    else if (result == RaceManager.MakeNextReturn.RaceFull)
-        //    {
-        //        DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
-        //    }
-        //}
+                textBlock.Margin = new Thickness(0, 0, 0, 0);
+                textBlock.TextAlignment = TextAlignment.Center;
+                textBlock.FontSize = 18;
+                textBlock.Text = "Empty";
+                textBlock.Opacity = 0.7;
+                textBlock.VerticalAlignment = VerticalAlignment.Center;
+                RaceList.Children.Add(textBlock);
 
-        //private void addEmpty()
-        //{
-        //    //RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_EmptyLane();
-        //    RaceManager.MakeNextReturn result = RaceManager.MakeNextReturn.Added;
+            } //error handling
+            else if (result == RaceManager.MakeNextReturn.RaceFull)
+            {
+                DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
+            }
+        }
 
-        //    if (result == RaceManager.MakeNextReturn.Added)
-        //    {
-        //        //listBox1.Items.Add("Empty");
+        private void runBarcodeCommand(string barcode)
+        {
+            if (barcode == "reset")
+            {
+                DataManager.RaceManager.forgetRace();
+                RaceList.Children.Clear();
+                //===reset race===
+            }
+            else if (barcode == "mask")
+            {
+                addEmpty();
+            }
+            else
+            {
+                //try a car barcode
+                bool found = false;
 
+                for (int i = 0; i < DataManager.Competition.Racers.Count && !found; i++)
+                {
+                    if (DataManager.Competition.Racers[i].Barcode == barcode)
+                    {
+                        found = true;
+                        addRacer(i);
+                    }
+                }
 
-        //        //< TextBlock Grid.Column = "2" Opacity = "0.7" Grid.Row = "2" TextAlignment = "Left" Margin = "0, 4, 0, 0" HorizontalAlignment = "Center" VerticalAlignment = "Center" FontSize = "18" >
-        //        //                   Empty
-        //        //           </ TextBlock >
-
-        //        TextBlock textBlock = new TextBlock();
-
-        //        textBlock.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane);
-
-        //        textBlock.Margin = new Thickness(0, 0, 0, 0);
-        //        textBlock.TextAlignment = TextAlignment.Center;
-        //        textBlock.FontSize = 18;
-        //        textBlock.Text = "Empty";
-        //        textBlock.Opacity = 0.7;
-        //        textBlock.VerticalAlignment = VerticalAlignment.Center;
-        //        RaceList.Children.Add(textBlock);
-
-        //    } //error handling
-        //    else if (result == RaceManager.MakeNextReturn.RaceFull)
-        //    {
-        //        DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
-        //    }
-        //}
-
-        //private void runBarcodeCommand(string barcode)
-        //{
-        //    if (barcode == "reset")
-        //    {
-        //        DataManager.RaceManager.forgetRace();
-        //        //===reset race===
-        //    }
-        //    else if (barcode == "mask")
-        //    {
-        //        addEmpty();
-        //    }
-        //    else
-        //    {
-        //        //try a car barcode
-        //        bool found = false;
-
-        //        for (int i = 0; i < DataManager.Competition.Racers.Count && !found; i++)
-        //        {
-        //            if (DataManager.Competition.Racers[i].Barcode == barcode)
-        //            {
-        //                found = true;
-        //                addRacer(i);
-        //            }
-        //        }
-
-        //        if (!found)
-        //        {
-        //            DataManager.MessageProvider.showError("Invalid Command", "[" + barcode + "] is not a valid command");
-        //        }
-        //    }
-        //}
+                if (!found)
+                {
+                    DataManager.MessageProvider.showError("Invalid Command", "[" + barcode + "] is not a valid command");
+                }
+            }
+        }
 
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -241,7 +255,6 @@ namespace Timer
                     Drawer.Margin = new Thickness(0, 0, -Drawer.Width - 10, 0);
                     Drawer.Visibility = Visibility.Collapsed;
                     _doingAnimation = false;
-                    Drawer.Children.Clear();//clear the drawer of the information
                 };
                 Drawer.BeginAnimation(FrameworkElement.MarginProperty, flyOut);
             }
@@ -270,6 +283,80 @@ namespace Timer
             {
                 updateRacerList();
             });
+        }
+
+        private void btnConnect_Click(object sender, RoutedEventArgs e)
+        {
+            if (btnConnect.Content.Equals("Connect"))
+            {
+                if (DataManager.tryConnectTimer(cboPorts.Text))
+                {
+                    //btnConnect.IsEnabled = false;
+                    btnConnect.Content = "Disconnect";
+                    tbCommand.IsEnabled = true;
+                    checkLock.IsEnabled = true;
+                    DataManager.RaceManager.onReadyForNextRace += RaceManager_onReadyForNextRace;
+                    DataManager.RaceManager.onRaceIsFull += RaceManager_onRaceIsFull;
+                }
+            }
+            else
+            {
+                DataManager.disconnectTimer();
+                btnConnect.Content = "Connect";
+                tbCommand.IsEnabled = false;
+                checkLock.IsEnabled = false;
+            }
+        }
+
+        private void RaceManager_onReadyForNextRace()
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                //reset race list
+                RaceList.Children.Clear();
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(RaceManager_onReadyForNextRace));
+            }
+        }
+
+        private void RaceManager_onRaceIsFull()
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                //label1.Content = "Waiting for race completion...";
+                //wait for race
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(RaceManager_onRaceIsFull));
+            }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            updatePorts();
+        }
+
+        private void tbCommand_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                //if (btnLockKeyboard.Content.ToString() == "Lock")
+                //{
+                //    btnLockKeyboard.Content = "Unlock";
+                //}
+                runBarcodeCommand(tbCommand.Text);
+                tbCommand.Text = string.Empty;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                //if (btnLockKeyboard.Content.ToString() == "Unlock")
+                //{
+                //    btnLockKeyboard.Content = "Lock";
+                //}
+            }
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)

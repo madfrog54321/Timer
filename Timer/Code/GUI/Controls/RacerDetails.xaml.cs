@@ -111,7 +111,12 @@ namespace Timer
             editor.tbCarName.Text = racer.Car.Name;
             editor.tbCreatorName.Text = racer.Maker.Name;
             editor.tbBarcode.Text = racer.Barcode;
-            
+
+            foreach (Time time in racer.Times)
+            {
+                editor.list.Items.Add(time.Speed + "s, Lane: " + time.Lane + ", Place: " + time.Place);
+            }
+
             MakeDialog(parent, editor, WindowType.Display);
         }
         

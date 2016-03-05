@@ -24,12 +24,23 @@ namespace Timer
         static public MessageProvider MessageProvider
         {
             get { return _messageProvider; }
+            set { _messageProvider = value; }
         }
 
         static private RaceManager _raceManager;
         static public RaceManager RaceManager
         {
-            get { return _raceManager; }
+            get {
+                if(_raceManager == null)
+                {
+                    MessageProvider.showError("Race Manager Missing", "The race manager was called, but it does not exist. Some unexpected resalts may occur. It is recommended to close the application immediately.");
+                    return new RaceManager(Settings.NumberOfLanes);
+                }
+                else
+                {
+                    return _raceManager;
+                }
+            }
         }
 
         static public string[] getPorts()
@@ -40,7 +51,18 @@ namespace Timer
         static private TrackTimer _trackTimer;
         static public TrackTimer TrackTimer
         {
-            get { return _trackTimer; }
+            get
+            {
+                if (_trackTimer == null)
+                {
+                    MessageProvider.showError("Track Timer Missing", "The track timer was called, but it does not exist. Some unexpected resalts may occur. It is recommended to close the application immediately.");
+                    return new TrackTimer("");
+                }
+                else
+                {
+                    return _trackTimer;
+                }
+            }
         }
 
         static public bool tryConnectTimer(string port)
@@ -54,7 +76,12 @@ namespace Timer
             }
             return _trackTimer.Connected;
         }
-        
+
+        static public void disconnectTimer()
+        {
+            _trackTimer.disconnect();
+        }
+
         private static void RaceManager_onGotRace(Dictionary<int, Time> results)
         {
             foreach (KeyValuePair<int, Time> lane in results)

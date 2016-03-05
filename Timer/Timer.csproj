@@ -75,6 +75,7 @@
     <Compile Include="Code\GUI\Controls\CameraDialog.xaml.cs">
       <DependentUpon>CameraDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Code\GUI\Controls\DialogMessageProvider.cs" />
     <Compile Include="Code\GUI\Controls\Dialog\Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>

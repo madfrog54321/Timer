@@ -261,10 +261,10 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0" Margin="8 0 0 0" materialDesign:TextFieldAssist.Hint="Enter Barcode" 
+                            <TextBox x:Name="tbCommand" KeyUp="tbCommand_KeyUp" IsEnabled="false" Grid.Column="0" Margin="8 0 0 0" materialDesign:TextFieldAssist.Hint="Enter Barcode" 
                                      materialDesign:TextFieldAssist.DecorationVisibility="Collapsed" BorderThickness="0"
                                      MinWidth="200" VerticalAlignment="Center" />
-                            <CheckBox Style="{DynamicResource CircleCheckbox2}" Width="32" Height="32" Grid.Column="1">
+                            <CheckBox x:Name="checkLock" IsEnabled="False" Style="{DynamicResource CircleCheckbox2}" Width="32" Height="32" Grid.Column="1">
                                 <materialDesign:PackIcon Kind="LockOpen" Margin="0 0 0 0" Width="24" Height="24" />
                             </CheckBox>
                         </Grid>
@@ -340,11 +340,11 @@
             </Grid.RowDefinitions>
             <materialDesign:ColorZone Grid.RowSpan="5" Grid.ColumnSpan="7" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth3"/>
 
-            <Button Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
+            <Button Click="Button_Click_2" Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
                 <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
             </Button>
-            <ComboBox Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
-            <Button Grid.Column="5" Grid.Row="1" Content="Connect"/>
+            <ComboBox x:Name="cboPorts" Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+            <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="5" Grid.Row="1" Content="Connect"/>
         </Grid>
         <Grid x:Name="HostGrid">
             

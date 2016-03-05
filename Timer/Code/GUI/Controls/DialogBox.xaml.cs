@@ -62,5 +62,22 @@ namespace Timer
                     return DialogButton.ReturnEvent.Close;
                 }));
         }
+
+        public static void showInfoBox(Panel parent, string message, string title, string button, dialogResultHandler handler)
+        {
+            DialogBox dialog = new DialogBox();
+            dialog.onGotDialogResult += handler;
+
+            dialog.tbMessage.Text = message;
+            dialog.tbTitle.Text = title;
+
+            new Dialog(parent, dialog, false, false, false, null,
+                new DialogButton(button, DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate () {
+
+                    dialog.triggerGotDialogResult(DialogResult.MainOption);
+
+                    return DialogButton.ReturnEvent.Close;
+                }));
+        }
     }
 }

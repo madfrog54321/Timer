@@ -87,6 +87,7 @@
         <ScrollViewer Grid.Row="2">
             <StackPanel Margin="8">
 
+                <ListBox x:Name="list"></ListBox>
 
             </StackPanel>
         </ScrollViewer>
