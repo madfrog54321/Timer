@@ -43,6 +43,11 @@ namespace Timer
             }
         }
 
+        public static bool readyForRace
+        {
+            get { return _trackTimer != null && _raceManager != null && _trackTimer.Connected; }
+        }
+
         static public string[] getPorts()
         {
             return SerialPort.GetPortNames();

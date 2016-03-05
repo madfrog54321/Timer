@@ -34,6 +34,11 @@ namespace Timer
             InitializeComponent();
             
             _type = type;
+
+            foreach(string rClass in DataManager.Settings.Classes)
+            {
+                cboClass.Items.Add(rClass);
+            }
         }
         
         private Dialog _dialogHost;
@@ -111,7 +116,9 @@ namespace Timer
             editor.tbCarName.Text = racer.Car.Name;
             editor.tbCreatorName.Text = racer.Maker.Name;
             editor.tbBarcode.Text = racer.Barcode;
+            editor.cboClass.Text = racer.Class;
 
+            //change
             foreach (Time time in racer.Times)
             {
                 editor.list.Items.Add(time.Speed + "s, Lane: " + time.Lane + ", Place: " + time.Place);
@@ -167,13 +174,14 @@ namespace Timer
             if (_type == WindowType.Create)
             {
                 DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, DataManager.getRelativePath(imgCarPicture.Source.ToString()),
-                    tbCreatorName.Text, DataManager.getRelativePath(imgCreatorPicture.Source.ToString()), tbBarcode.Text));
+                    tbCreatorName.Text, DataManager.getRelativePath(imgCreatorPicture.Source.ToString()), tbBarcode.Text, cboClass.Text));
             }
             else if(_type == WindowType.Display)
             {
                 _racer.Car.Name = tbCarName.Text;
                 _racer.Maker.Name = tbCreatorName.Text;
                 _racer.Barcode = tbBarcode.Text;
+                _racer.Class = cboClass.Text;
 
                 try
                 {

@@ -23,11 +23,13 @@ namespace Timer
                 handler();
             }
         }
+        private BasicMessageProvider basic;
 
         public DialogMessageProvider(Panel host, resetProvider onReset)
         {
             _dialogHost = host;
             _onReset = onReset;
+            basic = new BasicMessageProvider();
         }
 
         public void showError(string shortError, string longError)
@@ -38,8 +40,15 @@ namespace Timer
             }
             else
             {
-                SystemSounds.Hand.Play();
-                DialogBox.showInfoBox(_dialogHost, longError, shortError, "Continue", null);
+                try
+                {
+                    SystemSounds.Hand.Play();
+                    DialogBox.showInfoBox(_dialogHost, longError, shortError, "Continue", null);
+                }
+                catch (Exception ex)
+                {
+                    basic.showError(shortError, longError);
+                }
             }
         }
 
@@ -51,8 +60,15 @@ namespace Timer
             }
             else
             {
-                SystemSounds.Hand.Play();
-                DialogBox.showInfoBox(_dialogHost, longError, shortError, "Continue", null);
+                try
+                {
+                    SystemSounds.Hand.Play();
+                    DialogBox.showInfoBox(_dialogHost, longError, shortError, "Continue", null);
+                }
+                catch (Exception ex)
+                {
+                    basic.showError(shortError, longError);
+                }
             }
         }
 
@@ -64,8 +80,15 @@ namespace Timer
             }
             else
             {
-                SystemSounds.Exclamation.Play();
-                DialogBox.showInfoBox(_dialogHost, longMessage, shortMessage, "Got It", null);
+                try
+                {
+                    SystemSounds.Exclamation.Play();
+                    DialogBox.showInfoBox(_dialogHost, longMessage, shortMessage, "Got It", null);
+                }
+                catch (Exception ex)
+                {
+                    basic.showMessage(shortMessage, longMessage);
+                }
             }
         }
 
@@ -77,8 +100,15 @@ namespace Timer
             }
             else
             {
-                SystemSounds.Exclamation.Play();
-                DialogBox.showInfoBox(_dialogHost, longMessage, shortMessage, "Got It", null);
+                try
+                {
+                    SystemSounds.Exclamation.Play();
+                    DialogBox.showInfoBox(_dialogHost, longMessage, shortMessage, "Got It", null);
+                }
+                catch (Exception ex)
+                {
+                    basic.showMessage(shortMessage, longMessage);
+                }
             }
         }
     }

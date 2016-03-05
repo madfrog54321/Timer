@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Web.Script.Serialization;
 
 namespace Timer
@@ -33,12 +34,44 @@ namespace Timer
             set { _imageDirectory = value; }
         }
 
+        private List<string> _classes;
+        public List<string> Classes
+        {
+            get { return _classes; }
+            set { _classes = value; }
+        }
+
+        private string _emptyLaneBarcode;
+        public string EmptyLaneBarcode
+        {
+            get { return _emptyLaneBarcode; }
+            set { _emptyLaneBarcode = value; }
+        }
+
+        private string _resetBarcode;
+        public string ResetBarcode
+        {
+            get { return _resetBarcode; }
+            set { _resetBarcode = value; }
+        }
+
+        private double _raceDisplayHeight;
+        public double RaceDisplayHeight
+        {
+            get { return _raceDisplayHeight; }
+            set { _raceDisplayHeight = value; }
+        }
+
         public Settings()
         {
             _numLanes = 6;
             _defaltCarImageUri = "pack://application:,,,/Timer;component/Assets/Images/DefaltCarPicture.png";
             _defaltMakerImageUri = "pack://application:,,,/Timer;component/Assets/Images/DefaltCreatorImage.png";
             _imageDirectory = "images";
+            _classes = new List<string>();
+            _emptyLaneBarcode = "empty";
+            _resetBarcode = "reset";
+            _raceDisplayHeight = 1;
         }
 
         private const string DEFAULT_FILENAME = "settings.jsn";
@@ -50,14 +83,10 @@ namespace Timer
 
         public static Settings Load(string fileName = DEFAULT_FILENAME)
         {
-            Settings t;
+            Settings t = new Settings();//load defalt
             if (File.Exists(fileName))
             {
                 t = (new JavaScriptSerializer()).Deserialize<Settings>(File.ReadAllText(fileName));
-            }
-            else
-            {
-                t = new Settings();
             }
             return t;
         }

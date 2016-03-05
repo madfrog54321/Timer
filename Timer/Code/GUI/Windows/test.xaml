@@ -322,29 +322,61 @@
 
         </Grid>
         <Grid x:Name="Drawer" Background="#FFFAFAFA" Margin="0 ,0, -415,0" HorizontalAlignment="Right" Width="400">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="8"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="8"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="8"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="8"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="8"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="8"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="8"/>
-            </Grid.RowDefinitions>
             <materialDesign:ColorZone Grid.RowSpan="5" Grid.ColumnSpan="7" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth3"/>
-
-            <Button Click="Button_Click_2" Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
-                <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
-            </Button>
-            <ComboBox x:Name="cboPorts" Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
-            <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="5" Grid.Row="1" Content="Connect"/>
+            <StackPanel Margin="8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="8"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="8"/>
+                    </Grid.RowDefinitions>
+                    <Button Click="Button_Click_2" Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
+                        <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
+                    </Button>
+                    <ComboBox x:Name="cboPorts" FontSize="14" Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+                    <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="5" Grid.Row="1" Content="Connect"/>
+                </Grid>
+                <TextBox x:Name="tbEmptyBarcode" TextChanged="tbEmptyBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Empty Lane Barcode"/>
+                <TextBox x:Name="tbResetBarcode" TextChanged="tbResetBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Reset Race Barcode"/>
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Label IsEnabled="False" FontSize="14" Content="Current Race Display Height" VerticalAlignment="Center"/>
+                    <Slider x:Name="heightSlider" ValueChanged="heightSlider_ValueChanged" Grid.Row="1" Margin="8" Minimum="0.5" Maximum="3"/>
+                </Grid>
+                <Grid Margin="8" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <ListBox x:Name="lbClasses" Grid.Row="1" Grid.ColumnSpan="3"/>
+                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Car Classes" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Button x:Name="btnClassDelete" Click="btnClassDelete_Click"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                        <materialDesign:PackIcon Kind="Delete" Width="24" Height="24" />
+                    </Button>
+                    <Button x:Name="btnClassAdd" Click="btnClassAdd_Click" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                        <materialDesign:PackIcon Kind="Plus" Width="24" Height="24" />
+                    </Button>
+                </Grid>
+            </StackPanel>
         </Grid>
         <Grid x:Name="HostGrid">
             

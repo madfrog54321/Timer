@@ -40,6 +40,13 @@ namespace Timer
             _times.RemoveAt(index);
         }
 
+        private string _class;
+        public string Class
+        {
+            get { return _class; }
+            set { _class = value; }
+        }
+
         public Racer()
         {
             _car = new Car();
@@ -47,26 +54,38 @@ namespace Timer
             _barcode = string.Empty;
             _times = new List<Time>();
         }
-        public Racer(Car car, Maker maker, string barcode)
+        public Racer(Car car, Maker maker, string barcode, string rClass)
         {
             _car = car;
             _maker = maker;
             _barcode = barcode;
             _times = new List<Time>();
+            _class = rClass;
         }
-        public Racer(string carName, string makerName, string barcode)
+        public Racer(string carName, string makerName, string barcode, string rClass)
         {
             _car = new Car(carName);
             _maker = new Maker(makerName);
             _barcode = barcode;
             _times = new List<Time>();
+            _class = rClass;
         }
-        public Racer(string carName, string carImageUri, string makerName, string makerImageUri, string barcode)
+        public Racer(string carName, string carImageUri, string makerName, string makerImageUri, string barcode, string rClass)
         {
             _car = new Car(carName, carImageUri);
             _maker = new Maker(makerName, makerImageUri);
             _barcode = barcode;
             _times = new List<Time>();
+            _class = rClass;
+        }
+        public override bool Equals(object obj)
+        {
+            if(obj is Racer)
+            {
+                Racer test = obj as Racer;
+                return test.Car.Name == Car.Name;
+            }
+            return false;
         }
     }
 }

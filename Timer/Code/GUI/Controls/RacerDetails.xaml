@@ -80,7 +80,7 @@
                 <ColumnDefinition Width="16"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ComboBox x:Name="cmbClass" FontSize="14" Grid.Column="0" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Class" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+            <ComboBox x:Name="cboClass" FontSize="14" Grid.Column="0" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Class" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True"/>
             <TextBox x:Name="tbBarcode" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Barcode"/>
         </Grid>
         <Label Grid.Row="2" Content="No Racing Data" IsEnabled="False" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>

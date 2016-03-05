@@ -35,6 +35,8 @@ namespace Timer
             
             updatePorts();
 
+            updateSettings();
+
             //addEmpty();
         }
         
@@ -50,69 +52,90 @@ namespace Timer
 
         private void addRacer(int index)
         {
-            RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_CarLane(index);
-
-            if (result == RaceManager.MakeNextReturn.Added)
+            if (DataManager.readyForRace)
             {
-                //listBox1.Items.Add(DataManager.Competition.Racers[index].Car.Name);
+                RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_CarLane(index);
 
-                CarTile tile = CarTile.createTile(DataManager.Competition.Racers[index], false);
-                tile.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane - 2);
-                tile.Margin = new Thickness(8, 8, 8, 0);
-                RaceList.Children.Add(tile);
+                if (result == RaceManager.MakeNextReturn.Added)
+                {
+                    //listBox1.Items.Add(DataManager.Competition.Racers[index].Car.Name);
 
-            } //error handling
-            else if (result == RaceManager.MakeNextReturn.CallBackUsed)
-            {
-                DataManager.MessageProvider.showMessage("Duplicate Racer", DataManager.Competition.Racers[index].Car.Name + " has allready been entered into this race");
+                    try
+                    {
+                        CarTile tile = CarTile.createTile(DataManager.Competition.Racers[index], false);
+                        tile.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane - 2);
+                        tile.Margin = new Thickness(8, 8, 8, 0);
+                        RaceList.Children.Add(tile);
+                    }
+                    catch (Exception ex)
+                    {
+                        DataManager.MessageProvider.showError("Could Not Add Racer", ex.Message);
+                    }
+
+                } //error handling
+                else if (result == RaceManager.MakeNextReturn.CallBackUsed)
+                {
+                    DataManager.MessageProvider.showMessage("Duplicate Racer", DataManager.Competition.Racers[index].Car.Name + " has allready been entered into this race");
+                }
+                else if (result == RaceManager.MakeNextReturn.RaceFull)
+                {
+                    DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
+                }
             }
-            else if (result == RaceManager.MakeNextReturn.RaceFull)
+            else
             {
-                DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
+                DataManager.MessageProvider.showMessage("Not Ready To Add Racer", "The track timer does not seem to be connected. Please try to reconnect to the track timer.");
             }
         }
 
         private void addEmpty()
         {
-            RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_EmptyLane();
-
-            if (result == RaceManager.MakeNextReturn.Added)
+            if (DataManager.readyForRace)
             {
-                //listBox1.Items.Add("Empty");
+                RaceManager.MakeNextReturn result = DataManager.RaceManager.makeNext_EmptyLane();
+
+                if (result == RaceManager.MakeNextReturn.Added)
+                {
+                    //listBox1.Items.Add("Empty");
 
 
-                //< TextBlock Grid.Column = "2" Opacity = "0.7" Grid.Row = "2" TextAlignment = "Left" Margin = "0, 4, 0, 0" HorizontalAlignment = "Center" VerticalAlignment = "Center" FontSize = "18" >
-                //                   Empty
-                //           </ TextBlock >
+                    //< TextBlock Grid.Column = "2" Opacity = "0.7" Grid.Row = "2" TextAlignment = "Left" Margin = "0, 4, 0, 0" HorizontalAlignment = "Center" VerticalAlignment = "Center" FontSize = "18" >
+                    //                   Empty
+                    //           </ TextBlock >
 
-                TextBlock textBlock = new TextBlock();
+                    TextBlock textBlock = new TextBlock();
 
-                textBlock.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane - 2);
+                    textBlock.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane - 2);
 
-                textBlock.Margin = new Thickness(0, 0, 0, 0);
-                textBlock.TextAlignment = TextAlignment.Center;
-                textBlock.FontSize = 18;
-                textBlock.Text = "Empty";
-                textBlock.Opacity = 0.7;
-                textBlock.VerticalAlignment = VerticalAlignment.Center;
-                RaceList.Children.Add(textBlock);
+                    textBlock.Margin = new Thickness(0, 0, 0, 0);
+                    textBlock.TextAlignment = TextAlignment.Center;
+                    textBlock.FontSize = 18;
+                    textBlock.Text = "Empty";
+                    textBlock.Opacity = 0.7;
+                    textBlock.VerticalAlignment = VerticalAlignment.Center;
+                    RaceList.Children.Add(textBlock);
 
-            } //error handling
-            else if (result == RaceManager.MakeNextReturn.RaceFull)
+                } //error handling
+                else if (result == RaceManager.MakeNextReturn.RaceFull)
+                {
+                    DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
+                }
+            }
+            else
             {
-                DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
+                DataManager.MessageProvider.showMessage("Not Ready To Add Racer", "The track timer does not seem to be connected. Please try to reconnect to the track timer.");
             }
         }
 
         private void runBarcodeCommand(string barcode)
         {
-            if (barcode == "reset")
+            if (barcode == DataManager.Settings.ResetBarcode)
             {
                 DataManager.RaceManager.forgetRace();
                 RaceList.Children.Clear();
                 //===reset race===
             }
-            else if (barcode == "mask")
+            else if (barcode == DataManager.Settings.EmptyLaneBarcode)
             {
                 addEmpty();
             }
@@ -201,7 +224,10 @@ namespace Timer
             listHolder.Children.Clear();
             foreach (Racer racer in DataManager.Competition.Racers)
             {
-                CarTile tile = CarTile.createTile(racer, true);
+                CarTile tile = CarTile.createTile(racer, true, delegate()
+                {
+                    addRacer(DataManager.Competition.Racers.IndexOf(racer));
+                });
                 tile.MouseUp += delegate
                 {
                     RacerDetails.editOldRacer(HostGrid, racer, delegate ()
@@ -356,6 +382,83 @@ namespace Timer
                 //{
                 //    btnLockKeyboard.Content = "Lock";
                 //}
+            }
+        }
+
+        private void updateClassList()
+        {
+            lbClasses.Items.Clear();
+            foreach (string rClass in DataManager.Settings.Classes)
+            {
+                lbClasses.Items.Add(rClass);
+            }
+        }
+
+        private void btnClassAdd_Click(object sender, RoutedEventArgs e)
+        {
+            InputDialog.show(HostGrid, "Class' Name", "Create", delegate(string input)
+            {
+                DataManager.Settings.Classes.Add(input);
+                DataManager.Settings.Save();
+                updateClassList();
+            });
+        }
+
+        private void btnClassDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if(lbClasses.SelectedIndex >= 0)
+            {
+                DialogBox.showOptionBox(HostGrid, "This will remove \"" + lbClasses.SelectedItem as string + "\" from generic class list. This will not effect any of the racers' classes.", "Delete \"" + lbClasses.SelectedItem as string + "\"?", "Keep", "Delete", delegate (DialogBox.DialogResult result)
+                {
+                    if (result == DialogBox.DialogResult.MainOption)
+                    {
+                        DataManager.Settings.Classes.Remove(lbClasses.SelectedItem as string);
+                        DataManager.Settings.Save();
+                        updateClassList();
+                    }
+                });
+            }
+        }
+
+        private bool _loadingSettings = true;
+        private void updateSettings()
+        {
+            _loadingSettings = true;
+            tbEmptyBarcode.Text = DataManager.Settings.EmptyLaneBarcode;
+            tbResetBarcode.Text = DataManager.Settings.ResetBarcode;
+
+            heightSlider.Value = DataManager.Settings.RaceDisplayHeight;
+            MainGrid.RowDefinitions[2].Height = new GridLength(DataManager.Settings.RaceDisplayHeight, GridUnitType.Star);
+
+            updateClassList();
+            _loadingSettings = false;
+        }
+
+        private void tbEmptyBarcode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(!_loadingSettings)
+            {
+                DataManager.Settings.EmptyLaneBarcode = tbEmptyBarcode.Text;
+                DataManager.Settings.Save();
+            }
+        }
+
+        private void tbResetBarcode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_loadingSettings)
+            {
+                DataManager.Settings.ResetBarcode = tbResetBarcode.Text;
+                DataManager.Settings.Save();
+            }
+        }
+
+        private void heightSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_loadingSettings)
+            {
+                DataManager.Settings.RaceDisplayHeight = heightSlider.Value;
+                MainGrid.RowDefinitions[2].Height = new GridLength(DataManager.Settings.RaceDisplayHeight, GridUnitType.Star);
+                DataManager.Settings.Save();
             }
         }
 
