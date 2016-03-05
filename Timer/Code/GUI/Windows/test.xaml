@@ -9,6 +9,7 @@
         Title="Timer" Height="600" Width="600"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
+        GotFocus="Window_GotFocus"
         FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
 
     <Window.Resources>
@@ -66,6 +67,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Storyboard x:Key="blinkLabel" Duration="0:0:1" FillBehavior="Stop">
+            <ColorAnimationUsingKeyFrames
+      Storyboard.TargetName="lblStoryboard"
+      Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)">
+                <EasingColorKeyFrame KeyTime="0:0:0" Value="Red" />
+                <EasingColorKeyFrame KeyTime="0:0:0.5" Value="White" />
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
 
         <Style TargetType="CheckBox" x:Key="CircleCheckbox2">
             <Setter Property="Cursor" Value="Hand"></Setter>
@@ -261,10 +271,10 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="tbCommand" KeyUp="tbCommand_KeyUp" IsEnabled="false" Grid.Column="0" Margin="8 0 0 0" materialDesign:TextFieldAssist.Hint="Enter Barcode" 
+                            <TextBox x:Name="tbCommand" PreviewLostKeyboardFocus="tbCommand_PreviewLostKeyboardFocus" KeyUp="tbCommand_KeyUp" Grid.Column="0" Margin="8 0 0 0" materialDesign:TextFieldAssist.Hint="Enter Barcode" 
                                      materialDesign:TextFieldAssist.DecorationVisibility="Collapsed" BorderThickness="0"
                                      MinWidth="200" VerticalAlignment="Center" />
-                            <CheckBox x:Name="checkLock" IsEnabled="False" Style="{DynamicResource CircleCheckbox2}" Width="32" Height="32" Grid.Column="1">
+                            <CheckBox x:Name="btnLockKeyboard" Checked="btnLockKeyboard_Checked" Unchecked="btnLockKeyboard_Unchecked" Style="{DynamicResource CircleCheckbox2}" Width="32" Height="32" Grid.Column="1">
                                 <materialDesign:PackIcon Kind="LockOpen" Margin="0 0 0 0" Width="24" Height="24" />
                             </CheckBox>
                         </Grid>

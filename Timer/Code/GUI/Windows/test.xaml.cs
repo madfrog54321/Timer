@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -127,12 +129,54 @@ namespace Timer
             }
         }
 
+        private void tbCommand_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (btnLockKeyboard.IsChecked.HasValue && btnLockKeyboard.IsChecked.Value)
+            {
+                if(e.NewFocus != btnLockKeyboard)
+                {
+                    Storyboard sb = this.FindResource("blinkLabel") as Storyboard;
+                    Storyboard.SetTarget(sb, btnLockKeyboard);
+                    sb.Begin();
+                    //Keyboard.Focus(tbCommand);
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void Window_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (btnLockKeyboard.IsChecked.HasValue && btnLockKeyboard.IsChecked.Value)
+            {
+                Keyboard.Focus(tbCommand);
+            }
+        }
+
+        private void showTimerConnectMessage()
+        {
+            DataManager.MessageProvider.showMessage("Could Not Talk To Timer", "The track timer does not seem to be connected. Please try to reconnect to the track timer.");
+        }
+
         private void runBarcodeCommand(string barcode)
         {
             if (barcode == DataManager.Settings.ResetBarcode)
             {
-                DataManager.RaceManager.forgetRace();
-                RaceList.Children.Clear();
+                if (DataManager.readyForRace)
+                {
+                    try
+                    {
+                        DataManager.RaceManager.forgetRace();
+                        RaceList.Children.Clear();
+                    }
+                    catch (Exception ex)
+                    {
+                        showTimerConnectMessage();
+                    }
+                }
+                else
+                {
+                    showTimerConnectMessage();
+                }
                 //===reset race===
             }
             else if (barcode == DataManager.Settings.EmptyLaneBarcode)
@@ -319,8 +363,6 @@ namespace Timer
                 {
                     //btnConnect.IsEnabled = false;
                     btnConnect.Content = "Disconnect";
-                    tbCommand.IsEnabled = true;
-                    checkLock.IsEnabled = true;
                     DataManager.RaceManager.onReadyForNextRace += RaceManager_onReadyForNextRace;
                     DataManager.RaceManager.onRaceIsFull += RaceManager_onRaceIsFull;
                 }
@@ -329,8 +371,6 @@ namespace Timer
             {
                 DataManager.disconnectTimer();
                 btnConnect.Content = "Connect";
-                tbCommand.IsEnabled = false;
-                checkLock.IsEnabled = false;
             }
         }
 
@@ -369,19 +409,13 @@ namespace Timer
         {
             if (e.Key == Key.Enter)
             {
-                //if (btnLockKeyboard.Content.ToString() == "Lock")
-                //{
-                //    btnLockKeyboard.Content = "Unlock";
-                //}
+                btnLockKeyboard.IsChecked = true;
                 runBarcodeCommand(tbCommand.Text);
                 tbCommand.Text = string.Empty;
             }
             else if (e.Key == Key.Escape)
             {
-                //if (btnLockKeyboard.Content.ToString() == "Unlock")
-                //{
-                //    btnLockKeyboard.Content = "Lock";
-                //}
+                btnLockKeyboard.IsChecked = false;
             }
         }
 
@@ -460,6 +494,17 @@ namespace Timer
                 MainGrid.RowDefinitions[2].Height = new GridLength(DataManager.Settings.RaceDisplayHeight, GridUnitType.Star);
                 DataManager.Settings.Save();
             }
+        }
+
+        private void btnLockKeyboard_Checked(object sender, RoutedEventArgs e)
+        {
+            btnLockKeyboard.Content = new PackIcon() { Kind = PackIconKind.Lock, Width = 24, Height = 24 };
+            Keyboard.Focus(tbCommand);
+        }
+
+        private void btnLockKeyboard_Unchecked(object sender, RoutedEventArgs e)
+        {
+            btnLockKeyboard.Content = new PackIcon() { Kind = PackIconKind.LockOpen, Width = 24, Height = 24 };
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)
