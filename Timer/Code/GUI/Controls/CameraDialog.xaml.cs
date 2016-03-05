@@ -1,6 +1,7 @@
 ﻿using AForge.Video.DirectShow;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -15,23 +16,44 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Timer
 {
     /// <summary>
-    /// Interaction logic for CameraWindow.xaml
+    /// Interaction logic for CameraDialog.xaml
     /// </summary>
-    public partial class CameraWindow : Window
+    public partial class CameraDialog : UserControl
     {
         private FilterInfoCollection _videoCaptureDevices;
         public VideoCaptureDevice _camera = new VideoCaptureDevice();
+        private Dialog _hostDialog;
 
-        public CameraWindow()
+        public CameraDialog()
         {
             InitializeComponent();
 
             showCameras();
+        }
+
+        public static void Show(Panel parent, savedImageHandler onSavedImage)
+        {
+            CameraDialog cameraDialog = new CameraDialog();
+            cameraDialog.onSavedImage += onSavedImage;
+
+            cameraDialog._hostDialog = new Dialog(parent, cameraDialog, true, true, false, null,
+                new DialogButton("Close Camera", DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate () {
+
+                    cameraDialog.close();
+
+                    return DialogButton.ReturnEvent.Close;
+                }));
+        }
+
+        private void close()
+        {
+            stopCamera();
         }
 
         public delegate void savedImageHandler(Uri file);
@@ -47,41 +69,62 @@ namespace Timer
 
         private void showCameras()
         {
-            _videoCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-
             cmbCameras.Items.Clear();
 
-            foreach (FilterInfo camera in _videoCaptureDevices)
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += delegate (object sender, DoWorkEventArgs e)
             {
-                cmbCameras.Items.Add(camera.Name);
-            }
+                _videoCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                Dispatcher.Invoke(delegate ()
+                {
+                    foreach (FilterInfo camera in _videoCaptureDevices)
+                    {
+                        cmbCameras.Items.Add(camera.Name);
+                    }
 
-            if (cmbCameras.Items.Count > 0)
-            {
-                cmbCameras.SelectedIndex = 0;
+                    if (cmbCameras.Items.Count > 0)
+                    {
+                        cmbCameras.SelectedIndex = 0;
 
-                showResolutions();
-            }
+                        //showResolutions();
+                    }
+                });
+            };
+            worker.RunWorkerAsync();
         }
 
         private void showResolutions()
         {
             cmbResolutions.Items.Clear();
 
-            VideoCaptureDevice currentCam = new VideoCaptureDevice(_videoCaptureDevices[cmbCameras.SelectedIndex].MonikerString);
-
-            foreach (VideoCapabilities camera in currentCam.VideoCapabilities)
+            if (cmbCameras.SelectedIndex >= 0)
             {
-                string resolution = camera.FrameSize.Width + " X " + camera.FrameSize.Height;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += delegate (object sender, DoWorkEventArgs e)
+                {
+                    VideoCaptureDevice currentCam = new VideoCaptureDevice(_videoCaptureDevices[Dispatcher.Invoke<int>(delegate()
+                    {
+                        return cmbCameras.SelectedIndex;
+                    })].MonikerString);
 
-                cmbResolutions.Items.Add(resolution);
-            }
+                    Dispatcher.Invoke(delegate ()
+                    {
+                        foreach (VideoCapabilities camera in currentCam.VideoCapabilities)
+                        {
+                            string resolution = camera.FrameSize.Width + " X " + camera.FrameSize.Height;
 
-            if (cmbResolutions.Items.Count > 0)
-            {
-                cmbResolutions.SelectedIndex = cmbResolutions.Items.Count - 1;
+                            cmbResolutions.Items.Add(resolution);
+                        }
 
-                createCamera();
+                        if (cmbResolutions.Items.Count > 0)
+                        {
+                            cmbResolutions.SelectedIndex = cmbResolutions.Items.Count - 1;
+
+                            //createCamera();
+                        }
+                    });
+                };
+                worker.RunWorkerAsync();
             }
         }
 
@@ -104,6 +147,14 @@ namespace Timer
             {
                 _camera.SignalToStop();
                 _camera.WaitForStop();
+            }
+        }
+
+        private void startCamera()
+        {
+            if (!_camera.IsRunning)
+            {
+                _camera.Start();
             }
         }
 
@@ -140,16 +191,21 @@ namespace Timer
             createCamera();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            stopCamera();
-        }
-
         private void btnTakePicture_Click(object sender, RoutedEventArgs e)
         {
-            CropWindow.cropPicture(frameImage.Source, delegate (Uri file)
+            stopCamera();
+            CropDialog.Show(_hostDialog.Parent, frameImage.Source, delegate (CropDialog.CloseEvent closeEvent, Uri file)
             {
-                triggerSavedImage(file);
+                if (closeEvent == CropDialog.CloseEvent.Saved)
+                {
+                    triggerSavedImage(file);
+                    close();
+                    _hostDialog.Close();
+                }
+                else
+                {
+                    startCamera();
+                }
             });
         }
 

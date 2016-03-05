@@ -27,6 +27,11 @@ namespace Timer
         private bool _allowClickOffClose, _doingAnimation;
         public event DialogClickOffCloseHandler OnClickOffClose;
 
+        new public Panel Parent
+        {
+            get { return _parent; }
+        }
+
         public bool AllowClickOffClose
         {
             get { return _allowClickOffClose; }

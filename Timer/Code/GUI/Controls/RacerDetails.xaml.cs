@@ -197,22 +197,38 @@ namespace Timer
 
         private void btnCarPicture_Click(object sender, RoutedEventArgs e)
         {
-            CameraWindow camera = new CameraWindow();
-            camera.onSavedImage += delegate (Uri file)
+            CameraDialog.Show(_dialogHost.Parent, delegate (Uri file)
             {
                 imgCarPicture.Source = new BitmapImage(file);
-            };
-            camera.ShowDialog();
+            });
         }
 
         private void btnCreatorPicture_Click(object sender, RoutedEventArgs e)
         {
-            CameraWindow camera = new CameraWindow();
-            camera.onSavedImage += delegate (Uri file)
+            CameraDialog.Show(_dialogHost.Parent, delegate (Uri file)
             {
                 imgCreatorPicture.Source = new BitmapImage(file);
-            };
-            camera.ShowDialog();
+            });
+        }
+
+        private void Grid_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            btnCreatorPicture.Visibility = creatorOverLay.Visibility = Visibility.Visible;
+        }
+
+        private void Grid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            btnCreatorPicture.Visibility = creatorOverLay.Visibility = Visibility.Collapsed;
+        }
+
+        private void Grid_MouseEnter_1(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            carOverlay.Visibility = Visibility.Visible;
+        }
+
+        private void Grid_MouseLeave_1(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            carOverlay.Visibility = Visibility.Collapsed;
         }
     }
 }

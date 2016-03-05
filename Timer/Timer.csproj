@@ -72,6 +72,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Code\GUI\Controls\CameraDialog.xaml.cs">
+      <DependentUpon>CameraDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Code\GUI\Controls\Dialog\Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>
@@ -80,16 +83,10 @@
     </Compile>
     <Compile Include="Code\GUI\Controls\Dialog\DialogButton.cs" />
     <Compile Include="Code\GUI\Windows\BasicMessageProvider.cs" />
-    <Compile Include="Code\GUI\Windows\CameraWindow.xaml.cs">
-      <DependentUpon>CameraWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Code\GUI\Controls\CarTile.xaml.cs">
       <DependentUpon>CarTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Code\Internal\InformationHolders\Competition.cs" />
-    <Compile Include="Code\GUI\Windows\CropWindow.xaml.cs">
-      <DependentUpon>CropWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Code\Internal\Heart\DataManager.cs" />
     <Compile Include="Code\Internal\Heart\MessageProvider.cs" />
     <Compile Include="Code\Internal\InformationHolders\Race.cs" />
@@ -103,6 +100,10 @@
     </Compile>
     <Compile Include="Code\Internal\InformationHolders\Time.cs" />
     <Compile Include="Code\Internal\Communications\TrackTimer.cs" />
+    <Page Include="Code\GUI\Controls\CameraDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Code\GUI\Controls\Dialog\Dialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,15 +112,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Code\GUI\Windows\CameraWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Code\GUI\Controls\CarTile.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Code\GUI\Windows\CropWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -146,8 +139,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Code\GUI\Controls\CropDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\GUI\Controls\CropDialog.xaml.cs">
+      <DependentUpon>CropDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

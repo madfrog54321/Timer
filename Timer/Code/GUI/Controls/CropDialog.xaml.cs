@@ -11,16 +11,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Timer
 {
     /// <summary>
-    /// Interaction logic for CropWindow.xaml
+    /// Interaction logic for CropDialog.xaml
     /// </summary>
-    public partial class CropWindow : Window
+    public partial class CropDialog : UserControl
     {
-        private CropWindow()
+        private CropDialog()
         {
             InitializeComponent();
 
@@ -28,23 +29,86 @@ namespace Timer
 
         }
 
-        public delegate void savedImageHandler(Uri file);
-        public event savedImageHandler onSavedImage;
-        private void triggerSavedImage(Uri file)
+        public enum CloseEvent
         {
-            savedImageHandler handler = onSavedImage;
+            Saved, Canceled
+        }
+
+        public delegate void closeHandler(CloseEvent closeEvent, Uri file);
+        public event closeHandler onSavedImage;
+        private void triggerSavedImage(CloseEvent closeEvent, Uri file)
+        {
+            closeHandler handler = onSavedImage;
             if (handler != null)
             {
-                handler(file);
+                handler(closeEvent, file);
             }
         }
 
-        static public void cropPicture(ImageSource picture, savedImageHandler handler)
+        public static void Show(Panel parent, ImageSource picture, closeHandler handler)
         {
-            CropWindow cropTool = new CropWindow();
-            cropTool.frameImage.Source = picture;
-            cropTool.onSavedImage += handler;
-            cropTool.ShowDialog();
+            CropDialog cropDialog = new CropDialog();
+            cropDialog.frameImage.Source = picture;
+            cropDialog.onSavedImage += handler;
+
+            new Dialog(parent, cropDialog, false, true, false, null,
+                new DialogButton("Forget", DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate () {
+
+                    cropDialog.forget();
+
+                    return DialogButton.ReturnEvent.Close;
+                }), new DialogButton("Save", DialogButton.Alignment.Right, DialogButton.Style.Normal, delegate () {
+
+                    cropDialog.cropAndSaveImage();
+
+                    return DialogButton.ReturnEvent.Close;
+                }));
+        }
+
+        private void forget()
+        {
+            triggerSavedImage(CloseEvent.Canceled, null);
+        }
+
+        private void cropAndSaveImage()
+        {
+            Point topLeft_crop = getLocationOfCellOnCrop(3, 3);
+            Point bottomRight_crop = getLocationOfCellOnCrop(11, 11);
+
+            Point topLeft_image = Crop.TransformToVisual(frameImage).Transform(topLeft_crop);
+            Point bottomRight_image = Crop.TransformToVisual(frameImage).Transform(bottomRight_crop);
+
+            double maxWidth = frameImage.ActualWidth - Math.Max(topLeft_image.X, 0);
+            double maxHeight = frameImage.ActualHeight - Math.Max(topLeft_image.Y, 0);
+
+            int x = (int)Math.Max(topLeft_image.X, 0);
+            int y = (int)Math.Max(topLeft_image.Y, 0);
+            int width = (int)Math.Min(bottomRight_image.X - topLeft_image.X, maxWidth);
+            int height = (int)Math.Min(bottomRight_image.Y - topLeft_image.Y, maxHeight);
+
+            BitmapImage image = cropFromImageHolder(frameImage, new Int32Rect(x, y, width, height));
+
+            string imageDirectory = DataManager.getAbsolutePath(DataManager.Settings.ImageDirectory);
+            if (!Directory.Exists(imageDirectory))
+            {
+                Directory.CreateDirectory(imageDirectory);
+            }
+
+            string uniqueFileName;
+            do
+            {
+                uniqueFileName = imageDirectory + "\\" + string.Format(@"{0}.png", Guid.NewGuid());
+            }
+            while (File.Exists(uniqueFileName));
+
+            using (var fileStream = new FileStream(uniqueFileName, FileMode.Create))
+            {
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(image));
+                encoder.Save(fileStream);
+            }
+
+            triggerSavedImage(CloseEvent.Saved, DataManager.getAbsoluteUri(uniqueFileName));//tell caller image was created
         }
 
         private void setTopLeft(double width, double height)
@@ -90,13 +154,13 @@ namespace Timer
             Crop.RowDefinitions[0].Height = new GridLength(height);
         }
 
-        private Size getMinSizeOfAllOtherCells(int exludedDiagnalCell) 
+        private Size getMinSizeOfAllOtherCells(int exludedDiagnalCell)
         {
             Size size = new Size(0, 0);
 
-            for(int i = 0; i < Crop.ColumnDefinitions.Count; i++)
+            for (int i = 0; i < Crop.ColumnDefinitions.Count; i++)
             {
-                if(i != exludedDiagnalCell)//dont add the exluded cell into the calculation
+                if (i != exludedDiagnalCell)//dont add the exluded cell into the calculation
                 {
                     if (Crop.ColumnDefinitions[i].Width.IsAbsolute)
                     {
@@ -116,7 +180,7 @@ namespace Timer
         private void setBottomRight(double width, double height)
         {
             Point relativePoint = frameImage.TransformToVisual(Crop).Transform(new Point(frameImage.ActualWidth, frameImage.ActualHeight));
-            
+
             if (Crop.ActualWidth - width > relativePoint.X)
             {
                 width = Crop.ActualWidth - relativePoint.X;
@@ -195,45 +259,45 @@ namespace Timer
 
         private void btnTakePicture_Click(object sender, RoutedEventArgs e)
         {
-            Point topLeft_crop = getLocationOfCellOnCrop(3, 3);
-            Point bottomRight_crop = getLocationOfCellOnCrop(11, 11);
+            //Point topLeft_crop = getLocationOfCellOnCrop(3, 3);
+            //Point bottomRight_crop = getLocationOfCellOnCrop(11, 11);
 
-            Point topLeft_image = Crop.TransformToVisual(frameImage).Transform(topLeft_crop);
-            Point bottomRight_image = Crop.TransformToVisual(frameImage).Transform(bottomRight_crop);
+            //Point topLeft_image = Crop.TransformToVisual(frameImage).Transform(topLeft_crop);
+            //Point bottomRight_image = Crop.TransformToVisual(frameImage).Transform(bottomRight_crop);
 
-            double maxWidth = frameImage.ActualWidth - Math.Max(topLeft_image.X, 0);
-            double maxHeight = frameImage.ActualHeight - Math.Max(topLeft_image.Y, 0);
+            //double maxWidth = frameImage.ActualWidth - Math.Max(topLeft_image.X, 0);
+            //double maxHeight = frameImage.ActualHeight - Math.Max(topLeft_image.Y, 0);
 
-            int x = (int)Math.Max(topLeft_image.X, 0);
-            int y = (int)Math.Max(topLeft_image.Y, 0);
-            int width = (int)Math.Min(bottomRight_image.X - topLeft_image.X, maxWidth);
-            int height = (int)Math.Min(bottomRight_image.Y - topLeft_image.Y, maxHeight);
+            //int x = (int)Math.Max(topLeft_image.X, 0);
+            //int y = (int)Math.Max(topLeft_image.Y, 0);
+            //int width = (int)Math.Min(bottomRight_image.X - topLeft_image.X, maxWidth);
+            //int height = (int)Math.Min(bottomRight_image.Y - topLeft_image.Y, maxHeight);
 
-            BitmapImage image = cropFromImageHolder(frameImage, new Int32Rect(x, y, width, height));
+            //BitmapImage image = cropFromImageHolder(frameImage, new Int32Rect(x, y, width, height));
 
-            string imageDirectory = DataManager.getAbsolutePath(DataManager.Settings.ImageDirectory);
-            if (!Directory.Exists(imageDirectory))
-            {
-                Directory.CreateDirectory(imageDirectory);
-            }
+            //string imageDirectory = DataManager.getAbsolutePath(DataManager.Settings.ImageDirectory);
+            //if (!Directory.Exists(imageDirectory))
+            //{
+            //    Directory.CreateDirectory(imageDirectory);
+            //}
 
-            string uniqueFileName;
-            do
-            {
-                uniqueFileName = imageDirectory + "\\" + string.Format(@"{0}.png", Guid.NewGuid());
-            }
-            while (File.Exists(uniqueFileName));
+            //string uniqueFileName;
+            //do
+            //{
+            //    uniqueFileName = imageDirectory + "\\" + string.Format(@"{0}.png", Guid.NewGuid());
+            //}
+            //while (File.Exists(uniqueFileName));
 
-            using (var fileStream = new FileStream(uniqueFileName, FileMode.Create))
-            {
-                BitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(image));
-                encoder.Save(fileStream);
-            }
+            //using (var fileStream = new FileStream(uniqueFileName, FileMode.Create))
+            //{
+            //    BitmapEncoder encoder = new PngBitmapEncoder();
+            //    encoder.Frames.Add(BitmapFrame.Create(image));
+            //    encoder.Save(fileStream);
+            //}
 
-            triggerSavedImage(DataManager.getAbsoluteUri(uniqueFileName));//tell caller image was created
+            //triggerSavedImage(DataManager.getAbsoluteUri(uniqueFileName));//tell caller image was created
 
-            Close();
+            //Close();
         }
 
         private BitmapImage cropFromImageHolder(Image imageHolder, Int32Rect crop)
@@ -243,7 +307,7 @@ namespace Timer
 
             return sourceToImage(new CroppedBitmap(bitmap, crop));
         }
-        
+
         private BitmapImage sourceToImage(BitmapSource source)
         {
             using (MemoryStream memoryStream = new MemoryStream())
