@@ -87,5 +87,51 @@ namespace Timer
             }
             return false;
         }
+
+        public TimeInfo getTimeInfo()
+        {
+            List<int> lanesDone = new List<int>();
+
+            if (_times.Count > 0)
+            {
+                double bestTime = 10;
+                Dictionary<int, double> bestTimes = new Dictionary<int, double>();
+                foreach (Time time in _times)
+                {
+                    if (!bestTimes.ContainsKey(time.Lane))
+                    {
+                        bestTimes.Add(time.Lane, time.Speed);
+                    }
+                    else if (bestTimes[time.Lane] > time.Speed)
+                    {
+                        bestTimes[time.Lane] = time.Speed;
+                    }
+                    if (bestTime > time.Speed)
+                    {
+                        bestTime = time.Speed;
+                    }
+                    if (!lanesDone.Contains(time.Lane))
+                    {
+                        lanesDone.Add(time.Lane);
+                    }
+                }
+
+                double totalTime = 0;
+                int totalAmount = 0;
+                foreach (KeyValuePair<int, double> time in bestTimes)
+                {
+                    totalTime += time.Value;
+                    totalAmount++;
+                }
+
+                double averageTime = totalTime / totalAmount;
+                
+                return new TimeInfo(averageTime, bestTime, lanesDone);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

@@ -72,7 +72,7 @@ namespace Timer
             dialog.tbMessage.Text = message;
             dialog.tbTitle.Text = title;
 
-            new Dialog(parent, dialog, false, false, false, null,
+            new Dialog(parent, dialog, false, false, true, null,
                 new DialogButton(button, DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate () {
 
                     dialog.triggerGotDialogResult(DialogResult.MainOption);

@@ -56,8 +56,8 @@
                     <Label Content="5" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <Label Content="6" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </StackPanel>
-                
-                <StackPanel HorizontalAlignment="Left" Opacity="0.7" VerticalAlignment="Center" Margin="8">
+
+                <StackPanel x:Name="timeBestHolder" HorizontalAlignment="Left" Opacity="0.5" VerticalAlignment="Center" Margin="8">
                     <TextBlock x:Name="timeBest" TextAlignment="Left"  Margin="0, 0, 0, 0" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold">
                                 9.999s
                     </TextBlock>
@@ -66,7 +66,7 @@
                     </TextBlock>
                 </StackPanel>
 
-                <StackPanel HorizontalAlignment="Left" Opacity="0.7" VerticalAlignment="Center" Margin="8, 8, 16, 8">
+                <StackPanel x:Name="timeAverageHolder" HorizontalAlignment="Left" Opacity="0.5" VerticalAlignment="Center" Margin="8, 8, 16, 8">
                     <TextBlock x:Name="timeAverage" TextAlignment="Left" Margin="0, 0, 0, 0" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold">
                                 9.999s
                     </TextBlock>

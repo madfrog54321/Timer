@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -68,6 +69,9 @@ namespace Timer
                 DataManager.MessageProvider.showError("Could Not Load Defalt Creator's Picture", ex2.Message);
             }
 
+            creator.raceData.Children.Clear();
+            creator.raceData.ColumnDefinitions.Clear();
+
             MakeDialog(parent, creator, WindowType.Create);
 
         }
@@ -117,11 +121,90 @@ namespace Timer
             editor.tbCreatorName.Text = racer.Maker.Name;
             editor.tbBarcode.Text = racer.Barcode;
             editor.cboClass.Text = racer.Class;
-
-            //change
-            foreach (Time time in racer.Times)
+            
+            editor.raceData.Children.Clear();
+            editor.raceData.ColumnDefinitions.Clear();
+            if (racer.Times.Count > 0)
             {
-                editor.list.Items.Add(time.Speed + "s, Lane: " + time.Lane + ", Place: " + time.Place);
+                editor.scores.Visibility = Visibility.Visible;
+                double totalTime = 0;
+                int totalAmount = 0;
+                double bestTime = 10;
+
+                editor.lbNoRaceData.Visibility = Visibility.Collapsed;
+                for (int i = 0; i < DataManager.Settings.NumberOfLanes; i++)
+                {
+                    editor.raceData.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+
+                    //<Label Grid.Column="5" Content="6" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    Label lbLaneHeader = new Label();
+                    lbLaneHeader.Content = (i + 1).ToString();
+                    lbLaneHeader.FontSize = 30;
+                    lbLaneHeader.HorizontalAlignment = HorizontalAlignment.Center;
+                    lbLaneHeader.VerticalAlignment = VerticalAlignment.Center;
+                    lbLaneHeader.SetValue(Grid.RowProperty, 0);
+                    lbLaneHeader.SetValue(Grid.ColumnProperty, i);
+                    editor.raceData.Children.Add(lbLaneHeader);
+
+                    //<Border Grid.Column="6" Grid.Row="1" Grid.RowSpan="2" BorderThickness="0.5, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignDivider}" Margin="0, 16, 0, 8"/>
+                    Border border = new Border();
+                    border.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    border.VerticalAlignment = VerticalAlignment.Stretch;
+                    border.Margin = new Thickness(0, 8, 0, 8);
+                    border.BorderBrush = editor.FindResource("MaterialDesignDivider") as Brush;
+                    border.BorderThickness = new Thickness((i == 0 ? 0 : 0.5), 0, (i == DataManager.Settings.NumberOfLanes - 1 ? 0 : 0.5), 0);
+                    border.SetValue(Grid.RowProperty, 0);
+                    border.SetValue(Grid.RowSpanProperty, 2);
+                    border.SetValue(Grid.ColumnProperty, i);
+                    editor.raceData.Children.Add(border);
+
+                    StackPanel stp = new StackPanel();
+                    stp.HorizontalAlignment = HorizontalAlignment.Center;
+                    stp.VerticalAlignment = VerticalAlignment.Top;
+                    stp.Orientation = Orientation.Vertical;
+                    stp.SetValue(Grid.RowProperty, 1);
+                    stp.SetValue(Grid.ColumnProperty, i);
+
+                    List<double> times = new List<double>();
+                    foreach (Time time in racer.Times)
+                    {
+                        if (time.Lane == i + 1)
+                        {
+                            times.Add(time.Speed);
+                        }
+                    }
+                    times.Sort();
+
+                    for (int t = 0; t < times.Count; t++)
+                    {
+                        Label lbTime = new Label();
+                        lbTime.Content = String.Format("{0:0.000}", times[t]) + "s";
+                        lbTime.FontSize = 18;
+                        if (t == 0)
+                        {
+                            totalTime += times[t];
+                            totalAmount++;
+                            if (bestTime > times[t])
+                            {
+                                bestTime = times[t];
+                            }
+                        }
+                        else
+                        {
+                            lbTime.Opacity = 0.5;
+                        }
+                        lbTime.HorizontalAlignment = HorizontalAlignment.Center;
+                        lbTime.VerticalAlignment = VerticalAlignment.Top;
+                        lbTime.SetValue(Grid.RowProperty, 1);
+                        lbTime.SetValue(Grid.ColumnProperty, i);
+                        stp.Children.Add(lbTime);
+                    }
+                    
+                    editor.timeAverage.Text = String.Format("{0:0.000}", (totalTime / totalAmount)) + "s";
+                    editor.timeBest.Text = String.Format("{0:0.000}", bestTime) + "s";
+
+                    editor.raceData.Children.Add(stp);
+                }
             }
 
             MakeDialog(parent, editor, WindowType.Display);
@@ -129,7 +212,7 @@ namespace Timer
         
         private static void MakeDialog(Panel parent, RacerDetails content, WindowType type)
         {
-            content._dialogHost = new Dialog(parent, content, true, false, true, delegate ()
+            content._dialogHost = new Dialog(parent, content, false, false, true, delegate ()
                 {
                     if (content._type == WindowType.Display)//only allow saving after clicking of dialog, if not creating a new car
                     {

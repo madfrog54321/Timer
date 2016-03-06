@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="Code\Internal\InformationHolders\Time.cs" />
     <Compile Include="Code\Internal\Communications\TrackTimer.cs" />
+    <Compile Include="Code\Internal\InformationHolders\TimeInfo.cs" />
     <Page Include="Code\GUI\Controls\CameraDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

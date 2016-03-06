@@ -326,163 +326,164 @@ namespace Timer
             }
         }
 
+        private Dictionary<string, List<Racer>> sortRacerIntoClasses()
+        {
+            Dictionary<string, List<Racer>> standings = new Dictionary<string, List<Racer>>();
+            foreach (Racer racer in DataManager.Competition.Racers)
+            {
+                if (!standings.ContainsKey(racer.Class))
+                {
+                    standings.Add(racer.Class, new List<Racer>());
+                }
+                standings[racer.Class].Add(racer);
+            }
+            return standings;
+        }
+
         private void updateRacerList()
         {
+            //clear list holders
             tileHolder.Children.Clear();
             listHolder.Children.Clear();
-            if (btnTileMode.IsChecked.HasValue && btnTileMode.IsChecked.Value)
+            
+            if (btnTileMode.IsChecked.HasValue && btnTileMode.IsChecked.Value)//deside which mode to display
             {
-                if (btnShowClasses.IsChecked.HasValue && btnShowClasses.IsChecked.Value)
+                if (btnShowClasses.IsChecked.HasValue && btnShowClasses.IsChecked.Value)//deside to show classes
                 {
-                    Dictionary<string, List<Racer>> standings = new Dictionary<string, List<Racer>>();
-                    foreach (Racer racer in DataManager.Competition.Racers)
-                    {
-                        if (!standings.ContainsKey(racer.Class))
-                        {
-                            standings.Add(racer.Class, new List<Racer>());
-                        }
-                        standings[racer.Class].Add(racer);
-                    }
-                    List<string> classes = standings.Keys.ToList();
-
-                    for (int c = 0; c < classes.Count; c++)
+                    foreach (KeyValuePair<string, List<Racer>> racer in sortRacerIntoClasses())
                     {
                         listGroup group = new listGroup();
-                        group.Title.Content = classes[c];
-
-                        foreach (Racer racer in standings[classes[c]])
-                        {
-                            CarTile tile = CarTile.createTile(racer, true, delegate ()
-                            {
-                                addRacer(DataManager.Competition.Racers.IndexOf(racer));
-                            });
-                            tile.MouseUp += delegate
-                            {
-                                RacerDetails.editOldRacer(HostGrid, racer, delegate ()
-                                {
-                                    updateRacerList();
-                                });
-                            };
-                            tile.Cursor = Cursors.Hand;
-                            tile.Margin = new Thickness(8, 8, 0, 0);
-                            group.tileHolder.Children.Add(tile);
-                        }
-
+                        group.Title.Content = racer.Key;
+                        createCarTiles(group.tileHolder, racer.Value);
                         tileHolder.Children.Add(group);
                     }
                 }
                 else
                 {
-                    foreach (Racer racer in DataManager.Competition.Racers)
-                    {
-                        CarTile tile = CarTile.createTile(racer, true, delegate ()
-                        {
-                            addRacer(DataManager.Competition.Racers.IndexOf(racer));
-                        });
-                        tile.MouseUp += delegate
-                        {
-                            RacerDetails.editOldRacer(HostGrid, racer, delegate ()
-                            {
-                                updateRacerList();
-                            });
-                        };
-                        tile.Cursor = Cursors.Hand;
-                        tile.Margin = new Thickness(8, 8, 0, 0);
-                        tileHolder.Children.Add(tile);
-                    }
+                    createCarTiles(tileHolder, DataManager.Competition.Racers);
                 }
             }
             else
             {
-                if(btnShowClasses.IsChecked.HasValue && btnShowClasses.IsChecked.Value)
+                if (btnShowClasses.IsChecked.HasValue && btnShowClasses.IsChecked.Value)//deside to show classes
                 {
-                    Dictionary<string, List<KeyValuePair<double, Racer>>> standings = new Dictionary<string, List<KeyValuePair<double, Racer>>>();
-                    foreach (Racer racer in DataManager.Competition.Racers)
+                    foreach (KeyValuePair<string, List <Racer>> racer in sortRacerIntoClasses())
                     {
-                        double totalTime = 0;
-                        foreach (Time time in racer.Times)
-                        {
-                            totalTime += time.Speed;
-                        }
-                        if (!standings.ContainsKey(racer.Class))
-                        {
-                            standings.Add(racer.Class, new List<KeyValuePair<double, Racer>>());
-                        }
-                        standings[racer.Class].Add(new KeyValuePair<double, Racer>(totalTime / racer.Times.Count, racer));
-                    }
-
-                    List<string> classes = standings.Keys.ToList();
-                    for (int c = 0; c < classes.Count; c++)
-                    {
-                        standings[classes[c]].Sort(
-                            delegate (KeyValuePair<double, Racer> firstPair,
-                            KeyValuePair<double, Racer> nextPair)
-                            {
-                                return firstPair.Key.CompareTo(nextPair.Key);
-                            }
-                        );
-
                         listGroup group = new listGroup();
-                        group.Title.Content = classes[c];
-
-                        int i = 0;
-                        foreach (KeyValuePair<double, Racer> racer in standings[classes[c]])
-                        {
-                            i++;
-                            CarList listItem = CarList.createListItem(racer.Value, i);
-                            listItem.MouseUp += delegate
-                            {
-                                RacerDetails.editOldRacer(HostGrid, racer.Value, delegate ()
-                                {
-                                    updateRacerList();
-                                });
-                            };
-                            listItem.Margin = new Thickness(0, 0, 0, 8);
-                            group.listHolder.Children.Add(listItem);
-                        }
-
+                        group.Title.Content = racer.Key;
+                        createCarList(group.listHolder, racer.Value);
                         listHolder.Children.Add(group);
                     }
                 }
                 else
                 {
-                    List<KeyValuePair<double, Racer>> standings = new List<KeyValuePair<double, Racer>>();
-
-                    foreach (Racer racer in DataManager.Competition.Racers)
-                    {
-                        double totalTime = 0;
-                        foreach (Time time in racer.Times)
-                        {
-                            totalTime += time.Speed;
-                        }
-                        standings.Add(new KeyValuePair<double, Racer>(totalTime / racer.Times.Count, racer));
-                    }
-
-                    standings.Sort(
-                        delegate (KeyValuePair<double, Racer> firstPair,
-                        KeyValuePair<double, Racer> nextPair)
-                        {
-                            return firstPair.Key.CompareTo(nextPair.Key);
-                        }
-                    );
-                    
-                    int i = 0;
-                    foreach (KeyValuePair<double, Racer> racer in standings)
-                    {
-                        i++;
-                        CarList listItem = CarList.createListItem(racer.Value, i);
-                        listItem.MouseUp += delegate
-                        {
-                            RacerDetails.editOldRacer(HostGrid, racer.Value, delegate ()
-                            {
-                                updateRacerList();
-                            });
-                        };
-                        listItem.Margin = new Thickness(0, 0, 0, 8);
-                        listHolder.Children.Add(listItem);
-                    }
+                    createCarList(listHolder, DataManager.Competition.Racers);
                 }
             }
+        }
+
+        private void createCarTiles(Panel host, List<Racer> racers)
+        {
+            foreach (Racer racer in racers)
+            {
+                CarTile tile = CarTile.createTile(racer, true, delegate ()
+                {
+                    addRacer(DataManager.Competition.Racers.IndexOf(racer));
+                });
+                tile.MouseUp += delegate
+                {
+                    RacerDetails.editOldRacer(HostGrid, racer, delegate ()
+                    {
+                        updateRacerList();
+                    });
+                };
+                tile.Cursor = Cursors.Hand;
+                tile.Margin = new Thickness(8, 8, 0, 0);
+                host.Children.Add(tile);
+            }
+        }
+
+        private void createCarList(Panel host, List<Racer> racers)
+        {
+            //create sortable lists
+            List<KeyValuePair<TimeInfo, Racer>> doneStandings = new List<KeyValuePair<TimeInfo, Racer>>();
+            List<KeyValuePair<TimeInfo, Racer>> standings = new List<KeyValuePair<TimeInfo, Racer>>();
+            List<Racer> noDataStandings = new List<Racer>();
+
+            //put each racer into their list
+            foreach (Racer racer in racers)
+            {
+                TimeInfo timeInfo = racer.getTimeInfo();
+
+                if (timeInfo != null)
+                {
+                    if (timeInfo.HasAllLanesDone())
+                    {
+                        doneStandings.Add(new KeyValuePair<TimeInfo, Racer>(timeInfo, racer));
+                    }
+                    else
+                    {
+                        standings.Add(new KeyValuePair<TimeInfo, Racer>(timeInfo, racer));
+                    }
+                }
+                else
+                {
+                    noDataStandings.Add(racer);
+                }
+            }
+
+            //sort each list
+            Comparison<KeyValuePair<TimeInfo, Racer>> comparer = delegate (KeyValuePair<TimeInfo, Racer> firstPair, KeyValuePair<TimeInfo, Racer> nextPair)
+            {
+                return firstPair.Key.AverageTime.CompareTo(nextPair.Key.AverageTime);
+            };
+            doneStandings.Sort(comparer);
+            standings.Sort(comparer);
+
+            //display results
+            int i = 0;
+            foreach (KeyValuePair<TimeInfo, Racer> racer in doneStandings)
+            {
+                i++;
+                addCarListItem(host, racer.Value, i, racer.Key);
+            }
+            foreach (KeyValuePair<TimeInfo, Racer> racer in standings)
+            {
+                i++;
+                addCarListItem(host, racer.Value, i, racer.Key);
+            }
+            foreach (Racer racer in noDataStandings)
+            {
+                addCarListItem(host, racer);
+            }
+        }
+
+        private void addCarListItem(Panel host, Racer racer, int place, TimeInfo timeInfo)
+        {
+            CarList listItem = CarList.createListItem(racer, place, timeInfo);
+            listItem.MouseUp += delegate
+            {
+                RacerDetails.editOldRacer(HostGrid, racer, delegate ()
+                {
+                    updateRacerList();
+                });
+            };
+            listItem.Margin = new Thickness(0, 0, 0, 8);
+            host.Children.Add(listItem);
+        }
+
+        private void addCarListItem(Panel host, Racer racer)
+        {
+            CarList listItem = CarList.createListItem(racer);
+            listItem.MouseUp += delegate
+            {
+                RacerDetails.editOldRacer(HostGrid, racer, delegate ()
+                {
+                    updateRacerList();
+                });
+            };
+            listItem.Margin = new Thickness(0, 0, 0, 8);
+            host.Children.Add(listItem);
         }
 
         private void flyoutAnimation(double time, double opactity)

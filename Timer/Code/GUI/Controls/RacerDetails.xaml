@@ -22,7 +22,7 @@
     </UserControl.Resources>
 
 
-    <Grid x:Name="Info" Opacity="1" VerticalAlignment="Stretch" MinWidth="400" MaxWidth="700" >
+    <Grid x:Name="Info" Opacity="1" MinWidth="400" MaxWidth="700" >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -83,12 +83,55 @@
             <ComboBox x:Name="cboClass" FontSize="14" Grid.Column="0" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Class" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True"/>
             <TextBox x:Name="tbBarcode" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Barcode"/>
         </Grid>
-        <Label Grid.Row="2" Content="No Racing Data" IsEnabled="False" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ScrollViewer Grid.Row="2">
-            <StackPanel Margin="8">
+        <Label x:Name="lbNoRaceData" Grid.Row="2" Content="No Racing Data" Margin="52" IsEnabled="False" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Grid x:Name="scores" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <ListBox x:Name="list"></ListBox>
+                    <StackPanel Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8, 8, 16, 8">
+                        <TextBlock x:Name="timeBest" TextAlignment="Left"  Margin="0, 0, 0, 0" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold">
+                                9.999s
+                        </TextBlock>
+                        <TextBlock TextAlignment="Left" Margin="0, 4, 0, 0" VerticalAlignment="Center" FontSize="12">
+                                Best
+                        </TextBlock>
+                    </StackPanel>
 
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="16, 8, 8, 8">
+                        <TextBlock x:Name="timeAverage" TextAlignment="Left" Margin="0, 0, 0, 0" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold">
+                                9.999s
+                        </TextBlock>
+                        <TextBlock TextAlignment="Left" Margin="0, 4, 0, 0" VerticalAlignment="Center" FontSize="12">
+                                Average
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+                <Grid x:Name="raceData">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Content="1" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Column="1" Content="2" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Column="2" Content="3" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Column="3" Content="4" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Column="4" Content="5" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Column="5" Content="6" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <Label Grid.Column="0" Grid.Row="1" Content="9.999s" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                </Grid>
             </StackPanel>
         </ScrollViewer>
     </Grid>
