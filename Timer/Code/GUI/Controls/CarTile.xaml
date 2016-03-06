@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="300"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Cursor="Hand">
+        FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
 
     <Grid x:Name="MainGrid" Grid.Column="2" MouseEnter="btnAddToRace_MouseEnter" MouseLeave="btnAddToRace_MouseLeave" Width="200" Height="200" Grid.Row="2" VerticalAlignment="Stretch"  Background="{DynamicResource PrimaryHueDarkBrush}" >
         <Grid.RowDefinitions>
@@ -34,13 +34,15 @@
             </Grid.OpacityMask>
             <Image x:Name="imgCreatorPicture" Grid.Row="0" Grid.RowSpan="2" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>
-        <Grid x:Name="addOverlay" Visibility="Hidden" HorizontalAlignment="Right" MouseEnter="addOverlay_MouseEnter" MouseLeave="addOverlay_MouseLeave" Background="#66000000" Margin="8" VerticalAlignment="Top" Height="56" Width="56">
-            <Grid.OpacityMask>
-                <VisualBrush Visual="{Binding ElementName=creatorImage}"/>
-            </Grid.OpacityMask>
-            <Button x:Name="btnAddToRace" Click="btnAddToRace_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" materialDesign:RippleAssist.ClipToBounds="True" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <materialDesign:PackIcon Kind="FlagCheckered" Width="32" Height="32" />
-            </Button>
+        <Grid x:Name="addHolder" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Grid x:Name="addOverlay" Visibility="Hidden" MouseEnter="addOverlay_MouseEnter" MouseLeave="addOverlay_MouseLeave" Background="#66000000" Margin="8" Height="56" Width="56">
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=creatorImage}"/>
+                </Grid.OpacityMask>
+                <Button x:Name="btnAddToRace" Click="btnAddToRace_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" materialDesign:RippleAssist.ClipToBounds="True" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="FlagCheckered" Width="32" Height="32" />
+                </Button>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

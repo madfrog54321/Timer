@@ -62,6 +62,27 @@ namespace Timer
             set { _raceDisplayHeight = value; }
         }
 
+        private double _standingsZoom;
+        public double StandingsZoom
+        {
+            get { return _standingsZoom; }
+            set { _standingsZoom = value; }
+        }
+
+        private double _tilesZoom;
+        public double TilesZoom
+        {
+            get { return _tilesZoom; }
+            set { _tilesZoom = value; }
+        }
+
+        private double _autoScrollSpeed;
+        public double AutoScrollSpeed
+        {
+            get { return _autoScrollSpeed; }
+            set { _autoScrollSpeed = value; }
+        }
+
         public Settings()
         {
             _numLanes = 6;
@@ -72,6 +93,9 @@ namespace Timer
             _emptyLaneBarcode = "empty";
             _resetBarcode = "reset";
             _raceDisplayHeight = 1;
+            _standingsZoom = 1;
+            _autoScrollSpeed = 50;
+            _tilesZoom = 1;
         }
 
         private const string DEFAULT_FILENAME = "settings.jsn";

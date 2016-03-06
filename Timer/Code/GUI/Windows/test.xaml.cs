@@ -28,7 +28,7 @@ namespace Timer
         {
             InitializeComponent();
 
-            DataManager.MessageProvider = new DialogMessageProvider(HostGrid, delegate
+            DataManager.MessageProvider = new DialogMessageProvider(MessageGrid, delegate
             {
                 DataManager.MessageProvider = new BasicMessageProvider();
             });
@@ -39,11 +39,74 @@ namespace Timer
 
             updateSettings();
 
+            startAutoScroll();
+
             //addEmpty();
         }
         
+        private DateTime lastTime;
+        private enum ScrollEffect { Down, Up, PauseBeforeUp, PauseBeforeDown}
+        private ScrollEffect scrollDirection = ScrollEffect.PauseBeforeDown;
+        private void startAutoScroll()
+        {
+            lastTime = DateTime.Now;
+            CompositionTarget.Rendering += delegate (object send, EventArgs args)
+            {
+                DateTime now = DateTime.Now;
+                double elapsed = (now - lastTime).TotalSeconds;
+                if (btnScrollDown.IsChecked.HasValue && btnScrollDown.IsChecked.Value)
+                {
+                    if (scrollDirection == ScrollEffect.Down || scrollDirection == ScrollEffect.Up)
+                    {
+                        lastTime = now;
+
+
+                        if (scrollDirection == ScrollEffect.Down)
+                        {
+                            if (listScrollbar.ScrollableHeight <= listScrollbar.VerticalOffset)
+                            {
+                                scrollDirection = ScrollEffect.PauseBeforeUp;
+                            }
+                            else
+                            {
+                                listScrollbar.ScrollToVerticalOffset(listScrollbar.VerticalOffset + (elapsed * DataManager.Settings.AutoScrollSpeed));
+                            }
+                        }
+                        else
+                        {
+                            if (0 >= listScrollbar.VerticalOffset)
+                            {
+                                scrollDirection = ScrollEffect.PauseBeforeDown;
+                            }
+                            else
+                            {
+                                listScrollbar.ScrollToVerticalOffset(listScrollbar.VerticalOffset - (elapsed * 1000));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (elapsed > 300 / DataManager.Settings.AutoScrollSpeed)
+                        {
+                            if (scrollDirection == ScrollEffect.PauseBeforeUp)
+                            {
+                                scrollDirection = ScrollEffect.Up;
+                                lastTime = now;
+                            }
+                            else
+                            {
+                                scrollDirection = ScrollEffect.Down;
+                                lastTime = now;
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
         private void updatePorts()
         {
+            cboPorts.Items.Clear();
             string[] ports = DataManager.getPorts();
             foreach (string port in ports)
             {
@@ -265,22 +328,160 @@ namespace Timer
 
         private void updateRacerList()
         {
+            tileHolder.Children.Clear();
             listHolder.Children.Clear();
-            foreach (Racer racer in DataManager.Competition.Racers)
+            if (btnTileMode.IsChecked.HasValue && btnTileMode.IsChecked.Value)
             {
-                CarTile tile = CarTile.createTile(racer, true, delegate()
+                if (btnShowClasses.IsChecked.HasValue && btnShowClasses.IsChecked.Value)
                 {
-                    addRacer(DataManager.Competition.Racers.IndexOf(racer));
-                });
-                tile.MouseUp += delegate
-                {
-                    RacerDetails.editOldRacer(HostGrid, racer, delegate ()
+                    Dictionary<string, List<Racer>> standings = new Dictionary<string, List<Racer>>();
+                    foreach (Racer racer in DataManager.Competition.Racers)
                     {
-                        updateRacerList();
-                    });
-                };
-                tile.Margin = new Thickness(8, 8, 0, 0);
-                listHolder.Children.Add(tile);
+                        if (!standings.ContainsKey(racer.Class))
+                        {
+                            standings.Add(racer.Class, new List<Racer>());
+                        }
+                        standings[racer.Class].Add(racer);
+                    }
+                    List<string> classes = standings.Keys.ToList();
+
+                    for (int c = 0; c < classes.Count; c++)
+                    {
+                        listGroup group = new listGroup();
+                        group.Title.Content = classes[c];
+
+                        foreach (Racer racer in standings[classes[c]])
+                        {
+                            CarTile tile = CarTile.createTile(racer, true, delegate ()
+                            {
+                                addRacer(DataManager.Competition.Racers.IndexOf(racer));
+                            });
+                            tile.MouseUp += delegate
+                            {
+                                RacerDetails.editOldRacer(HostGrid, racer, delegate ()
+                                {
+                                    updateRacerList();
+                                });
+                            };
+                            tile.Cursor = Cursors.Hand;
+                            tile.Margin = new Thickness(8, 8, 0, 0);
+                            group.tileHolder.Children.Add(tile);
+                        }
+
+                        tileHolder.Children.Add(group);
+                    }
+                }
+                else
+                {
+                    foreach (Racer racer in DataManager.Competition.Racers)
+                    {
+                        CarTile tile = CarTile.createTile(racer, true, delegate ()
+                        {
+                            addRacer(DataManager.Competition.Racers.IndexOf(racer));
+                        });
+                        tile.MouseUp += delegate
+                        {
+                            RacerDetails.editOldRacer(HostGrid, racer, delegate ()
+                            {
+                                updateRacerList();
+                            });
+                        };
+                        tile.Cursor = Cursors.Hand;
+                        tile.Margin = new Thickness(8, 8, 0, 0);
+                        tileHolder.Children.Add(tile);
+                    }
+                }
+            }
+            else
+            {
+                if(btnShowClasses.IsChecked.HasValue && btnShowClasses.IsChecked.Value)
+                {
+                    Dictionary<string, List<KeyValuePair<double, Racer>>> standings = new Dictionary<string, List<KeyValuePair<double, Racer>>>();
+                    foreach (Racer racer in DataManager.Competition.Racers)
+                    {
+                        double totalTime = 0;
+                        foreach (Time time in racer.Times)
+                        {
+                            totalTime += time.Speed;
+                        }
+                        if (!standings.ContainsKey(racer.Class))
+                        {
+                            standings.Add(racer.Class, new List<KeyValuePair<double, Racer>>());
+                        }
+                        standings[racer.Class].Add(new KeyValuePair<double, Racer>(totalTime / racer.Times.Count, racer));
+                    }
+
+                    List<string> classes = standings.Keys.ToList();
+                    for (int c = 0; c < classes.Count; c++)
+                    {
+                        standings[classes[c]].Sort(
+                            delegate (KeyValuePair<double, Racer> firstPair,
+                            KeyValuePair<double, Racer> nextPair)
+                            {
+                                return firstPair.Key.CompareTo(nextPair.Key);
+                            }
+                        );
+
+                        listGroup group = new listGroup();
+                        group.Title.Content = classes[c];
+
+                        int i = 0;
+                        foreach (KeyValuePair<double, Racer> racer in standings[classes[c]])
+                        {
+                            i++;
+                            CarList listItem = CarList.createListItem(racer.Value, i);
+                            listItem.MouseUp += delegate
+                            {
+                                RacerDetails.editOldRacer(HostGrid, racer.Value, delegate ()
+                                {
+                                    updateRacerList();
+                                });
+                            };
+                            listItem.Margin = new Thickness(0, 0, 0, 8);
+                            group.listHolder.Children.Add(listItem);
+                        }
+
+                        listHolder.Children.Add(group);
+                    }
+                }
+                else
+                {
+                    List<KeyValuePair<double, Racer>> standings = new List<KeyValuePair<double, Racer>>();
+
+                    foreach (Racer racer in DataManager.Competition.Racers)
+                    {
+                        double totalTime = 0;
+                        foreach (Time time in racer.Times)
+                        {
+                            totalTime += time.Speed;
+                        }
+                        standings.Add(new KeyValuePair<double, Racer>(totalTime / racer.Times.Count, racer));
+                    }
+
+                    standings.Sort(
+                        delegate (KeyValuePair<double, Racer> firstPair,
+                        KeyValuePair<double, Racer> nextPair)
+                        {
+                            return firstPair.Key.CompareTo(nextPair.Key);
+                        }
+                    );
+                    
+                    int i = 0;
+                    foreach (KeyValuePair<double, Racer> racer in standings)
+                    {
+                        i++;
+                        CarList listItem = CarList.createListItem(racer.Value, i);
+                        listItem.MouseUp += delegate
+                        {
+                            RacerDetails.editOldRacer(HostGrid, racer.Value, delegate ()
+                            {
+                                updateRacerList();
+                            });
+                        };
+                        listItem.Margin = new Thickness(0, 0, 0, 8);
+                        listHolder.Children.Add(listItem);
+                    }
+                }
             }
         }
 
@@ -363,6 +564,7 @@ namespace Timer
                 {
                     //btnConnect.IsEnabled = false;
                     btnConnect.Content = "Disconnect";
+                    cboPorts.IsEnabled = false;
                     DataManager.RaceManager.onReadyForNextRace += RaceManager_onReadyForNextRace;
                     DataManager.RaceManager.onRaceIsFull += RaceManager_onRaceIsFull;
                 }
@@ -370,6 +572,7 @@ namespace Timer
             else
             {
                 DataManager.disconnectTimer();
+                cboPorts.IsEnabled = true;
                 btnConnect.Content = "Connect";
             }
         }
@@ -380,6 +583,7 @@ namespace Timer
             {
                 //reset race list
                 RaceList.Children.Clear();
+                updateRacerList();
             }
             else
             {
@@ -464,6 +668,10 @@ namespace Timer
             heightSlider.Value = DataManager.Settings.RaceDisplayHeight;
             MainGrid.RowDefinitions[2].Height = new GridLength(DataManager.Settings.RaceDisplayHeight, GridUnitType.Star);
 
+            uiScaleSlider.Value = DataManager.Settings.StandingsZoom;
+            tilesSlider.Value = DataManager.Settings.TilesZoom;
+            autoScrollSlider.Value = DataManager.Settings.AutoScrollSpeed;
+
             updateClassList();
             _loadingSettings = false;
         }
@@ -505,6 +713,68 @@ namespace Timer
         private void btnLockKeyboard_Unchecked(object sender, RoutedEventArgs e)
         {
             btnLockKeyboard.Content = new PackIcon() { Kind = PackIconKind.LockOpen, Width = 24, Height = 24 };
+        }
+        
+        private void btnListMode_Checked(object sender, RoutedEventArgs e)
+        {
+            updateRacerList();
+            listHolder.Visibility = Visibility.Visible;
+            tileHolder.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnTileMode_Checked(object sender, RoutedEventArgs e)
+        {
+            updateRacerList();
+            listHolder.Visibility = Visibility.Collapsed;
+            tileHolder.Visibility = Visibility.Visible;
+        }
+
+        private void uiScaleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_loadingSettings)
+            {
+                DataManager.Settings.StandingsZoom = uiScaleSlider.Value;
+                DataManager.Settings.Save();
+            }
+        }
+
+        private void listScrollbar_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            btnScrollDown.IsChecked = false;
+        }
+
+        private void autoScrollSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_loadingSettings)
+            {
+                DataManager.Settings.AutoScrollSpeed = autoScrollSlider.Value;
+                DataManager.Settings.Save();
+            }
+        }
+
+        private void btnShowClasses_Checked(object sender, RoutedEventArgs e)
+        {
+            updateRacerList();
+        }
+
+        private void btnShowClasses_Unchecked(object sender, RoutedEventArgs e)
+        {
+            updateRacerList();
+        }
+
+        private void btnScrollDown_Checked(object sender, RoutedEventArgs e)
+        {
+            lastTime = DateTime.Now;
+            scrollDirection = ScrollEffect.Up;
+        }
+
+        private void tilesSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_loadingSettings)
+            {
+                DataManager.Settings.TilesZoom = tilesSlider.Value;
+                DataManager.Settings.Save();
+            }
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)

@@ -219,32 +219,29 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="8">
-                <ScrollViewer>
+                <ScrollViewer x:Name="listScrollbar" PreviewMouseWheel="listScrollbar_PreviewMouseWheel">
                     <StackPanel>
+                        <StackPanel x:Name="listHolder" Visibility="Collapsed" Margin="8, 8, 8, 48">
+                            <StackPanel.LayoutTransform>
+                                <ScaleTransform 
+                                CenterX="0" CenterY="0"
+                                ScaleX="{Binding ElementName=uiScaleSlider,Path=Value}"
+                                ScaleY="{Binding ElementName=uiScaleSlider,Path=Value}"
+                            />
 
-                        <StackPanel>
-
-                            <materialDesign:ColorZone Visibility="Collapsed" Mode="Light">
-                                <Grid Grid.Column="2" Grid.Row="2" Margin="8, 8, 0, 0" VerticalAlignment="Stretch">
-                                    <Button Style="{StaticResource MaterialDesignFloatingActionButton}" materialDesign:ShadowAssist.ShadowDepth="Depth0" Margin="0,0,0,0" BorderBrush="Transparent" Background="Transparent" ToolTip="Add New Racer" Width="56" Height="56" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                        <Image Source="../../../Assets/Images/IMG_7143.JPG" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-1"/>
-                                    </Button>
-                                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="68, 16, 16, 16">
-                                        <TextBlock TextAlignment="Left" Margin="0, 0, 0, 0" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold">
-                                            Woodie
-                                        </TextBlock>
-                                        <TextBlock TextAlignment="Left" Margin="0, 4, 0, 0" VerticalAlignment="Center" FontSize="16">
-                                            Konnor Andrews
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Grid>
-                            </materialDesign:ColorZone>
+                            </StackPanel.LayoutTransform>
 
                         </StackPanel>
 
-                        <WrapPanel x:Name="listHolder" HorizontalAlignment="Center" Margin="0, 0, 8, 8">
+                        <WrapPanel x:Name="tileHolder" HorizontalAlignment="Center" Margin="0, 0, 8, 8">
+                            <WrapPanel.LayoutTransform>
+                                <ScaleTransform 
+                                CenterX="0" CenterY="0"
+                                ScaleX="{Binding ElementName=tilesSlider,Path=Value}"
+                                ScaleY="{Binding ElementName=tilesSlider,Path=Value}"
+                            />
+                            </WrapPanel.LayoutTransform>
 
-                            
 
                         </WrapPanel>
 
@@ -280,14 +277,17 @@
                         </Grid>
                     </materialDesign:ColorZone>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="auto">
-                        <CheckBox Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8">
+                        <CheckBox x:Name="btnShowClasses" Checked="btnShowClasses_Checked" Unchecked="btnShowClasses_Unchecked" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8">
+                            <materialDesign:PackIcon Kind="Group" Width="24" Height="24"  HorizontalAlignment="Center" />
+                        </CheckBox>
+                        <CheckBox x:Name="btnScrollDown" Checked="btnScrollDown_Checked" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8">
                             <materialDesign:PackIcon Kind="ArrowDown" Width="24" Height="24"  HorizontalAlignment="Center" />
                         </CheckBox>
                         <Border BorderThickness="0, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignBody}" Margin="0 8 0 8" Width="1" HorizontalAlignment="Right"/>
-                        <RadioButton HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="8, 8, 8, 8" Panel.ZIndex="2" Width="32">
+                        <RadioButton x:Name="btnListMode" Checked="btnListMode_Checked" HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="8, 8, 8, 8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="ViewHeadline" Width="24" Height="24" />
                         </RadioButton>
-                        <RadioButton IsChecked="True" HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="0, 8, 8, 8" Panel.ZIndex="2" Width="32">
+                        <RadioButton x:Name="btnTileMode" Checked="btnTileMode_Checked" IsChecked="True" HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="0, 8, 8, 8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="ViewModule" Width="24" Height="24" />
                         </RadioButton>
                         <Border BorderThickness="0, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignBody}" Margin="0 8 0 8" Width="1" HorizontalAlignment="Right"/>
@@ -333,63 +333,92 @@
         </Grid>
         <Grid x:Name="Drawer" Background="#FFFAFAFA" Margin="0 ,0, -415,0" HorizontalAlignment="Right" Width="400">
             <materialDesign:ColorZone Grid.RowSpan="5" Grid.ColumnSpan="7" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth3"/>
-            <StackPanel Margin="8">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="8"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="8"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="8"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="8"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="8"/>
-                    </Grid.RowDefinitions>
-                    <Button Click="Button_Click_2" Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
-                        <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
-                    </Button>
-                    <ComboBox x:Name="cboPorts" FontSize="14" Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
-                    <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="5" Grid.Row="1" Content="Connect"/>
-                </Grid>
-                <TextBox x:Name="tbEmptyBarcode" TextChanged="tbEmptyBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Empty Lane Barcode"/>
-                <TextBox x:Name="tbResetBarcode" TextChanged="tbResetBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Reset Race Barcode"/>
-                <Grid Margin="8">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <Label IsEnabled="False" FontSize="14" Content="Current Race Display Height" VerticalAlignment="Center"/>
-                    <Slider x:Name="heightSlider" ValueChanged="heightSlider_ValueChanged" Grid.Row="1" Margin="8" Minimum="0.5" Maximum="3"/>
-                </Grid>
-                <Grid Margin="8" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <ListBox x:Name="lbClasses" Grid.Row="1" Grid.ColumnSpan="3"/>
-                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Car Classes" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Button x:Name="btnClassDelete" Click="btnClassDelete_Click"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
-                        <materialDesign:PackIcon Kind="Delete" Width="24" Height="24" />
-                    </Button>
-                    <Button x:Name="btnClassAdd" Click="btnClassAdd_Click" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
-                        <materialDesign:PackIcon Kind="Plus" Width="24" Height="24" />
-                    </Button>
-                </Grid>
-            </StackPanel>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="8"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="8"/>
+                        </Grid.RowDefinitions>
+                        <Button Click="Button_Click_2" Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
+                            <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
+                        </Button>
+                        <ComboBox x:Name="cboPorts" FontSize="14" Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+                        <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="5" Grid.Row="1" Content="Connect"/>
+                    </Grid>
+                    <TextBox x:Name="tbEmptyBarcode" TextChanged="tbEmptyBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Empty Lane Barcode"/>
+                    <TextBox x:Name="tbResetBarcode" TextChanged="tbResetBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Reset Race Barcode"/>
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label IsEnabled="False" FontSize="14" Content="Current Race Display Height" VerticalAlignment="Center"/>
+                        <Slider x:Name="heightSlider" ValueChanged="heightSlider_ValueChanged" Grid.Row="1" Margin="8" Minimum="0.5" Maximum="3"/>
+                    </Grid>
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label IsEnabled="False" FontSize="14" Content="Standings' Zoom" VerticalAlignment="Center"/>
+                        <Slider x:Name="uiScaleSlider" ValueChanged="uiScaleSlider_ValueChanged" Grid.Row="1" Margin="8" Minimum="1" Maximum="4"/>
+                    </Grid>
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label IsEnabled="False" FontSize="14" Content="Tiles' Zoom" VerticalAlignment="Center"/>
+                        <Slider x:Name="tilesSlider" ValueChanged="tilesSlider_ValueChanged"  Grid.Row="1" Margin="8" Minimum="1" Maximum="4"/>
+                    </Grid>
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label IsEnabled="False" FontSize="14" Content="Auto Scroll Speed" VerticalAlignment="Center"/>
+                        <Slider x:Name="autoScrollSlider" ValueChanged="autoScrollSlider_ValueChanged" Grid.Row="1" Margin="8" Minimum="50" Maximum="300"/>
+                    </Grid>
+                    <Grid Margin="8" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <ListBox x:Name="lbClasses" Grid.Row="1" Grid.ColumnSpan="3"/>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Car Classes" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Button x:Name="btnClassDelete" Click="btnClassDelete_Click"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                            <materialDesign:PackIcon Kind="Delete" Width="24" Height="24" />
+                        </Button>
+                        <Button x:Name="btnClassAdd" Click="btnClassAdd_Click" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                            <materialDesign:PackIcon Kind="Plus" Width="24" Height="24" />
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
         <Grid x:Name="HostGrid">
-            
+
+        </Grid>
+        <Grid x:Name="MessageGrid">
+
         </Grid>
     </Grid>
 </Window>

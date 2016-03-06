@@ -46,7 +46,7 @@ namespace Timer
 
             if (!haveAdd)
             {
-                tile.btnAddToRace.Visibility = System.Windows.Visibility.Collapsed;
+                tile.addHolder.Visibility = System.Windows.Visibility.Collapsed;
             }
 
             if (!keepSize)
