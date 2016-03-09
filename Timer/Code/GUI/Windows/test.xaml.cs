@@ -41,6 +41,10 @@ namespace Timer
 
             startAutoScroll();
 
+            //Dictionary<int, Time> times = new Dictionary<int, Time>();
+            //times.Add(1, new Time(1, 2, 5));
+            //RaceManager_onGotRace(times);
+
             //addEmpty();
         }
         
@@ -130,6 +134,7 @@ namespace Timer
                         CarTile tile = CarTile.createTile(DataManager.Competition.Racers[index], false);
                         tile.SetValue(Grid.ColumnProperty, DataManager.RaceManager.nextOpenLane - 2);
                         tile.Margin = new Thickness(8, 8, 8, 0);
+                        tile.AnimateIn();
                         RaceList.Children.Add(tile);
                     }
                     catch (Exception ex)
@@ -384,8 +389,10 @@ namespace Timer
 
         private void createCarTiles(Panel host, List<Racer> racers)
         {
+            int i = 0;
             foreach (Racer racer in racers)
             {
+                i++;
                 CarTile tile = CarTile.createTile(racer, true, delegate ()
                 {
                     addRacer(DataManager.Competition.Racers.IndexOf(racer));
@@ -399,6 +406,7 @@ namespace Timer
                 };
                 tile.Cursor = Cursors.Hand;
                 tile.Margin = new Thickness(8, 8, 0, 0);
+                tile.AnimateIn(i * 250);
                 host.Children.Add(tile);
             }
         }
@@ -445,20 +453,21 @@ namespace Timer
             foreach (KeyValuePair<TimeInfo, Racer> racer in doneStandings)
             {
                 i++;
-                addCarListItem(host, racer.Value, i, racer.Key);
+                addCarListItem(host, racer.Value, i, racer.Key, i * 250);
             }
             foreach (KeyValuePair<TimeInfo, Racer> racer in standings)
             {
                 i++;
-                addCarListItem(host, racer.Value, i, racer.Key);
+                addCarListItem(host, racer.Value, i, racer.Key, i * 250);
             }
             foreach (Racer racer in noDataStandings)
             {
-                addCarListItem(host, racer);
+                i++;
+                addCarListItem(host, racer, i * 250);
             }
         }
 
-        private void addCarListItem(Panel host, Racer racer, int place, TimeInfo timeInfo)
+        private void addCarListItem(Panel host, Racer racer, int place, TimeInfo timeInfo, int delay)
         {
             CarList listItem = CarList.createListItem(racer, place, timeInfo);
             listItem.MouseUp += delegate
@@ -469,10 +478,11 @@ namespace Timer
                 });
             };
             listItem.Margin = new Thickness(0, 0, 0, 8);
+            listItem.AnimateIn(delay);
             host.Children.Add(listItem);
         }
 
-        private void addCarListItem(Panel host, Racer racer)
+        private void addCarListItem(Panel host, Racer racer, int delay)
         {
             CarList listItem = CarList.createListItem(racer);
             listItem.MouseUp += delegate
@@ -483,6 +493,7 @@ namespace Timer
                 });
             };
             listItem.Margin = new Thickness(0, 0, 0, 8);
+            listItem.AnimateIn(delay);
             host.Children.Add(listItem);
         }
 
@@ -568,6 +579,7 @@ namespace Timer
                     cboPorts.IsEnabled = false;
                     DataManager.RaceManager.onReadyForNextRace += RaceManager_onReadyForNextRace;
                     DataManager.RaceManager.onRaceIsFull += RaceManager_onRaceIsFull;
+                    DataManager.RaceManager.onGotRace += RaceManager_onGotRace;
                 }
             }
             else
@@ -575,6 +587,48 @@ namespace Timer
                 DataManager.disconnectTimer();
                 cboPorts.IsEnabled = true;
                 btnConnect.Content = "Connect";
+            }
+        }
+
+        private void RaceManager_onGotRace(Dictionary<int, Time> results)
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                lastRaceList.Children.Clear();
+                while(RaceList.Children.Count > 0)
+                {
+                    UIElement tile = RaceList.Children[0];
+                    RaceList.Children.RemoveAt(0);
+                    lastRaceList.Children.Add(tile);
+                }
+
+                KeyValuePair<int, Time> winnerCar = new KeyValuePair<int, Time>(-1, new Time(-1, 10, -1));
+                foreach (KeyValuePair<int, Time> time in results)
+                {
+                    if(winnerCar.Value.Speed > time.Value.Speed)
+                    {
+                        winnerCar = time;
+                    }
+                }
+
+                StackPanel panel = new StackPanel();
+                panel.MaxWidth = 700;
+
+                Label label = new Label();
+                label.Content = "Winner";
+                label.FontSize = 50;
+                label.HorizontalAlignment = HorizontalAlignment.Center;
+                panel.Children.Add(label);
+
+                CarList listItem = CarList.createListItem(DataManager.Competition.Racers[winnerCar.Key], 1, DataManager.Competition.Racers[winnerCar.Key].getTimeInfo());
+                listItem.IsHitTestVisible = false;
+                panel.Children.Add(listItem);
+                
+                Dialog winDialog = new Dialog(winnerGrid, panel, false, false, 50000);
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(() => RaceManager_onGotRace(results)));
             }
         }
 

@@ -9,7 +9,7 @@
              d:DesignHeight="200" d:DesignWidth="700"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Cursor="Hand">
-    <Grid Height="72" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+    <Grid x:Name="MainGrid" Height="72" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="52"/>
             <ColumnDefinition Width="72"/>

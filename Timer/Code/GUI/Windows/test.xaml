@@ -7,6 +7,8 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" 
         Title="Timer" Height="800" Width="600"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         GotFocus="Window_GotFocus"
@@ -316,16 +318,40 @@
             <Label Grid.Column="5" Grid.Row="1" Content="5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
             <Label Grid.Column="6" Grid.Row="1" Content="6" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
 
-            <Grid x:Name="RaceList" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="6">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid x:Name="RaceList">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+                <Grid x:Name="lastRaceList" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.OpacityMask>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#00000000" Offset="1" />
+                            <GradientStop Color="#ff000000" Offset="0" />
+                        </LinearGradientBrush>
+                    </Grid.OpacityMask>
+                </Grid>
             </Grid>
+
+            <Grid x:Name="winnerGrid" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Grid.ColumnSpan="8"/>
         </Grid>
 
         <Grid x:Name="Overlay" Background="Black" Opacity="0.7" Visibility="Collapsed" MouseUp="Overlay_MouseUp">

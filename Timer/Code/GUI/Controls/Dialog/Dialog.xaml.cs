@@ -72,16 +72,39 @@ namespace Timer
             show(parent);
         }
 
+        public Dialog(Panel parent, UIElement content, bool fillHeight, bool fillWidth, int delay)
+        {
+            InitializeComponent();
+
+            Card.VerticalAlignment = (fillHeight ? VerticalAlignment.Stretch : VerticalAlignment.Center);
+            Card.HorizontalAlignment = (fillWidth ? HorizontalAlignment.Stretch : HorizontalAlignment.Center);
+
+            _allowClickOffClose = false;
+
+            if (content != null)
+            {
+                content.SetValue(Grid.RowProperty, 0);
+                content.SetValue(Grid.ColumnProperty, 0);
+                content.SetValue(Grid.RowSpanProperty, 1);
+                content.SetValue(Grid.ColumnSpanProperty, 3);
+                ContentHolder.Children.Add(content);
+            }
+
+            _parent = parent;
+            _parent.Children.Add(this);
+            startGrowInAnimation(true, delay);
+        }
+
         private void show(Panel parent)
         {
             _parent = parent;
             _parent.Children.Add(this);
-            startGrowInAnimation();
+            startGrowInAnimation(false, 0);
         }
 
         public void Close()
         {
-            startGrowOutAnimation();
+            startGrowOutAnimation(0);
         }
 
         private void remove()
@@ -91,36 +114,39 @@ namespace Timer
 
         private void createButtons(DialogButton[] buttons)
         {
-            foreach(DialogButton buttonInfo in buttons)
+            if (buttons != null && buttons.Length > 0)
             {
-                if(buttonInfo != null)
+                foreach (DialogButton buttonInfo in buttons)
                 {
-                    Button button = new Button();
-                    button.Content = buttonInfo.Text;
-                    button.Click += delegate (object sender, RoutedEventArgs e)
+                    if (buttonInfo != null)
                     {
-                        if (buttonInfo.triggerOnClick() == DialogButton.ReturnEvent.Close)
+                        Button button = new Button();
+                        button.Content = buttonInfo.Text;
+                        button.Click += delegate (object sender, RoutedEventArgs e)
                         {
-                            Close();
+                            if (buttonInfo.triggerOnClick() == DialogButton.ReturnEvent.Close)
+                            {
+                                Close();
+                            }
+                        };
+                        button.Margin = new Thickness(8, 4, 8, 8);
+                        button.SetValue(Grid.RowProperty, 1);
+                        if (buttonInfo.Look == DialogButton.Style.Flat)
+                        {
+                            button.Style = FindResource("MaterialDesignFlatButton") as Style;
                         }
-                    };
-                    button.Margin = new Thickness(8, 4, 8, 8);
-                    button.SetValue(Grid.RowProperty, 1);
-                    if (buttonInfo.Look == DialogButton.Style.Flat)
-                    {
-                        button.Style = FindResource("MaterialDesignFlatButton") as Style;
-                    }
-                    switch (buttonInfo.Position)
-                    {
-                        case DialogButton.Alignment.Left:
-                            ButtonHolderLeft.Children.Add(button);
-                            break;
-                        case DialogButton.Alignment.Center:
-                            ButtonHolderCenter.Children.Add(button);
-                            break;
-                        case DialogButton.Alignment.Right:
-                            ButtonHolderRight.Children.Add(button);
-                            break;
+                        switch (buttonInfo.Position)
+                        {
+                            case DialogButton.Alignment.Left:
+                                ButtonHolderLeft.Children.Add(button);
+                                break;
+                            case DialogButton.Alignment.Center:
+                                ButtonHolderCenter.Children.Add(button);
+                                break;
+                            case DialogButton.Alignment.Right:
+                                ButtonHolderRight.Children.Add(button);
+                                break;
+                        }
                     }
                 }
             }
@@ -137,7 +163,7 @@ namespace Timer
             }
         }
 
-        private void startGrowInAnimation()
+        private void startGrowInAnimation(bool inAndOut, int delay)
         {
             if (!_doingAnimation)
             {
@@ -179,6 +205,10 @@ namespace Timer
                 growYAnimation.Completed += delegate
                 {
                     _doingAnimation = false;
+                    if (inAndOut)
+                    {
+                        startGrowOutAnimation(delay);
+                    }
                 };
                 Card.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, growYAnimation);
 
@@ -194,7 +224,7 @@ namespace Timer
             }
         }
 
-        private void startGrowOutAnimation()
+        private void startGrowOutAnimation(int delay)
         {
             if (!_doingAnimation)
             {
@@ -204,6 +234,7 @@ namespace Timer
                 //do fade in on overlay
                 ColorAnimation overlayAnimation;
                 overlayAnimation = new ColorAnimation();
+                overlayAnimation.BeginTime = new TimeSpan(delay * 1000);
                 overlayAnimation.From = Color.FromArgb(88, 0, 0, 0);
                 overlayAnimation.To = Color.FromArgb(0, 0, 0, 0);
                 overlayAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
@@ -215,6 +246,7 @@ namespace Timer
                 Card.RenderTransform = scale;
 
                 DoubleAnimation growXAnimation = new DoubleAnimation();
+                growXAnimation.BeginTime = new TimeSpan(delay * 1000);
                 growXAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
                 growXAnimation.From = 1;
                 growXAnimation.To = 0;
@@ -225,6 +257,7 @@ namespace Timer
                 Card.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, growXAnimation);
 
                 DoubleAnimation growYAnimation = new DoubleAnimation();
+                growYAnimation.BeginTime = new TimeSpan(delay * 1000);
                 growYAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
                 growYAnimation.From = 1;
                 growYAnimation.To = 0;
@@ -244,7 +277,8 @@ namespace Timer
                 {
                     From = 1,
                     To = 0,
-                    Duration = new Duration(TimeSpan.FromSeconds(0.3))
+                    Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                    BeginTime = new TimeSpan(delay * 1000)
                 };
                 ContentHolder.BeginAnimation(UIElement.OpacityProperty, fadeOut);
             }

@@ -23,9 +23,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel x:Name="ButtonHolderLeft" Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="8"/>
-                <StackPanel x:Name="ButtonHolderCenter" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="8" Orientation="Horizontal"/>
-                <StackPanel x:Name="ButtonHolderRight" Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="8"/>
+                <StackPanel x:Name="ButtonHolderLeft" Grid.Row="1" Grid.Column="0" Orientation="Horizontal"/>
+                <StackPanel x:Name="ButtonHolderCenter" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal"/>
+                <StackPanel x:Name="ButtonHolderRight" Grid.Row="1" Grid.Column="2" Orientation="Horizontal"/>
             </Grid>
         </materialDesign:Card>
     </Grid>

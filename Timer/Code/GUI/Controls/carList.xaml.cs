@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -158,6 +159,45 @@ namespace Timer
             }
 
             return item;
+        }
+
+        public void AnimateIn()
+        {
+            AnimateIn(0);
+        }
+
+        public void AnimateIn(int delay)
+        {
+            //do grow in animation
+            ScaleTransform scale = new ScaleTransform(0, 0);
+            MainGrid.RenderTransformOrigin = new Point(0.5, 0.5);
+            MainGrid.RenderTransform = scale;
+
+            DoubleAnimation growXAnimation = new DoubleAnimation();
+            growXAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
+            growXAnimation.From = 0;
+            growXAnimation.To = 1;
+            growXAnimation.EasingFunction = new CubicEase
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+            growXAnimation.BeginTime = new TimeSpan(delay * 1000);
+            MainGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, growXAnimation);
+
+            DoubleAnimation growYAnimation = new DoubleAnimation();
+            growYAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
+            growYAnimation.From = 0;
+            growYAnimation.To = 1;
+            growYAnimation.EasingFunction = new CubicEase
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+            growYAnimation.Completed += delegate
+            {
+
+            };
+            growYAnimation.BeginTime = new TimeSpan(delay * 1000);
+            MainGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, growYAnimation);
         }
 
         private void Grid_MouseEnter(object sender, MouseEventArgs e)
