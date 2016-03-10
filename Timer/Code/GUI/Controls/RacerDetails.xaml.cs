@@ -25,6 +25,17 @@ namespace Timer
             }
         }
 
+        public delegate void racerDeletedHandler();
+        public event racerDeletedHandler onDeletedRacer;
+        private void triggerDeletedRacer()
+        {
+            racerDeletedHandler handler = onDeletedRacer;
+            if (handler != null)
+            {
+                handler();
+            }
+        }
+
         private enum WindowType
         {
             Create, Display
@@ -76,10 +87,11 @@ namespace Timer
 
         }
 
-        public static void editOldRacer(Panel parent, Racer racer, racerUpdatedHandler returnHandler)
+        public static void editOldRacer(Panel parent, Racer racer, racerUpdatedHandler returnHandler, racerDeletedHandler deleteHandler)
         {
             RacerDetails editor = new RacerDetails(WindowType.Display);
             editor.onUpdatedRacer += returnHandler;
+            editor.onDeletedRacer += deleteHandler;
 
             editor._racer = racer;
 
@@ -226,12 +238,13 @@ namespace Timer
                     }
                 }, (type == WindowType.Display ? new DialogButton("Delete", DialogButton.Alignment.Left, DialogButton.Style.Flat, delegate () {
 
-                    DialogBox.showOptionBox(parent, "This will completly remove \"" + content.tbCarName.Text + "\" from the competition. All of its history will be deleted.", "Delete \"" + content.tbCarName.Text + "\"?", "Keep", "Delete", delegate (DialogBox.DialogResult result)
+                    DialogBox.showOptionBox(parent, "This will completly remove \"" + content.tbCarName.Text + "\" from the competition. All of its history will be deleted. The current race will also be reset.", "Delete \"" + content.tbCarName.Text + "\"?", "Keep", "Delete", delegate (DialogBox.DialogResult result)
                     {
                         if (result == DialogBox.DialogResult.MainOption)
                         {
                             DataManager.Competition.Racers.Remove(content._racer);
                             content.triggerUpdatedRacer();
+                            content.triggerDeletedRacer();
                             content._dialogHost.Close();//close this host dialog
                         }
                     });

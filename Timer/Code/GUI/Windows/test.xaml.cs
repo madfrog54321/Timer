@@ -238,8 +238,7 @@ namespace Timer
                 {
                     try
                     {
-                        DataManager.RaceManager.forgetRace();
-                        RaceList.Children.Clear();
+                        forgetRace();
                     }
                     catch (Exception ex)
                     {
@@ -407,6 +406,9 @@ namespace Timer
                     RacerDetails.editOldRacer(HostGrid, racer, delegate ()
                     {
                         updateRacerList();
+                    }, delegate ()
+                    {
+                        forgetRace();
                     });
                 };
                 tile.Cursor = Cursors.Hand;
@@ -480,6 +482,9 @@ namespace Timer
                 RacerDetails.editOldRacer(HostGrid, racer, delegate ()
                 {
                     updateRacerList();
+                }, delegate()
+                {
+                    forgetRace();
                 });
             };
             listItem.Margin = new Thickness(0, 0, 0, 8);
@@ -495,6 +500,9 @@ namespace Timer
                 RacerDetails.editOldRacer(HostGrid, racer, delegate ()
                 {
                     updateRacerList();
+                }, delegate ()
+                {
+                    forgetRace();
                 });
             };
             listItem.Margin = new Thickness(0, 0, 0, 8);
@@ -635,6 +643,12 @@ namespace Timer
             {
                 Dispatcher.Invoke(new Action(() => RaceManager_onGotRace(results)));
             }
+        }
+
+        private void forgetRace()
+        {
+            DataManager.RaceManager.forgetRace();
+            RaceList.Children.Clear();
         }
 
         private void RaceManager_onReadyForNextRace()
