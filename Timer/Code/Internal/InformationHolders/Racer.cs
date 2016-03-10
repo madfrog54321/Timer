@@ -47,36 +47,47 @@ namespace Timer
             set { _class = value; }
         }
 
+        private bool _passedInspection;
+        public bool PassedInspection
+        {
+            get { return _passedInspection; }
+            set { _passedInspection = value; }
+        }
+
         public Racer()
         {
             _car = new Car();
             _maker = new Maker();
             _barcode = string.Empty;
             _times = new List<Time>();
+            _passedInspection = false;
         }
-        public Racer(Car car, Maker maker, string barcode, string rClass)
+        public Racer(Car car, Maker maker, string barcode, string rClass, bool passedInspection)
         {
             _car = car;
             _maker = maker;
             _barcode = barcode;
             _times = new List<Time>();
             _class = rClass;
+            _passedInspection = passedInspection;
         }
-        public Racer(string carName, string makerName, string barcode, string rClass)
+        public Racer(string carName, string makerName, string barcode, string rClass, bool passedInspection)
         {
             _car = new Car(carName);
             _maker = new Maker(makerName);
             _barcode = barcode;
             _times = new List<Time>();
             _class = rClass;
+            _passedInspection = passedInspection;
         }
-        public Racer(string carName, string carImageUri, string makerName, string makerImageUri, string barcode, string rClass)
+        public Racer(string carName, string carImageUri, string makerName, string makerImageUri, string barcode, string rClass, bool passedInspection)
         {
             _car = new Car(carName, carImageUri);
             _maker = new Maker(makerName, makerImageUri);
             _barcode = barcode;
             _times = new List<Time>();
             _class = rClass;
+            _passedInspection = passedInspection;
         }
         public override bool Equals(object obj)
         {
@@ -92,7 +103,7 @@ namespace Timer
         {
             List<int> lanesDone = new List<int>();
 
-            if (_times.Count > 0)
+            if (_times.Count > 0 && PassedInspection)
             {
                 double bestTime = 10;
                 Dictionary<int, double> bestTimes = new Dictionary<int, double>();

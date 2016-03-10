@@ -267,7 +267,7 @@ namespace Timer
                 {
                     if (tbBarcode.Text != string.Empty)
                     {
-                        DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, DataManager.Settings.DefaltCarImageUri, tbMakerName.Text, DataManager.Settings.DefaltMakerImageUri, tbBarcode.Text, ""));
+                        DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, DataManager.Settings.DefaltCarImageUri, tbMakerName.Text, DataManager.Settings.DefaltMakerImageUri, tbBarcode.Text, "", false));
                         tbCarName.Clear();
                         tbMakerName.Clear();
                         tbBarcode.Clear();

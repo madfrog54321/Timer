@@ -151,6 +151,10 @@ namespace Timer
                 {
                     DataManager.MessageProvider.showMessage("Race is full", "Cannot enter more than " + DataManager.RaceManager.NumberOfLanes + " racers into a race");
                 }
+                else if (result == RaceManager.MakeNextReturn.NotPassed)
+                {
+                    DataManager.MessageProvider.showMessage("Racer Has Not Passed Inspection", DataManager.Competition.Racers[index].Car.Name + " has not passed inspection, and cannot race.");
+                }
             }
             else
             {

@@ -44,5 +44,7 @@
                 </Button>
             </Grid>
         </Grid>
+
+        <Label x:Name="disabled" Background="#88000000" Grid.RowSpan="3" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

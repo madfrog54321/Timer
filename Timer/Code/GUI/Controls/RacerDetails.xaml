@@ -80,8 +80,15 @@
                 <ColumnDefinition Width="16"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ComboBox x:Name="cboClass" FontSize="14" Grid.Column="0" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Class" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True"/>
-            <TextBox x:Name="tbBarcode" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Barcode"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <CheckBox x:Name="passedInspect" Grid.ColumnSpan="3" Style="{StaticResource MaterialDesignCheckBox}" Margin="8 8 8 8" VerticalAlignment="Center" FontSize="14">
+                Passed Inspection
+            </CheckBox>
+            <ComboBox x:Name="cboClass" Grid.Row="1" FontSize="14" Grid.Column="0" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Class" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True"/>
+            <TextBox x:Name="tbBarcode" Grid.Row="1" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Barcode"/>
         </Grid>
         <Label x:Name="lbNoRaceData" Grid.Row="2" Content="No Racing Data" Margin="52" IsEnabled="False" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">

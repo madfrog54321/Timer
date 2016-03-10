@@ -121,6 +121,7 @@ namespace Timer
             editor.tbCreatorName.Text = racer.Maker.Name;
             editor.tbBarcode.Text = racer.Barcode;
             editor.cboClass.Text = racer.Class;
+            editor.passedInspect.IsChecked = racer.PassedInspection;
             
             editor.raceData.Children.Clear();
             editor.raceData.ColumnDefinitions.Clear();
@@ -257,7 +258,7 @@ namespace Timer
             if (_type == WindowType.Create)
             {
                 DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, DataManager.getRelativePath(imgCarPicture.Source.ToString()),
-                    tbCreatorName.Text, DataManager.getRelativePath(imgCreatorPicture.Source.ToString()), tbBarcode.Text, cboClass.Text));
+                    tbCreatorName.Text, DataManager.getRelativePath(imgCreatorPicture.Source.ToString()), tbBarcode.Text, cboClass.Text, passedInspect.IsChecked == true));
             }
             else if(_type == WindowType.Display)
             {
@@ -265,6 +266,7 @@ namespace Timer
                 _racer.Maker.Name = tbCreatorName.Text;
                 _racer.Barcode = tbBarcode.Text;
                 _racer.Class = cboClass.Text;
+                _racer.PassedInspection = passedInspect.IsChecked == true;
 
                 try
                 {

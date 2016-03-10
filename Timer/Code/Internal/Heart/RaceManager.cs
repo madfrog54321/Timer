@@ -99,30 +99,37 @@ namespace Timer
             DataManager.TrackTimer.getNextRace();
         }
 
-        public enum MakeNextReturn { CallBackUsed, RaceFull, Added }
+        public enum MakeNextReturn { CallBackUsed, RaceFull, Added, NotPassed }
 
         public MakeNextReturn makeNext_CarLane(int callBack)
         {
-            if (!_raceCallBack.Contains(callBack))
+            if (DataManager.Competition.Racers[callBack].PassedInspection)
             {
-                if (!raceIsFull)
+                if (!_raceCallBack.Contains(callBack))
                 {
-                    _raceCallBack.Add(callBack);
-                    if (raceIsFull)
+                    if (!raceIsFull)
                     {
-                        notifyTimer();
-                        triggerRaceIsFull();
+                        _raceCallBack.Add(callBack);
+                        if (raceIsFull)
+                        {
+                            notifyTimer();
+                            triggerRaceIsFull();
+                        }
+                        return MakeNextReturn.Added;
                     }
-                    return MakeNextReturn.Added;
+                    else
+                    {
+                        return MakeNextReturn.RaceFull;
+                    }
                 }
                 else
                 {
-                    return MakeNextReturn.RaceFull;
+                    return MakeNextReturn.CallBackUsed;
                 }
             }
             else
             {
-                return MakeNextReturn.CallBackUsed;
+                return MakeNextReturn.NotPassed;
             }
         }
 

@@ -78,5 +78,7 @@
             </StackPanel>
         </Grid>
 
+        <Label x:Name="disabled" Background="#88000000" Grid.ColumnSpan="4" Visibility="Collapsed"/>
+        
     </Grid>
 </UserControl>

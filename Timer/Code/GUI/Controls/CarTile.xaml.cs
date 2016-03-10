@@ -84,8 +84,13 @@ namespace Timer
             tile.tbCarName.Text = racer.Car.Name;
             tile.tbCreatorName.Text = racer.Maker.Name;
             tile.onAddToRace += addHandler;
+            
+            if (!racer.PassedInspection)
+            {
+                tile.disabled.Visibility = Visibility.Visible;
+            }
 
-            if (!haveAdd)
+            if (!haveAdd || !racer.PassedInspection)
             {
                 tile.addHolder.Visibility = System.Windows.Visibility.Collapsed;
             }

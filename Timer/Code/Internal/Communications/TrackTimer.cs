@@ -11,10 +11,8 @@ namespace Timer
         private const StopBits STOP_BITS = StopBits.One;
         private const Handshake HAND_SHAKE = Handshake.None;
         private const Parity PARITY = Parity.None;
-        private const string GET_NEXT_RACE = "rg";
         private const string MESSAGE_END = "\r";
         private const string RETURN_END = "\r\n";
-        private const string MASK_LANE = "om";
         private const int DECIMAL_PLACES = 3;
 
         private SerialPort _serialPort;
@@ -59,6 +57,8 @@ namespace Timer
                 _serialPort.Parity = PARITY;
 
                 _serialPort.Open();
+
+                setup();
             }
             catch (Exception ex)
             {
@@ -92,18 +92,20 @@ namespace Timer
 
         private void processData(string value)
         {
+            //DataManager.MessageProvider.showError("Info", "\"" + value + "\"");
+
             if (value == "?")
             {
                 DataManager.MessageProvider.showError("Track responded with \"?\"", "The track timer did not understand the command, or the command was invalid");
             }
-            else if (_waitingForRace)
+            else if (_waitingForRace && !String.IsNullOrEmpty(value))
             {
                 value = value.Replace("  ", "0 ");
-                if (value[value.Length - 1] == ' ')
-                {
-                    value = value.Substring(0, value.Length - 1) + '0';
-                }
-                string[] splitValue = value.Split(' ');
+                //if (value[value.Length - 1] == ' ')
+                //{
+                //    value = value.Substring(0, value.Length - 1) + '0';
+                //}
+                string[] splitValue = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 //form of: 1=9.9992
                 List<Time> times = new List<Time>();
                 bool success = true;
@@ -163,23 +165,40 @@ namespace Timer
             if (!_waitingForRace)
             {
                 _waitingForRace = true;
-                _serialPort.Write(GET_NEXT_RACE + MESSAGE_END);
+                sendCommand("rg");
             }
         }
 
         public void maskOffLane(int lane)
         {
-            _serialPort.Write(MASK_LANE + lane + MESSAGE_END);
+            sendCommand("om" + lane.ToString());
         }
 
         public void resetMask()
         {
-            _serialPort.Write(MASK_LANE + 0 + MESSAGE_END);
+            sendCommand("om0");
         }
 
         public void reset()
         {
+            sendCommand("r");
+        }
 
+        public void setup()
+        {
+            sendCommand("ol1"); //set lane character
+            sendCommand("op2"); //set place character
+            sendCommand("od3"); //set decimals
+        }
+
+        public void setNumberLanes(int number)
+        {
+            sendCommand("on" + number.ToString());
+        }
+
+        private void sendCommand(string command)
+        {
+            _serialPort.Write(command + MESSAGE_END);
         }
     }
 }

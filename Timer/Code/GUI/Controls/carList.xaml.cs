@@ -41,6 +41,11 @@ namespace Timer
                 item.timeBestHolder.Opacity = 1;
             }
 
+            if (!racer.PassedInspection)
+            {
+                item.disabled.Visibility = Visibility.Visible;
+            }
+
             item.Lanes.Children.Clear();
             for (int i = 0; i < DataManager.Settings.NumberOfLanes; i++)
             {
@@ -108,6 +113,11 @@ namespace Timer
             
             item.timeAverage.Text = "-";
             item.timeBest.Text = "-";
+            
+            if (!racer.PassedInspection)
+            {
+                item.disabled.Visibility = Visibility.Visible;
+            }
 
             item.Lanes.Children.Clear();
             for (int i = 0; i < DataManager.Settings.NumberOfLanes; i++)
