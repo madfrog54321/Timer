@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -833,6 +834,14 @@ namespace Timer
             {
                 DataManager.Settings.TilesZoom = tilesSlider.Value;
                 DataManager.Settings.Save();
+            }
+        }
+
+        private void listScrollbar_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!(e.OriginalSource is ScrollViewer || e.Source is CarList || e.Source is CarTile))
+            {
+                btnScrollDown.IsChecked = false;
             }
         }
 

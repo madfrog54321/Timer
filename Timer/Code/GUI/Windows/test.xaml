@@ -221,7 +221,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="8">
-                <ScrollViewer x:Name="listScrollbar" PreviewMouseWheel="listScrollbar_PreviewMouseWheel">
+                <ScrollViewer x:Name="listScrollbar" PreviewMouseDown="listScrollbar_PreviewMouseDown" PreviewMouseWheel="listScrollbar_PreviewMouseWheel">
                     <StackPanel>
                         <StackPanel x:Name="listHolder" Visibility="Collapsed" Margin="8, 8, 8, 48">
                             <StackPanel.LayoutTransform>
