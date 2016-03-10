@@ -293,6 +293,9 @@
                             <materialDesign:PackIcon Kind="ViewModule" Width="24" Height="24" />
                         </RadioButton>
                         <Border BorderThickness="0, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignBody}" Margin="0 8 0 8" Width="1" HorizontalAlignment="Right"/>
+                        <CheckBox x:Name="btnFullScreen" Checked="btnFullScreen_Checked" Unchecked="btnFullScreen_Unchecked" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8, 8, 0, 8">
+                            <materialDesign:PackIcon Kind="Presentation" Width="24" Height="24"  HorizontalAlignment="Center" />
+                        </CheckBox>
                         <Button HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" Click="button_Click">
                             <materialDesign:PackIcon Kind="Settings" Width="24" Height="24" />
                         </Button>

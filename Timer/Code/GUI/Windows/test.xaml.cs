@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -857,6 +858,22 @@ namespace Timer
             {
                 btnScrollDown.IsChecked = false;
             }
+        }
+        
+        private void btnFullScreen_Checked(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Normal;
+            ResizeMode = ResizeMode.NoResize;
+            WindowStyle = WindowStyle.None;
+            WindowState = WindowState.Maximized;
+        }
+
+        private void btnFullScreen_Unchecked(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Normal;
+            ResizeMode = ResizeMode.CanResize;
+            WindowStyle = WindowStyle.ThreeDBorderWindow;
+            WindowState = WindowState.Maximized;
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)
