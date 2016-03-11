@@ -272,18 +272,49 @@ namespace Timer
             {
                 DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, DataManager.getRelativePath(imgCarPicture.Source.ToString()),
                     tbCreatorName.Text, DataManager.getRelativePath(imgCreatorPicture.Source.ToString()), tbBarcode.Text, cboClass.Text, passedInspect.IsChecked == true));
+
+                //========save changes to file=========
+                DataManager.saveSettings();
+
+                triggerUpdatedRacer();
             }
             else if(_type == WindowType.Display)
             {
-                _racer.Car.Name = tbCarName.Text;
-                _racer.Maker.Name = tbCreatorName.Text;
-                _racer.Barcode = tbBarcode.Text;
-                _racer.Class = cboClass.Text;
-                _racer.PassedInspection = passedInspect.IsChecked == true;
+                bool changed = false;
+
+                if(_racer.Car.Name != tbCarName.Text)
+                {
+                    _racer.Car.Name = tbCarName.Text;
+                    changed = true;
+                }
+                if (_racer.Maker.Name != tbCreatorName.Text)
+                {
+                    _racer.Maker.Name = tbCreatorName.Text;
+                    changed = true;
+                }
+                if (_racer.Barcode != tbBarcode.Text)
+                {
+                    _racer.Barcode = tbBarcode.Text;
+                    changed = true;
+                }
+                if (_racer.Class != cboClass.Text)
+                {
+                    _racer.Class = cboClass.Text;
+                    changed = true;
+                }
+                if (_racer.PassedInspection != (passedInspect.IsChecked == true))
+                {
+                    _racer.PassedInspection = passedInspect.IsChecked == true;
+                    changed = true;
+                }
 
                 try
                 {
-                    _racer.Car.ImageUri = DataManager.getRelativePath(imgCarPicture.Source.ToString());
+                    if (_racer.Car.ImageUri != DataManager.getRelativePath(imgCarPicture.Source.ToString()))
+                    {
+                        _racer.Car.ImageUri = DataManager.getRelativePath(imgCarPicture.Source.ToString());
+                        changed = true;
+                    }
                 }
                 catch(Exception ex)
                 {
@@ -292,18 +323,25 @@ namespace Timer
 
                 try
                 {
-                    _racer.Maker.ImageUri = DataManager.getRelativePath(imgCreatorPicture.Source.ToString());
+                    if (_racer.Maker.ImageUri != DataManager.getRelativePath(imgCreatorPicture.Source.ToString()))
+                    {
+                        _racer.Maker.ImageUri = DataManager.getRelativePath(imgCreatorPicture.Source.ToString());
+                        changed = true;
+                    }
                 }
                 catch (Exception ex)
                 {
                     DataManager.MessageProvider.showError("Could Not Apply Creator's Image", ex.Message);
                 }
+
+                if (changed)
+                {
+                    //========save changes to file=========
+                    DataManager.saveSettings();
+
+                    triggerUpdatedRacer();
+                }
             }
-
-            //========save changes to file=========
-            DataManager.saveSettings();
-
-            triggerUpdatedRacer();
         }
 
         private void btnCarPicture_Click(object sender, RoutedEventArgs e)
