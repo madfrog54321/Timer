@@ -152,17 +152,6 @@ namespace Timer
             }
         }
 
-        private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (_allowClickOffClose)
-            {
-                if (triggerOnClose() != DialogButton.ReturnEvent.DoNothing)
-                {
-                    Close();
-                }
-            }
-        }
-
         private void startGrowInAnimation(bool inAndOut, int delay)
         {
             if (!_doingAnimation)
@@ -221,6 +210,17 @@ namespace Timer
                     Duration = new Duration(TimeSpan.FromSeconds(0.3))
                 };
                 ContentHolder.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+            }
+        }
+
+        private void Overlay_Click(object sender, RoutedEventArgs e)
+        {
+            if (_allowClickOffClose)
+            {
+                if (triggerOnClose() != DialogButton.ReturnEvent.DoNothing)
+                {
+                    Close();
+                }
             }
         }
 

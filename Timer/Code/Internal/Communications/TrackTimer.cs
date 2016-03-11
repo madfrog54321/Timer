@@ -176,6 +176,7 @@ namespace Timer
         public void reset()
         {
             sendCommand("r");
+            _waitingForRace = false;//stop waiting for a race
         }
 
         public void setup()

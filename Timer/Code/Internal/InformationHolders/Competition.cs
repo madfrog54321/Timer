@@ -38,7 +38,14 @@ namespace Timer
         public void Save(string fileName = DEFAULT_FILENAME)
         {
             string file = DataManager.getAbsolutePath(fileName);
-            File.WriteAllText(file, (new JavaScriptSerializer()).Serialize(this));
+            try
+            {
+                File.WriteAllText(file, (new JavaScriptSerializer()).Serialize(this));
+            }
+            catch (Exception ex)
+            {
+                DataManager.MessageProvider.showError("Failed To Save Competition", "The competition could not be saved.");
+            }
         }
 
         public static Competition Load(string fileName = DEFAULT_FILENAME)
