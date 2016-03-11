@@ -8,7 +8,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="200" d:DesignWidth="700"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Cursor="Hand">
+        FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Cursor="Hand" ToolTip="View Racer's Data">
     <Grid x:Name="MainGrid" Height="72" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="52"/>

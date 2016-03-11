@@ -19,7 +19,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="0" Margin="8,8,0,0" ToolTip="Save Picture" Width="32" Height="32" Click="btnRefresh_Click">
+                <Button ToolTip="Refresh Cameras" Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="0" Margin="8,8,0,0" Width="32" Height="32" Click="btnRefresh_Click">
                     <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
                 </Button>
                 <ComboBox x:Name="cmbCameras" Grid.Column="1" Margin="8, 8, 8, 0" materialDesign:TextFieldAssist.Hint="Camera" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="cmbCameras_SelectionChanged"/>
@@ -27,7 +27,7 @@
             </Grid>
             <Image x:Name="frameImage" Margin="8,8,8,8"/>
         </DockPanel>
-        <Button x:Name="btnTakePicture" Style="{StaticResource MaterialDesignFloatingActionDarkButton}" Margin="0,0,0,16" ToolTip="Take Picture" Width="56" Height="56" VerticalAlignment="Bottom" Click="btnTakePicture_Click">
+        <Button ToolTip="Take Picture" x:Name="btnTakePicture" Style="{StaticResource MaterialDesignFloatingActionDarkButton}" Margin="0,0,0,16" Width="56" Height="56" VerticalAlignment="Bottom" Click="btnTakePicture_Click">
             <materialDesign:PackIcon Kind="CameraIris" Height="32" Width="32" />
         </Button>
     </Grid>

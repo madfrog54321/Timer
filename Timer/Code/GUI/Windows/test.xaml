@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Timer"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" 
-        Title="Timer" Height="800" Width="600"
+        Title="Timer" Height="800" Width="700"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -252,7 +252,7 @@
                 </ScrollViewer>
 
 
-                <Button x:Name="btnCreateRacer" Click="btnCreateRacer_Click" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Margin="0,0,32,16" ToolTip="Add New Racer" Width="48" Height="48" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <Button x:Name="btnCreateRacer" ToolTip="Create New Racer" Click="btnCreateRacer_Click" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Margin="0,0,32,16" Width="48" Height="48" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                     <materialDesign:PackIcon Kind="Plus" Height="32" Width="32" Foreground="#eeeeee"/>
                 </Button>
             </Grid>
@@ -262,41 +262,49 @@
 
             <materialDesign:ColorZone Grid.Row="4" Grid.ColumnSpan="8" Mode="PrimaryDark" Padding="8" materialDesign:ShadowAssist.ShadowDepth="Depth2">
                 <Grid materialDesign:RippleAssist.IsCentered="True">
-                    <materialDesign:ColorZone VerticalAlignment="Center" Mode="Light" Padding="4 4 4 4" HorizontalAlignment="Left" CornerRadius="2" Panel.ZIndex="1"
-                                   Margin="0,0,50,0" MaxWidth="500" MinWidth="300"
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <materialDesign:ColorZone VerticalAlignment="Center" Mode="Light" Padding="4 4 4 4" HorizontalAlignment="Left" CornerRadius="2" Panel.ZIndex="1"
+                                   Margin="0,0,0,0" MaxWidth="500" MinWidth="300"
                                    materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox x:Name="tbCommand" PreviewLostKeyboardFocus="tbCommand_PreviewLostKeyboardFocus" KeyUp="tbCommand_KeyUp" Grid.Column="0" Margin="8 0 0 0" materialDesign:TextFieldAssist.Hint="Enter Barcode" 
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="tbCommand" ToolTip="Barcode Input" PreviewLostKeyboardFocus="tbCommand_PreviewLostKeyboardFocus" KeyUp="tbCommand_KeyUp" Grid.Column="0" Margin="8 0 0 0" materialDesign:TextFieldAssist.Hint="Enter Barcode" 
                                      materialDesign:TextFieldAssist.DecorationVisibility="Collapsed" BorderThickness="0"
                                      MinWidth="200" VerticalAlignment="Center" />
-                            <CheckBox x:Name="btnLockKeyboard" Checked="btnLockKeyboard_Checked" Unchecked="btnLockKeyboard_Unchecked" Style="{DynamicResource CircleCheckbox2}" Width="32" Height="32" Grid.Column="1">
-                                <materialDesign:PackIcon Kind="LockOpen" Margin="0 0 0 0" Width="24" Height="24" />
-                            </CheckBox>
-                        </Grid>
-                    </materialDesign:ColorZone>
+                                <CheckBox x:Name="btnLockKeyboard" Checked="btnLockKeyboard_Checked" Unchecked="btnLockKeyboard_Unchecked" Style="{DynamicResource CircleCheckbox2}" Width="32" Height="32" Grid.Column="1" ToolTip="Lock/Unlock Keyboard">
+                                    <materialDesign:PackIcon Kind="LockOpen" Margin="0 0 0 0" Width="24" Height="24" />
+                                </CheckBox>
+                            </Grid>
+                        </materialDesign:ColorZone>
+                        <Button Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" ToolTip="Make Next Lane Empty">
+                            <materialDesign:PackIcon Kind="FlagCheckered" Width="24" Height="24" />
+                        </Button>
+                        <Button Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" ToolTip="Clear Current Race">
+                            <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24" />
+                        </Button>
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="auto">
-                        <CheckBox x:Name="btnShowClasses" Checked="btnShowClasses_Checked" Unchecked="btnShowClasses_Unchecked" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8">
+                        <CheckBox x:Name="btnShowClasses" Checked="btnShowClasses_Checked" ToolTip="Show Classes" Unchecked="btnShowClasses_Unchecked" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8">
                             <materialDesign:PackIcon Kind="Group" Width="24" Height="24"  HorizontalAlignment="Center" />
                         </CheckBox>
-                        <CheckBox x:Name="btnScrollDown" Checked="btnScrollDown_Checked" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8">
+                        <CheckBox x:Name="btnScrollDown" Checked="btnScrollDown_Checked" ToolTip="Auto Scroll" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8">
                             <materialDesign:PackIcon Kind="ArrowDown" Width="24" Height="24"  HorizontalAlignment="Center" />
                         </CheckBox>
                         <Border BorderThickness="0, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignBody}" Margin="0 8 0 8" Width="1" HorizontalAlignment="Right"/>
-                        <RadioButton x:Name="btnListMode" Checked="btnListMode_Checked" HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="8, 8, 8, 8" Panel.ZIndex="2" Width="32">
+                        <RadioButton x:Name="btnListMode" Checked="btnListMode_Checked" ToolTip="Standings View" HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="8, 8, 8, 8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="ViewHeadline" Width="24" Height="24" />
                         </RadioButton>
-                        <RadioButton x:Name="btnTileMode" Checked="btnTileMode_Checked" IsChecked="True" HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="0, 8, 8, 8" Panel.ZIndex="2" Width="32">
+                        <RadioButton x:Name="btnTileMode" Checked="btnTileMode_Checked" ToolTip="Tile View" IsChecked="True" HorizontalAlignment="Right" Style="{DynamicResource CircleRadioButton}" Margin="0, 8, 8, 8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="ViewModule" Width="24" Height="24" />
                         </RadioButton>
                         <Border BorderThickness="0, 0, 1, 0" BorderBrush="{DynamicResource MaterialDesignBody}" Margin="0 8 0 8" Width="1" HorizontalAlignment="Right"/>
-                        <CheckBox x:Name="btnFullScreen" Checked="btnFullScreen_Checked" Unchecked="btnFullScreen_Unchecked" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8, 8, 0, 8">
+                        <CheckBox x:Name="btnFullScreen" Checked="btnFullScreen_Checked" ToolTip="Full Screen" Unchecked="btnFullScreen_Unchecked" Style="{DynamicResource CircleCheckbox}" Width="32" Height="32" Margin="8, 8, 0, 8">
                             <materialDesign:PackIcon Kind="Presentation" Width="24" Height="24"  HorizontalAlignment="Center" />
                         </CheckBox>
-                        <Button HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" Click="button_Click">
+                        <Button HorizontalAlignment="Right" ToolTip="Settings" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" Click="button_Click">
                             <materialDesign:PackIcon Kind="Settings" Width="24" Height="24" />
                         </Button>
                     </StackPanel>
@@ -381,14 +389,14 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="8"/>
                         </Grid.RowDefinitions>
-                        <Button Click="Button_Click_2" Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
+                        <Button Click="Button_Click_2" ToolTip="Refresh Serial Ports" Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="1" Grid.Row="1" Width="32" Height="32">
                             <materialDesign:PackIcon Kind="Refresh" Foreground="White" Height="24" Width="24"/>
                         </Button>
                         <ComboBox x:Name="cboPorts" FontSize="14" Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
                         <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="5" Grid.Row="1" Content="Connect"/>
                     </Grid>
                     <TextBox x:Name="tbEmptyBarcode" TextChanged="tbEmptyBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Empty Lane Barcode"/>
-                    <TextBox x:Name="tbResetBarcode" TextChanged="tbResetBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Reset Race Barcode"/>
+                    <TextBox x:Name="tbResetBarcode" TextChanged="tbResetBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Clear Race Barcode"/>
                     <Grid Margin="8">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -433,13 +441,13 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Competition Manager" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Button x:Name="btnCompOpen" Click="btnCompOpen_Click" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                        <Button x:Name="btnCompOpen" ToolTip="Open Archived Competition" Click="btnCompOpen_Click" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="PackageVariant" Width="24" Height="24" />
                         </Button>
-                        <Button x:Name="btnCompClose" Click="btnCompClose_Click" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                        <Button x:Name="btnCompClose" ToolTip="Archive Current Competition" Click="btnCompClose_Click" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="PackageVariantClosed" Width="24" Height="24" />
                         </Button>
-                        <Button x:Name="btnCompExport" Click="btnCompExport_Click" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                        <Button x:Name="btnCompExport" ToolTip="Export Current Competition To Excel File" Click="btnCompExport_Click" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="Export" Width="24" Height="24" />
                         </Button>
                         <TextBox x:Name="tbCompName" TextChanged="tbCompName_TextChanged" Margin="8, 0, 8, 8" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Competition's Name"/>
@@ -456,10 +464,10 @@
                         </Grid.RowDefinitions>
                         <ListBox x:Name="lbClasses" Grid.Row="1" Grid.ColumnSpan="3"/>
                         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Car Classes" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Button x:Name="btnClassDelete" Click="btnClassDelete_Click"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                        <Button x:Name="btnClassDelete" ToolTip="Delete Selected Class" Click="btnClassDelete_Click"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="Delete" Width="24" Height="24" />
                         </Button>
-                        <Button x:Name="btnClassAdd" Click="btnClassAdd_Click" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                        <Button x:Name="btnClassAdd" Click="btnClassAdd_Click" ToolTip="Add Class" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
                             <materialDesign:PackIcon Kind="Plus" Width="24" Height="24" />
                         </Button>
                     </Grid>

@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="300"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+        FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" ToolTip="View Racer's Data">
 
     <Grid x:Name="MainGrid" Grid.Column="2" MouseEnter="btnAddToRace_MouseEnter" MouseLeave="btnAddToRace_MouseLeave" Width="200" Height="200" Grid.Row="2" VerticalAlignment="Stretch"  Background="{DynamicResource PrimaryHueDarkBrush}" >
         <Grid.RowDefinitions>
@@ -39,7 +39,7 @@
                 <Grid.OpacityMask>
                     <VisualBrush Visual="{Binding ElementName=creatorImage}"/>
                 </Grid.OpacityMask>
-                <Button x:Name="btnAddToRace" Click="btnAddToRace_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" materialDesign:RippleAssist.ClipToBounds="True" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button x:Name="btnAddToRace" ToolTip="Make The Next Lane This Car" Click="btnAddToRace_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" materialDesign:RippleAssist.ClipToBounds="True" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <materialDesign:PackIcon Kind="FlagCheckered" Width="32" Height="32" />
                 </Button>
             </Grid>
