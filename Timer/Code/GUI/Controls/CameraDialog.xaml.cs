@@ -181,7 +181,7 @@ namespace Timer
         {
             if (!_camera.IsRunning)
             {
-                _camera.Start();
+                _camera.Start();//fix no crop bug
             }
         }
 

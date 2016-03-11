@@ -103,7 +103,7 @@ namespace Timer
 
             try
             {
-                tile.imgCarImage.Source = new BitmapImage(DataManager.getAbsoluteUri(racer.Car.ImageUri));
+                tile.imgCarImage.Source = DataManager.loadImage(DataManager.getAbsoluteUri(racer.Car.ImageUri));
             }
             catch (Exception ex1)
             {
@@ -120,7 +120,7 @@ namespace Timer
 
             try
             {
-                tile.imgCreatorPicture.Source = new BitmapImage(DataManager.getAbsoluteUri(racer.Maker.ImageUri));
+                tile.imgCreatorPicture.Source = DataManager.loadImage(DataManager.getAbsoluteUri(racer.Maker.ImageUri));
             }
             catch (Exception ex1)
             {

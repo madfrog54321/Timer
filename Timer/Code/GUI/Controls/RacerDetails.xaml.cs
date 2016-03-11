@@ -97,7 +97,7 @@ namespace Timer
 
             try
             {
-                editor.imgCarPicture.Source = new BitmapImage(DataManager.getAbsoluteUri(racer.Car.ImageUri));
+                editor.imgCarPicture.Source = DataManager.loadImage(DataManager.getAbsoluteUri(racer.Car.ImageUri));
             }
             catch (Exception ex1)
             {
@@ -114,7 +114,7 @@ namespace Timer
 
             try
             {
-                editor.imgCreatorPicture.Source = new BitmapImage(DataManager.getAbsoluteUri(racer.Maker.ImageUri));
+                editor.imgCreatorPicture.Source = DataManager.loadImage(DataManager.getAbsoluteUri(racer.Maker.ImageUri));
             }
             catch (Exception ex1)
             {
@@ -348,7 +348,7 @@ namespace Timer
         {
             CameraDialog.Show(_dialogHost.Parent, delegate (Uri file)
             {
-                imgCarPicture.Source = new BitmapImage(file);
+                imgCarPicture.Source = DataManager.loadImage(file);
             });
         }
 
@@ -356,7 +356,7 @@ namespace Timer
         {
             CameraDialog.Show(_dialogHost.Parent, delegate (Uri file)
             {
-                imgCreatorPicture.Source = new BitmapImage(file);
+                imgCreatorPicture.Source = DataManager.loadImage(file);
             });
         }
 

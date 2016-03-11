@@ -103,7 +103,7 @@ namespace Timer
         {
             List<int> lanesDone = new List<int>();
 
-            if (_times.Count > 0 && PassedInspection)
+            if (_times.Count > 0)
             {
                 double bestTime = 10;
                 Dictionary<int, double> bestTimes = new Dictionary<int, double>();

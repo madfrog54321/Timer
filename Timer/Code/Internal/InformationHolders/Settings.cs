@@ -27,6 +27,13 @@ namespace Timer
             set { _defaltMakerImageUri = value; }
         }
 
+        private string _archiveDirectory;
+        public string ArchiveDirectory
+        {
+            get { return _archiveDirectory; }
+            set { _archiveDirectory = value; }
+        }
+        
         private string _imageDirectory;
         public string ImageDirectory
         {
@@ -88,6 +95,7 @@ namespace Timer
             _numLanes = 6;
             _defaltCarImageUri = "pack://application:,,,/Timer;component/Assets/Images/DefaltCarPicture.png";
             _defaltMakerImageUri = "pack://application:,,,/Timer;component/Assets/Images/DefaltCreatorImage.png";
+            _archiveDirectory = "archives";
             _imageDirectory = "images";
             _classes = new List<string>();
             _emptyLaneBarcode = "empty";
@@ -102,15 +110,17 @@ namespace Timer
 
         public void Save(string fileName = DEFAULT_FILENAME)
         {
-            File.WriteAllText(fileName, (new JavaScriptSerializer()).Serialize(this));
+            string file = DataManager.getAbsolutePath(fileName);
+            File.WriteAllText(file, (new JavaScriptSerializer()).Serialize(this));
         }
 
         public static Settings Load(string fileName = DEFAULT_FILENAME)
         {
+            string file = DataManager.getAbsolutePath(fileName);
             Settings t = new Settings();//load defalt
-            if (File.Exists(fileName))
+            if (File.Exists(file))
             {
-                t = (new JavaScriptSerializer()).Deserialize<Settings>(File.ReadAllText(fileName));
+                t = (new JavaScriptSerializer()).Deserialize<Settings>(File.ReadAllText(file));
             }
             return t;
         }

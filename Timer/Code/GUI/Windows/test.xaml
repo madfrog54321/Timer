@@ -426,6 +426,29 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Competition Manager" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Button x:Name="btnCompOpen" Click="btnCompOpen_Click" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                            <materialDesign:PackIcon Kind="PackageVariant" Width="24" Height="24" />
+                        </Button>
+                        <Button x:Name="btnCompClose" Click="btnCompClose_Click" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                            <materialDesign:PackIcon Kind="PackageVariantClosed" Width="24" Height="24" />
+                        </Button>
+                        <Button x:Name="btnCompExport" Click="btnCompExport_Click" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8" Panel.ZIndex="2" Width="32">
+                            <materialDesign:PackIcon Kind="Export" Width="24" Height="24" />
+                        </Button>
+                        <TextBox x:Name="tbCompName" TextChanged="tbCompName_TextChanged" Margin="8, 0, 8, 8" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Competition's Name"/>
+                    </Grid>
+                    <Grid Margin="8" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>

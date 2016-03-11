@@ -35,11 +35,15 @@ namespace Timer
                 DataManager.MessageProvider = new BasicMessageProvider();
             });
 
+            DataManager.competitionChanged += DataManager_competitionChanged;
+
             updateRacerList();
             
             updatePorts();
 
             updateSettings();
+
+            tbCompName.Text = DataManager.Competition.Name;
 
             startAutoScroll();
 
@@ -49,7 +53,13 @@ namespace Timer
 
             //addEmpty();
         }
-        
+
+        private void DataManager_competitionChanged()
+        {
+            tbCompName.Text = DataManager.Competition.Name;
+            updateRacerList();
+        }
+
         private DateTime lastTime;
         private enum ScrollEffect { Down, Up, PauseBeforeUp, PauseBeforeDown}
         private ScrollEffect scrollDirection = ScrollEffect.PauseBeforeDown;
@@ -425,13 +435,18 @@ namespace Timer
             List<KeyValuePair<TimeInfo, Racer>> doneStandings = new List<KeyValuePair<TimeInfo, Racer>>();
             List<KeyValuePair<TimeInfo, Racer>> standings = new List<KeyValuePair<TimeInfo, Racer>>();
             List<Racer> noDataStandings = new List<Racer>();
+            List<Racer> notPassedStandings = new List<Racer>();
 
             //put each racer into their list
             foreach (Racer racer in racers)
             {
                 TimeInfo timeInfo = racer.getTimeInfo();
 
-                if (timeInfo != null)
+                if (!racer.PassedInspection)
+                {
+                    notPassedStandings.Add(racer);
+                }
+                else if (timeInfo != null)
                 {
                     if (timeInfo.HasAllLanesDone())
                     {
@@ -469,6 +484,11 @@ namespace Timer
                 addCarListItem(host, racer.Value, i, racer.Key, i * 250);
             }
             foreach (Racer racer in noDataStandings)
+            {
+                i++;
+                addCarListItem(host, racer, i * 250);
+            }
+            foreach (Racer racer in notPassedStandings)
             {
                 i++;
                 addCarListItem(host, racer, i * 250);
@@ -874,6 +894,26 @@ namespace Timer
             ResizeMode = ResizeMode.CanResize;
             WindowStyle = WindowStyle.ThreeDBorderWindow;
             WindowState = WindowState.Maximized;
+        }
+
+        private void btnCompOpen_Click(object sender, RoutedEventArgs e)
+        {
+            DataManager.unarchiveCompetition(HostGrid);
+        }
+
+        private void btnCompClose_Click(object sender, RoutedEventArgs e)
+        {
+            DataManager.archiveCompetition();
+        }
+
+        private void btnCompExport_Click(object sender, RoutedEventArgs e)
+        {
+            DataManager.Competition.export();
+        }
+
+        private void tbCompName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            DataManager.Competition.Name = tbCompName.Text;
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)
