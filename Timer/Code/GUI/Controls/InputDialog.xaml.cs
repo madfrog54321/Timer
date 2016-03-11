@@ -53,5 +53,10 @@ namespace Timer
                     return DialogButton.ReturnEvent.Close;
                 }));
         }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Keyboard.Focus(tbInput);
+        }
     }
 }

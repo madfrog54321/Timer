@@ -207,7 +207,7 @@ namespace Timer
         {
             if (btnLockKeyboard.IsChecked.HasValue && btnLockKeyboard.IsChecked.Value)
             {
-                if(e.NewFocus != btnLockKeyboard)
+                if (e.NewFocus != btnLockKeyboard)
                 {
                     Storyboard sb = this.FindResource("blinkLabel") as Storyboard;
                     Storyboard.SetTarget(sb, btnLockKeyboard);

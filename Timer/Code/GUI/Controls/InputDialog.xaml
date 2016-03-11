@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             FontFamily="pack://application:,,,MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" Loaded="UserControl_Loaded">
 
     <Grid Margin="16" MinWidth="100" MaxWidth="400">
         <TextBox x:Name="tbInput" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom"/>
