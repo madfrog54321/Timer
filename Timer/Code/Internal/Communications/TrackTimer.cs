@@ -69,19 +69,13 @@ namespace Timer
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             _currentResponse += _serialPort.ReadExisting();
-
-            int endIndex = _currentResponse.IndexOf(RETURN_END);
-            if (endIndex != -1)
+            
+            while (_currentResponse.Contains(RETURN_END))
             {
-                processData(_currentResponse.Substring(0, endIndex));
-                _currentResponse = _currentResponse.Substring(endIndex + RETURN_END.Length);
-            }
-
-            if(_currentResponse.Length > 100)
-            {
-                DataManager.MessageProvider.showError("Invalid responce from track timer", "The responce buffer [size: 100 chars] has been filled without finding a valid response " + _currentResponse.Length);
-                _currentResponse = "";//disgard responces
-                _waitingForRace = false;//ready for new responce
+                string command = _currentResponse.Substring(0, _currentResponse.IndexOf(RETURN_END));
+                processData(command);
+                string infoLeft = _currentResponse.Substring(_currentResponse.IndexOf(RETURN_END) + RETURN_END.Length);
+                _currentResponse = infoLeft;
             }
         }
 
