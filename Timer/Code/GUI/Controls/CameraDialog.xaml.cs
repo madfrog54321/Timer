@@ -43,11 +43,38 @@ namespace Timer
             cameraDialog.onSavedImage += onSavedImage;
 
             cameraDialog._hostDialog = new Dialog(parent, cameraDialog, true, true, false, null,
-                new DialogButton("Close Camera", DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate () {
+                new DialogButton("Close Camera", DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate ()
+                {
 
                     cameraDialog.close();
 
                     return DialogButton.ReturnEvent.Close;
+                }), new DialogButton("Import Image", DialogButton.Alignment.Left, DialogButton.Style.Flat, delegate ()
+                {
+                    Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+                    dlg.DefaultExt = ".png";
+                    dlg.Filter = "Image Files (*.jpeg,*.jpg,*.png,*.gif)|*.jpeg;*.jpg;*.png;*.gif";
+                    Nullable<bool> result = dlg.ShowDialog();
+                    if (result == true)
+                    {
+                        string filename = dlg.FileName;
+                        cameraDialog.stopCamera();
+                        CropDialog.Show(cameraDialog._hostDialog.Parent, new BitmapImage(new Uri(filename)), delegate (CropDialog.CloseEvent closeEvent, Uri file)
+                        {
+                            if (closeEvent == CropDialog.CloseEvent.Saved)
+                            {
+                                cameraDialog.triggerSavedImage(file);
+                                cameraDialog.close();
+                                cameraDialog._hostDialog.Close();
+                            }
+                            else
+                            {
+                                cameraDialog.startCamera();
+                            }
+                        });
+                    }
+
+                    return DialogButton.ReturnEvent.DoNothing;
                 }));
         }
 
