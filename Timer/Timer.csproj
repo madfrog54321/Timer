@@ -137,10 +137,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Code\GUI\Windows\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="Code\Internal\Heart\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -148,10 +144,6 @@
     <Compile Include="Code\Internal\InformationHolders\Car.cs" />
     <Compile Include="Code\Internal\InformationHolders\Maker.cs" />
     <Compile Include="Code\Internal\InformationHolders\Racer.cs" />
-    <Compile Include="Code\GUI\Windows\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Page Include="Code\GUI\Controls\RacerDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

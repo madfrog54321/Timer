@@ -38,8 +38,6 @@ namespace Timer
             DataManager.competitionChanged += DataManager_competitionChanged;
 
             updateAdvanced();
-
-            updateRacerList();
             
             updatePorts();
 
@@ -48,6 +46,8 @@ namespace Timer
             tbCompName.Text = DataManager.Competition.Name;
 
             startAutoScroll();
+
+            updateRacerList();
 
             //Dictionary<int, Time> times = new Dictionary<int, Time>();
             //times.Add(1, new Time(1, 2, 5));
