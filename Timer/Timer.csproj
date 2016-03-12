@@ -40,6 +40,9 @@
   <PropertyGroup>
     <StartupObject>Timer.DataManager</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Graphicloads-Flat-Finance-Timer.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,8 +110,8 @@
       <DependentUpon>RacerDetails.xaml</DependentUpon>
     </Compile>
     <Compile Include="Code\Internal\InformationHolders\Settings.cs" />
-    <Compile Include="Code\GUI\Windows\test.xaml.cs">
-      <DependentUpon>test.xaml</DependentUpon>
+    <Compile Include="Code\GUI\Windows\RaceWindow.xaml.cs">
+      <DependentUpon>RaceWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Code\Internal\InformationHolders\Time.cs" />
     <Compile Include="Code\Internal\Communications\TrackTimer.cs" />
@@ -148,7 +151,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Code\GUI\Windows\test.xaml">
+    <Page Include="Code\GUI\Windows\RaceWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -205,6 +208,8 @@
     <Resource Include="Assets\Images\DefaltCreatorImage.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\Images\Graphicloads-Flat-Finance-Timer.ico" />
+    <Resource Include="Graphicloads-Flat-Finance-Timer.ico" />
     <Content Include="Libraries\EPPlus\EPPlus.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

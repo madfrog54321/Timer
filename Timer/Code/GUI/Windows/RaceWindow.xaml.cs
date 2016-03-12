@@ -22,11 +22,11 @@ namespace Timer
     /// <summary>
     /// Interaction logic for test.xaml
     /// </summary>
-    public partial class test : Window
+    public partial class RaceWindow : Window
     {
         private double ANIMATION_TIME = 0.4, OVERLAY_OPACTIY = 0.4; 
 
-        public test()
+        public RaceWindow()
         {
             InitializeComponent();
 
