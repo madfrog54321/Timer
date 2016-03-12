@@ -94,7 +94,7 @@ namespace Timer
             if(obj is Racer)
             {
                 Racer test = obj as Racer;
-                return test.Car.Name == Car.Name;
+                return test.Barcode == Barcode;
             }
             return false;
         }

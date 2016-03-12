@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Timer"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" 
-        Title="Timer" Height="800" Width="700"
+        Title="Timer" Height="800" Width="800"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -279,10 +279,16 @@
                                 </CheckBox>
                             </Grid>
                         </materialDesign:ColorZone>
-                        <Button Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" ToolTip="Make Next Lane Empty">
+                        <Button x:Name="btnGetLast" Click="btnGetLast_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" ToolTip="Get Last Race">
+                            <materialDesign:PackIcon Kind="UndoVariant" Width="24" Height="24" />
+                        </Button>
+                        <Button x:Name="btnStop" Click="btnStop_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" ToolTip="Stop Current Race">
+                            <materialDesign:PackIcon Kind="Stop" Width="24" Height="24" />
+                        </Button>
+                        <Button x:Name="btnNextEmpty" Click="btnNextEmpty_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" ToolTip="Make Next Lane Empty">
                             <materialDesign:PackIcon Kind="FlagCheckered" Width="24" Height="24" />
                         </Button>
-                        <Button Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" ToolTip="Clear Current Race">
+                        <Button x:Name="btnReset" Click="btnReset_Click" Style="{DynamicResource MaterialDesignToolForegroundButton}" Margin="8, 8, 0, 8" Panel.ZIndex="2" Width="32" ToolTip="Clear Current Race">
                             <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24" />
                         </Button>
                     </StackPanel>
@@ -395,8 +401,13 @@
                         <ComboBox x:Name="cboPorts" FontSize="14" Grid.Column="3" Grid.Row="1"  materialDesign:TextFieldAssist.Hint="Serial Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
                         <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="5" Grid.Row="1" Content="Connect"/>
                     </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <ToggleButton x:Name="btnShowAdvance" Checked="btnShowAdvance_Checked" Unchecked="btnShowAdvance_Checked" Style="{StaticResource MaterialDesignSwitchToggleButton}" Margin="16, 0, 0, 0" VerticalAlignment="Center" />
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Show Advanced Options" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </StackPanel>
                     <TextBox x:Name="tbEmptyBarcode" TextChanged="tbEmptyBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Empty Lane Barcode"/>
                     <TextBox x:Name="tbResetBarcode" TextChanged="tbResetBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Clear Race Barcode"/>
+                    <TextBox x:Name="tbEndBarcode" TextChanged="tbEndBarcode_TextChanged" Margin="8" Grid.Column="2" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Bottom" materialDesign:TextFieldAssist.Hint="Force Race To End Barcode"/>
                     <Grid Margin="8">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -429,7 +440,7 @@
                         <Label IsEnabled="False" FontSize="14" Content="Auto Scroll Speed" VerticalAlignment="Center"/>
                         <Slider x:Name="autoScrollSlider" ValueChanged="autoScrollSlider_ValueChanged" Grid.Row="1" Margin="8" Minimum="50" Maximum="300"/>
                     </Grid>
-                    <Grid Margin="8" >
+                    <Grid x:Name="competitionManager" Margin="8" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>

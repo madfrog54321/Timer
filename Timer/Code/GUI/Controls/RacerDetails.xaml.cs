@@ -229,8 +229,14 @@ namespace Timer
                 {
                     if (content._type == WindowType.Display)//only allow saving after clicking of dialog, if not creating a new car
                     {
-                        content.createSaveRacer();
-                        return DialogButton.ReturnEvent.Close;
+                        if (content.createSaveRacer())
+                        {
+                            return DialogButton.ReturnEvent.Close;
+                        }
+                        else
+                        {
+                            return DialogButton.ReturnEvent.DoNothing;
+                        }
                     }
                     else
                     {
@@ -251,97 +257,284 @@ namespace Timer
 
                     return DialogButton.ReturnEvent.DoNothing;
                 }) : null), new DialogButton((type == WindowType.Display ? "Revert" : "Forget"), DialogButton.Alignment.Right, DialogButton.Style.Flat, delegate () {
-                    
-                    //no nothing, this will act like a revert
 
-                    return DialogButton.ReturnEvent.Close;
+                    if(type == WindowType.Display)
+                    {
+                        string changes = "";
+                        
+                        if (content._racer.Car.Name != content.tbCarName.Text)
+                        {
+                            changes += Environment.NewLine + "Car's Name: " + content._racer.Car.Name + " -> " + content.tbCarName.Text;
+                        }
+                        if (content._racer.Car.ImageUri != DataManager.getRelativePath(content.imgCarPicture.Source.ToString()))
+                        {
+                            changes += Environment.NewLine + "Car's Image";
+                        }
+                        if (content._racer.Maker.Name != content.tbCreatorName.Text)
+                        {
+                            changes += Environment.NewLine + "Creator's Name: " + content._racer.Maker.Name + " -> " + content.tbCreatorName.Text;
+                        }
+                        if (content._racer.Maker.ImageUri != DataManager.getRelativePath(content.imgCreatorPicture.Source.ToString()))
+                        {
+                            changes += Environment.NewLine + "Creator's Name";
+                        }
+                        if (content._racer.Barcode != content.tbBarcode.Text)
+                        {
+                            changes += Environment.NewLine + "Barcode: " + content._racer.Barcode + " -> " + content.tbBarcode.Text;
+                        }
+                        if (content._racer.Class != content.cboClass.Text)
+                        {
+                            changes += Environment.NewLine + "Class: " + content._racer.Class + " -> " + content.cboClass.Text;
+                        }
+                        if (content._racer.PassedInspection != (content.passedInspect.IsChecked == true))
+                        {
+                            changes += Environment.NewLine + "Passed Inspection: " + (content._racer.PassedInspection ? "Yes" : "No") + " -> " + ((content.passedInspect.IsChecked == true)?"Yes":"No");
+                        }
+
+                        //no nothing, this will act like a revert
+                        if (changes.Length > 0)
+                        {
+                            DialogBox.showOptionBox(parent, "This will revert the following changes" + changes, "Revert Changes Made To \"" + content.tbCarName.Text + "\"?", "Keep", "Revert", delegate (DialogBox.DialogResult result)
+                            {
+                                if (result == DialogBox.DialogResult.MainOption)
+                                {
+                                    content._dialogHost.Close();//close this host dialog
+                                }
+                            });
+                        }
+                        else
+                        {
+                            return DialogButton.ReturnEvent.Close;
+                        }
+                    }
+                    else
+                    {
+                        bool changed = false;
+                        if ("" != content.tbCarName.Text)
+                        {
+                            changed = true;
+                        }
+                        if (DataManager.Settings.DefaltCarImageUri != DataManager.getRelativePath(content.imgCarPicture.Source.ToString()))
+                        {
+                            changed = true;
+                        }
+                        if ("" != content.tbCreatorName.Text)
+                        {
+                            changed = true;
+                        }
+                        if (DataManager.Settings.DefaltMakerImageUri != DataManager.getRelativePath(content.imgCreatorPicture.Source.ToString()))
+                        {
+                            changed = true;
+                        }
+                        if ("" != content.tbBarcode.Text)
+                        {
+                            changed = true;
+                        }
+                        if ("" != content.cboClass.Text)
+                        {
+                            changed = true;
+                        }
+                        if (false != (content.passedInspect.IsChecked == true))
+                        {
+                            changed = true;
+                        }
+
+                        if (changed)
+                        {
+                            DialogBox.showOptionBox(parent, "This will erase all data entered for " + content.tbCarName.Text + ".", "Forget \"" + content.tbCarName.Text + "\"?", "Keep", "Forget", delegate (DialogBox.DialogResult result)
+                            {
+                                if (result == DialogBox.DialogResult.MainOption)
+                                {
+                                    content._dialogHost.Close();//close this host dialog
+                                }
+                            });
+                        }
+                        else
+                        {
+                            return DialogButton.ReturnEvent.Close;
+                        }
+                    }
+
+                    return DialogButton.ReturnEvent.DoNothing;
                 }), new DialogButton("Save", DialogButton.Alignment.Right, DialogButton.Style.Normal, delegate () {
 
-                    content.createSaveRacer();//save racer on save button click
-
-                    return DialogButton.ReturnEvent.Close;
+                    if (content.createSaveRacer())//save racer on save button click
+                    {
+                        return DialogButton.ReturnEvent.Close;
+                    }
+                    else
+                    {
+                        return DialogButton.ReturnEvent.DoNothing;
+                    }
                 }));
         }
 
-        private void createSaveRacer()
+        private bool createSaveRacer()
         {
             //========= create/update racer ========
+
+            
 
             //create racer
             if (_type == WindowType.Create)
             {
-                DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, DataManager.getRelativePath(imgCarPicture.Source.ToString()),
-                    tbCreatorName.Text, DataManager.getRelativePath(imgCreatorPicture.Source.ToString()), tbBarcode.Text, cboClass.Text, passedInspect.IsChecked == true));
-
-                //========save changes to file=========
-                DataManager.saveSettings();
-
-                triggerUpdatedRacer();
-            }
-            else if(_type == WindowType.Display)
-            {
-                bool changed = false;
-
-                if(_racer.Car.Name != tbCarName.Text)
+                int count = DataManager.Competition.Racers.Count;
+                bool noMatch = true;
+                int i = 0;
+                for (; i < count && noMatch; i++)
                 {
-                    _racer.Car.Name = tbCarName.Text;
-                    changed = true;
-                }
-                if (_racer.Maker.Name != tbCreatorName.Text)
-                {
-                    _racer.Maker.Name = tbCreatorName.Text;
-                    changed = true;
-                }
-                if (_racer.Barcode != tbBarcode.Text)
-                {
-                    _racer.Barcode = tbBarcode.Text;
-                    changed = true;
-                }
-                if (_racer.Class != cboClass.Text)
-                {
-                    _racer.Class = cboClass.Text;
-                    changed = true;
-                }
-                if (_racer.PassedInspection != (passedInspect.IsChecked == true))
-                {
-                    _racer.PassedInspection = passedInspect.IsChecked == true;
-                    changed = true;
-                }
-
-                try
-                {
-                    if (_racer.Car.ImageUri != DataManager.getRelativePath(imgCarPicture.Source.ToString()))
+                    if (DataManager.Competition.Racers[i].Barcode == tbBarcode.Text)
                     {
-                        _racer.Car.ImageUri = DataManager.getRelativePath(imgCarPicture.Source.ToString());
-                        changed = true;
+                        noMatch = false;
                     }
                 }
-                catch(Exception ex)
-                {
-                    DataManager.MessageProvider.showError("Could Not Apply Car's Image", ex.Message);
-                }
 
-                try
+                if (noMatch)
                 {
-                    if (_racer.Maker.ImageUri != DataManager.getRelativePath(imgCreatorPicture.Source.ToString()))
-                    {
-                        _racer.Maker.ImageUri = DataManager.getRelativePath(imgCreatorPicture.Source.ToString());
-                        changed = true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    DataManager.MessageProvider.showError("Could Not Apply Creator's Image", ex.Message);
-                }
+                    DataManager.Competition.Racers.Add(new Racer(tbCarName.Text, DataManager.getRelativePath(imgCarPicture.Source.ToString()),
+                        tbCreatorName.Text, DataManager.getRelativePath(imgCreatorPicture.Source.ToString()), tbBarcode.Text, cboClass.Text, passedInspect.IsChecked == true));
 
-                if (changed)
-                {
                     //========save changes to file=========
                     DataManager.saveSettings();
 
                     triggerUpdatedRacer();
                 }
+                else
+                {
+                    DataManager.MessageProvider.showMessage("Another Racer Has The Same Barcode", DataManager.Competition.Racers[i].Car.Name + " allready has the barcode [" + tbBarcode.Text + "]. The barcode for this racer must be changed.");
+                    return false;
+                }
             }
+            else if (_type == WindowType.Display)
+            {
+                bool changed = false;
+                bool checkBarcode = false;
+
+                if (_racer.Car.Name != tbCarName.Text)
+                {
+                    changed = true;
+                }
+                if (_racer.Maker.Name != tbCreatorName.Text)
+                {
+                    changed = true;
+                }
+                if (_racer.Barcode != tbBarcode.Text)
+                {
+                    changed = true;
+                    checkBarcode = true;
+                }
+                if (_racer.Class != cboClass.Text)
+                {
+                    changed = true;
+                }
+                if (_racer.PassedInspection != (passedInspect.IsChecked == true))
+                {
+                    changed = true;
+                }
+                if (_racer.Car.ImageUri != DataManager.getRelativePath(imgCarPicture.Source.ToString()))
+                {
+                    changed = true;
+                }
+                if (_racer.Maker.ImageUri != DataManager.getRelativePath(imgCreatorPicture.Source.ToString()))
+                {
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    if (checkBarcode)
+                    {
+                        int count = DataManager.Competition.Racers.Count;
+                        bool noMatch = true;
+                        int i = 0;
+                        for (; i < count && noMatch; i++)
+                        {
+                            if (DataManager.Competition.Racers[i].Barcode == tbBarcode.Text)
+                            {
+                                noMatch = false;
+                                i--;
+                            }
+                        }
+
+                        if (noMatch)
+                        {
+                            _racer.Car.Name = tbCarName.Text;
+                            _racer.Maker.Name = tbCreatorName.Text;
+                            _racer.Barcode = tbBarcode.Text;
+                            _racer.Class = cboClass.Text;
+                            _racer.PassedInspection = passedInspect.IsChecked == true;
+                            try
+                            {
+                                _racer.Car.ImageUri = DataManager.getRelativePath(imgCarPicture.Source.ToString());
+                            }
+                            catch (Exception ex)
+                            {
+                                DataManager.MessageProvider.showError("Could Not Apply Car's Image", ex.Message);
+                            }
+
+                            try
+                            {
+                                _racer.Maker.ImageUri = DataManager.getRelativePath(imgCreatorPicture.Source.ToString());
+                            }
+                            catch (Exception ex)
+                            {
+                                DataManager.MessageProvider.showError("Could Not Apply Creator's Image", ex.Message);
+                            }
+
+
+                            //========save changes to file=========
+                            DataManager.saveSettings();
+
+                            triggerUpdatedRacer();
+                        }
+                        else
+                        {
+                            DataManager.MessageProvider.showMessage("Another Racer Has The Same Barcode", DataManager.Competition.Racers[i].Car.Name + " allready has the barcode [" + tbBarcode.Text + "]. The barcode for this racer must be changed.");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        _racer.Car.Name = tbCarName.Text;
+                        _racer.Maker.Name = tbCreatorName.Text;
+                        _racer.Barcode = tbBarcode.Text;
+                        _racer.Class = cboClass.Text;
+                        _racer.PassedInspection = passedInspect.IsChecked == true;
+                        try
+                        {
+                            if (_racer.Car.ImageUri != DataManager.getRelativePath(imgCarPicture.Source.ToString()))
+                            {
+                                _racer.Car.ImageUri = DataManager.getRelativePath(imgCarPicture.Source.ToString());
+                                changed = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            DataManager.MessageProvider.showError("Could Not Apply Car's Image", ex.Message);
+                        }
+
+                        try
+                        {
+                            if (_racer.Maker.ImageUri != DataManager.getRelativePath(imgCreatorPicture.Source.ToString()))
+                            {
+                                _racer.Maker.ImageUri = DataManager.getRelativePath(imgCreatorPicture.Source.ToString());
+                                changed = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            DataManager.MessageProvider.showError("Could Not Apply Creator's Image", ex.Message);
+                        }
+
+
+                        //========save changes to file=========
+                        DataManager.saveSettings();
+
+                        triggerUpdatedRacer();
+                    }
+                }
+            }
+            return true;
         }
 
         private void btnCarPicture_Click(object sender, RoutedEventArgs e)

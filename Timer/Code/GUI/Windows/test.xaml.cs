@@ -37,6 +37,8 @@ namespace Timer
 
             DataManager.competitionChanged += DataManager_competitionChanged;
 
+            updateAdvanced();
+
             updateRacerList();
             
             updatePorts();
@@ -261,6 +263,17 @@ namespace Timer
                     showTimerConnectMessage();
                 }
                 //===reset race===
+            }
+            else if (barcode == DataManager.Settings.EndBarcode)
+            {
+                if (DataManager.readyForRace)
+                {
+                    DataManager.TrackTimer.getRaceNow();
+                }
+                else
+                {
+                    showTimerConnectMessage();
+                }
             }
             else if (barcode == DataManager.Settings.EmptyLaneBarcode)
             {
@@ -668,7 +681,10 @@ namespace Timer
 
         private void forgetRace()
         {
-            DataManager.RaceManager.forgetRace();
+            if (DataManager.readyForRace)
+            {
+                DataManager.RaceManager.forgetRace();
+            }
             RaceList.Children.Clear();
         }
 
@@ -766,6 +782,7 @@ namespace Timer
             uiScaleSlider.Value = DataManager.Settings.StandingsZoom;
             tilesSlider.Value = DataManager.Settings.TilesZoom;
             autoScrollSlider.Value = DataManager.Settings.AutoScrollSpeed;
+            tbEndBarcode.Text = DataManager.Settings.EndBarcode;
 
             updateClassList();
             _loadingSettings = false;
@@ -914,6 +931,80 @@ namespace Timer
         private void tbCompName_TextChanged(object sender, TextChangedEventArgs e)
         {
             DataManager.Competition.Name = tbCompName.Text;
+        }
+
+        private void tbEndBarcode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_loadingSettings)
+            {
+                DataManager.Settings.EndBarcode = tbEndBarcode.Text;
+                DataManager.Settings.Save();
+            }
+        }
+
+        private void btnNextEmpty_Click(object sender, RoutedEventArgs e)
+        {
+            addEmpty();
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataManager.readyForRace)
+                {
+                    try
+                    {
+                        forgetRace();
+                    }
+                    catch (Exception ex)
+                    {
+                        showTimerConnectMessage();
+                    }
+                }
+                else
+                {
+                    showTimerConnectMessage();
+                }
+        }
+
+        private void updateAdvanced()
+        {
+            if (DataManager.Settings.ShowAdvance)
+            {
+                btnStop.Visibility =
+                btnGetLast.Visibility =
+                competitionManager.Visibility =
+                tbEndBarcode.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                btnStop.Visibility =
+                btnGetLast.Visibility =
+                competitionManager.Visibility =
+                tbEndBarcode.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataManager.readyForRace)
+            {
+                DataManager.TrackTimer.getRaceNow();
+            }
+            else
+            {
+                showTimerConnectMessage();
+            }
+        }
+
+        private void btnShowAdvance_Checked(object sender, RoutedEventArgs e)
+        {
+            DataManager.Settings.ShowAdvance = btnShowAdvance.IsChecked == true;
+            updateAdvanced();
+        }
+
+        private void btnGetLast_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)

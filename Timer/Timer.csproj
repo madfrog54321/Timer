@@ -200,17 +200,11 @@
     <None Include="Libraries\AForge\AForge.Video.DirectShow.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Images\IMG_7143.JPG" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Libraries\MaterialDesign\MaterialDesignColors.dll" />
     <None Include="Libraries\MaterialDesign\MaterialDesignThemes.Wpf.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\CameraWindowIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Images\Jet-New-Design-2-300-web.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\DefaltCarPicture.png" />

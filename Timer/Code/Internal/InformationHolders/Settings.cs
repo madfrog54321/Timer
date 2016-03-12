@@ -62,6 +62,13 @@ namespace Timer
             set { _resetBarcode = value; }
         }
 
+        private string _endBarcode;
+        public string EndBarcode
+        {
+            get { return _endBarcode; }
+            set { _endBarcode = value; }
+        }
+
         private double _raceDisplayHeight;
         public double RaceDisplayHeight
         {
@@ -90,6 +97,13 @@ namespace Timer
             set { _autoScrollSpeed = value; }
         }
 
+        private bool _showAdvance;
+        public bool ShowAdvance
+        {
+            get { return _showAdvance; }
+            set { _showAdvance = value; }
+        }
+
         public Settings()
         {
             _numLanes = 6;
@@ -99,7 +113,9 @@ namespace Timer
             _imageDirectory = "images";
             _classes = new List<string>();
             _emptyLaneBarcode = "empty";
-            _resetBarcode = "reset";
+            _endBarcode = "end";
+            _showAdvance = false;
+             _resetBarcode = "reset";
             _raceDisplayHeight = 1;
             _standingsZoom = 1;
             _autoScrollSpeed = 50;

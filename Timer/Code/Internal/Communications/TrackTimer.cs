@@ -92,7 +92,7 @@ namespace Timer
             {
                 DataManager.MessageProvider.showError("Track responded with \"?\"", "The track timer did not understand the command, or the command was invalid");
             }
-            else if (_waitingForRace && !String.IsNullOrEmpty(value))
+            else if (_waitingForRace && !String.IsNullOrEmpty(value) && value.Length > 5)
             {
                 value = value.Replace("  ", "0 ");
                 //if (value[value.Length - 1] == ' ')
@@ -149,6 +149,7 @@ namespace Timer
                         success = false;
                     }
                 }
+                resetMask();
                 _waitingForRace = false;
                 triggerGotRace(success, new Race(times.ToArray()));
             }
@@ -161,6 +162,20 @@ namespace Timer
                 _waitingForRace = true;
                 sendCommand("rg");
             }
+        }
+
+        public void getRaceNow()
+        {
+            if (_waitingForRace)
+            {
+                sendCommand("ra");
+            }
+        }
+
+        public void getLastRace()
+        {
+            _waitingForRace = true;
+            sendCommand("rp");
         }
 
         public void maskOffLane(int lane)
