@@ -46,5 +46,13 @@
         </Grid>
 
         <Label x:Name="disabled" Background="#88000000" Grid.RowSpan="3" Visibility="Collapsed"/>
+        <Grid x:Name="gridTime" Background="#88000000" Visibility="Collapsed" Grid.RowSpan="3" Height="auto" VerticalAlignment="Top">
+            <TextBlock x:Name="tbPlace" Grid.Row="0" TextAlignment="Left" Margin="8, 8, 0, 8" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold">
+
+            </TextBlock>
+            <TextBlock x:Name="tbTime" Grid.Row="0" TextAlignment="Right" Margin="0, 8, 8, 8" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold">
+
+            </TextBlock>
+        </Grid>
     </Grid>
 </UserControl>

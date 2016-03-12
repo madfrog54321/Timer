@@ -174,8 +174,10 @@ namespace Timer
 
         public void getLastRace()
         {
-            _waitingForRace = true;
-            sendCommand("rp");
+            if (_waitingForRace)
+            {
+                sendCommand("rp");
+            }
         }
 
         public void maskOffLane(int lane)

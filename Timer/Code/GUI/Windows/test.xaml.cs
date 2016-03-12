@@ -646,6 +646,17 @@ namespace Timer
                 {
                     UIElement tile = RaceList.Children[0];
                     RaceList.Children.RemoveAt(0);
+                    if (tile is CarTile)
+                    {
+                        int lane = (int)(tile as CarTile).GetValue(Grid.ColumnProperty) + 1;
+                        foreach (KeyValuePair<int , Time> result in results)
+                        {
+                            if (result.Value.Lane == lane)
+                            {
+                                (tile as CarTile).showTime(result.Value.Place, result.Value.Speed);
+                            }
+                        }
+                    }
                     lastRaceList.Children.Add(tile);
                 }
 
@@ -899,18 +910,22 @@ namespace Timer
         
         private void btnFullScreen_Checked(object sender, RoutedEventArgs e)
         {
+            Hide();
             WindowState = WindowState.Normal;
             ResizeMode = ResizeMode.NoResize;
             WindowStyle = WindowStyle.None;
             WindowState = WindowState.Maximized;
+            Show();
         }
 
         private void btnFullScreen_Unchecked(object sender, RoutedEventArgs e)
         {
+            Hide();
             WindowState = WindowState.Normal;
             ResizeMode = ResizeMode.CanResize;
             WindowStyle = WindowStyle.ThreeDBorderWindow;
             WindowState = WindowState.Maximized;
+            Show();
         }
 
         private void btnCompOpen_Click(object sender, RoutedEventArgs e)
@@ -968,6 +983,7 @@ namespace Timer
 
         private void updateAdvanced()
         {
+            btnShowAdvance.IsChecked = DataManager.Settings.ShowAdvance;
             if (DataManager.Settings.ShowAdvance)
             {
                 btnStop.Visibility =
@@ -1004,7 +1020,14 @@ namespace Timer
 
         private void btnGetLast_Click(object sender, RoutedEventArgs e)
         {
-
+            if (DataManager.readyForRace)
+            {
+                DataManager.TrackTimer.getLastRace();
+            }
+            else
+            {
+                showTimerConnectMessage();
+            }
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)

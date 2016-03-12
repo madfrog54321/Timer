@@ -31,7 +31,7 @@ namespace Timer
 
         public static CarTile createTile(Racer racer, bool keepSize)
         {
-            return createTile(racer, keepSize, false, null);
+            return createTile(racer, keepSize,  false, null);
         }
 
         public static CarTile createTile(Racer racer, bool keepSize, addToRaceHandler addHandler)
@@ -78,13 +78,40 @@ namespace Timer
             MainGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, growYAnimation);
         }
 
+        public void showTime(int place, double time)
+        {
+            if (addHolder.Visibility == Visibility.Collapsed)
+            {
+                gridTime.Visibility = Visibility.Visible;
+                tbTime.Text = String.Format("{0:0.000}", time) + "s";
+                string after = "";
+                if (place == 1)
+                {
+                    after = "st";
+                }
+                else if (place == 2)
+                {
+                    after = "nd";
+                }
+                else if (place == 3)
+                {
+                    after = "rd";
+                }
+                else if (place >= 4)
+                {
+                    after = "th";
+                }
+                tbPlace.Text = place.ToString() + after;
+            }
+        }
+
         private static CarTile createTile(Racer racer, bool keepSize, bool haveAdd, addToRaceHandler addHandler)
         {
             CarTile tile = new CarTile();
             tile.tbCarName.Text = racer.Car.Name;
             tile.tbCreatorName.Text = racer.Maker.Name;
             tile.onAddToRace += addHandler;
-            
+
             if (!racer.PassedInspection)
             {
                 tile.disabled.Visibility = Visibility.Visible;
