@@ -432,6 +432,8 @@ namespace Timer
                         updateRacerList();
                     }, delegate ()
                     {
+                        lastResults = null;
+                        lastRaceList.Children.Clear();
                         forgetRace();
                     });
                 };
@@ -637,12 +639,15 @@ namespace Timer
             }
         }
 
+        private Dictionary<int, Time> lastResults;
+
         private void RaceManager_onGotRace(Dictionary<int, Time> results)
         {
             if (Dispatcher.CheckAccess())
             {
                 lastRaceList.Children.Clear();
-                while(RaceList.Children.Count > 0)
+                lastResults = results;
+                while (RaceList.Children.Count > 0)
                 {
                     UIElement tile = RaceList.Children[0];
                     RaceList.Children.RemoveAt(0);
@@ -1028,6 +1033,32 @@ namespace Timer
             {
                 showTimerConnectMessage();
             }
+        }
+
+        private void lastHolder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (lastRaceList.Children.Count > 0)
+            {
+                mouseOverlay.Visibility = deleteLast.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void lastHolder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            mouseOverlay.Visibility = deleteLast.Visibility = Visibility.Collapsed;
+        }
+
+        private void deleteLast_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (KeyValuePair<int, Time> result in lastResults)
+            {
+                if (!DataManager.Competition.Racers[result.Key].Times.Remove(result.Value))
+                {
+                    DataManager.MessageProvider.showError("Error Deleting Last Race", "One of the racers kept the time they got in the race.");
+                }
+            }
+            lastRaceList.Children.Clear();
+            updateRacerList();
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)

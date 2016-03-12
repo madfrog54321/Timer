@@ -32,5 +32,15 @@
         {
             //for json deserialize
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Time)
+            {
+                Time test = (obj as Time);
+                return test.Speed == Speed && test.Lane == Lane && test.Place == Place;
+            }
+            return false;
+        }
     }
 }

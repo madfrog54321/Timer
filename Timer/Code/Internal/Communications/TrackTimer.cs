@@ -25,6 +25,7 @@ namespace Timer
         private bool _waitingForRace;
         public delegate void gotRace(bool success, Race race);
         public event gotRace OnGotRace;
+        private string lastComand = "";
         private void triggerGotRace(bool success, Race race)
         {
             gotRace handler = OnGotRace;
@@ -90,7 +91,7 @@ namespace Timer
 
             if (value == "?")
             {
-                DataManager.MessageProvider.showError("Track responded with \"?\"", "The track timer did not understand the command, or the command was invalid");
+                DataManager.MessageProvider.showError("Track responded with \"?\"", "The track timer did not understand the command, or the command was invalid. Last command sent:" + Environment.NewLine + "\"" + lastComand + "\"");
             }
             else if (_waitingForRace && !String.IsNullOrEmpty(value) && value.Length > 5)
             {
@@ -160,6 +161,7 @@ namespace Timer
             if (!_waitingForRace)
             {
                 _waitingForRace = true;
+                lastComand = "rg";
                 sendCommand("rg");
             }
         }
@@ -168,6 +170,7 @@ namespace Timer
         {
             if (_waitingForRace)
             {
+                lastComand = "ra";
                 sendCommand("ra");
             }
         }
@@ -176,35 +179,43 @@ namespace Timer
         {
             if (_waitingForRace)
             {
+                lastComand = "rp";
                 sendCommand("rp");
             }
         }
 
         public void maskOffLane(int lane)
         {
+            lastComand = "om";
             sendCommand("om" + lane.ToString());
         }
 
         public void resetMask()
         {
+            lastComand = "om0";
             sendCommand("om0");
         }
 
         public void reset()
         {
+            lastComand = "r";
             sendCommand("r");
             _waitingForRace = false;//stop waiting for a race
         }
 
         public void setup()
         {
+            lastComand = "ol1";
             sendCommand("ol1"); //set lane character
+            lastComand = "op2";
             sendCommand("op2"); //set place character
+            lastComand = "od3";
             sendCommand("od3"); //set decimals
         }
 
         public void setNumberLanes(int number)
         {
+            lastComand = "on";
             sendCommand("on" + number.ToString());
         }
 

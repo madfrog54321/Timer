@@ -350,21 +350,27 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                 </Grid>
-                <Grid x:Name="lastRaceList" Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.OpacityMask>
-                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                            <GradientStop Color="#00000000" Offset="1" />
-                            <GradientStop Color="#ff000000" Offset="0" />
-                        </LinearGradientBrush>
-                    </Grid.OpacityMask>
+                <Grid x:Name="lastHolder" Background="Transparent" Grid.Row="1" MouseEnter="lastHolder_MouseEnter" MouseLeave="lastHolder_MouseLeave">
+                    <Grid x:Name="lastRaceList">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.OpacityMask>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="#00000000" Offset="1" />
+                                <GradientStop Color="#ff000000" Offset="0" />
+                            </LinearGradientBrush>
+                        </Grid.OpacityMask>
+                    </Grid>
+                    <Label x:Name="mouseOverlay" Background="Black" Opacity="0.3" Visibility="Collapsed"/>
+                    <Button x:Name="deleteLast" Visibility="Collapsed" Click="deleteLast_Click" HorizontalAlignment="Center" ToolTip="Delete This Race" Style="{DynamicResource MaterialDesignToolForegroundButton}" Width="48" Height="48">
+                        <materialDesign:PackIcon Kind="Delete" Width="24" Height="24" />
+                    </Button>
                 </Grid>
             </Grid>
 
